@@ -98,8 +98,38 @@ h5 {
   font-size: 18px;
 }
 
+
+/* - label - */
+
 label {
   font-size: $font-size-secondary;
   line-height: 22px;
   color: $color-gray-7;
+}
+
+
+/* - toast - */
+
+.toast__popup {
+  display: flex !important;
+  justify-content: space-between !important;
+  align-items: center !important;
+  height: 96px;
+}
+
+.toast__title {
+  font-size: 20px !important;
+}
+
+.toast__icon {
+  position: relative;
+  width: 56px;
+  height: 56px;
+}
+
+.toast__icon__inner {
+  position: absolute;
+  top: 55%;
+  left: 50%;
+  transform: translate(-50%, -50%);
 }

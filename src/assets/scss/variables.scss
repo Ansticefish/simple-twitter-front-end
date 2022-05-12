@@ -1,0 +1,228 @@
+/* - fonts - */
+
+$text-font: "Noto Sans TC",
+sans-serif;
+$number-font: "Montserrat",
+sans-serif;
+$font-size-basic: 16px;
+$font-size-secondary: 14px;
+$font-size-small: 12px;
+
+/* - colors-main - */
+
+$color-brand: #ff6600;
+$color-primary: #0062ff;
+$color-secondary: #6c757d;
+$color-success: #3dd598;
+$color-warning: #ffc542;
+$color-error: #fc5a5a;
+
+/* - colors-aid - */
+
+$color-aid-orange: #ff974a;
+$color-aid-blue: #50b5ff;
+$color-aid-green: #82c43c;
+$color-aid-purple: #a461d8;
+$color-aid-pink: #ff9ad5;
+$color-aid-gray: #657786;
+
+/* - colors-gray - */
+
+$color-white: #ffffff;
+$color-gray-1: #fafafb;
+$color-gray-2: #f1f1f5;
+$color-gray-3: #e2e2ea;
+$color-gray-4: #d5d5dc;
+$color-gray-5: #b5b5be;
+$color-gray-6: #92929d;
+$color-gray-7: #696974;
+$color-gray-8: #44444f;
+$color-black: #171725;
+
+/* - colors-elements - */
+
+$color-input-bg: #f5f8fa;
+$color-tab-line: #e6ecf0;
+
+/* - icons - */
+
+$icon-home: url('../icons/home.png');
+$icon-home-active: url('../icons/home-active.png');
+$icon-person: url('../icons/person.png');
+$icon-person-active: url('../icons/person-active.png');
+$icon-setting: url('../icons/setting.png');
+$icon-setting-active: url('../icons/setting-active.png');
+$icon-reply: url('../icons//reply.png');
+$icon-heart: url('../icons/heart.png');
+$icon-heart-liked: url('../icons/heart-liked.png');
+$icon-tweet: url('../icons//tweet.png');
+
+/* - sizes - */
+
+$sizes: ( 25: 25%,
+50: 50%,
+75: 75%,
+100: 100%);
+@each $prop,
+$abbrev in (width: w,
+height: h) {
+  @each $key,
+  $value in $sizes {
+    .#{$abbrev}-#{$key} {
+      #{$prop}: #{$value};
+    }
+  }
+}
+
+
+/* - spaces - */
+
+$spacer: 1.2rem;
+$spacers: ( 1: ( $spacer * 0.25),
+2: ( $spacer * 0.5),
+3: ( $spacer * 0.75),
+4: ( $spacer * 1),
+5: ( $spacer * 1.25),
+6: ( $spacer * 1.5),
+7: ( $spacer * 1.75),
+8: ( $spacer * 2));
+@each $prop,
+$abbrev in (margin: m,
+padding: p) {
+  @each $key,
+  $value in $spacers {
+    .#{$abbrev}-#{$key} {
+      #{$prop}: #{$value};
+    }
+    .#{$abbrev}t-#{$key} {
+      #{$prop}-top: #{$value};
+    }
+    .#{$abbrev}b-#{$key} {
+      #{$prop}-bottom: #{$value};
+    }
+    .#{$abbrev}l-#{$key} {
+      #{$prop}-left: #{$value};
+    }
+    .#{$abbrev}r-#{$key} {
+      #{$prop}-right: #{$value};
+    }
+    .#{$abbrev}x-#{$key} {
+      #{$prop}-left: #{$value};
+      #{$prop}-right: #{$value};
+    }
+    .#{$abbrev}y-#{$key} {
+      #{$prop}-top: #{$value};
+      #{$prop}-bottom: #{$value};
+    }
+  }
+}
+
+
+/* - input - */
+
+%input-style {
+  position: relative;
+  width: 540px;
+  label {
+    position: absolute;
+    top: 0px;
+    left: 1rem;
+  }
+  input {
+    padding: 1.6rem 1rem 0.4rem 1rem;
+    width: 100%;
+    height: 54px;
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    background: $color-input-bg;
+    border-bottom: 2px solid $color-aid-gray;
+    &:hover,
+    &:focus {
+      border-color: $color-aid-blue;
+    }
+    &.error {
+      border-color: $color-error;
+      &+.error-message {
+        display: block;
+      }
+    }
+    &:disabled {
+      border-color: $color-gray-4;
+    }
+  }
+  .error-message {
+    display: none;
+    top: 54px;
+    left: 0;
+    font-size: $font-size-small;
+    color: $color-error;
+  }
+  .text-count {
+    top: 54px;
+    left: unset;
+    right: 0px;
+    font-size: $font-size-small;
+  }
+}
+
+
+/* - tabs - */
+
+%tab-style {
+  display: flex;
+  li {
+    width: 130px;
+    text-align: center;
+    border-bottom: 2px solid $color-tab-line;
+    a {
+      color: $color-aid-gray;
+      line-height: 52px;
+      font-weight: bold;
+    }
+    &.active {
+      border-bottom: 2px solid $color-brand;
+      a {
+        color: $color-brand;
+      }
+    }
+  }
+}
+
+
+/* - notification - */
+
+
+/* - button - */
+
+@mixin setButton($color,
+$bgcolor,
+$radius,
+$px,
+$py) {
+  border: 1px solid $color-brand;
+  border-radius: $radius;
+  padding: $px $py;
+  color: $color;
+  background: $bgcolor;
+  @content;
+}
+
+
+/* - logo & icon - */
+
+@mixin setIcon($width,
+$height,
+$icon-path,
+$active-icon-path) {
+  display: inline-block;
+  margin-right: 1rem;
+  width: $width;
+  height: $height;
+  background-image: url($icon-path);
+  background-size: cover;
+  &.active {
+    background-image: url($active-icon-path);
+  }
+  @content;
+}

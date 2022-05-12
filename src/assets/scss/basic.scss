@@ -1,0 +1,105 @@
+/* == css reset == */
+
+* {
+  margin: 0;
+  padding: 0;
+  border: 0;
+  font-size: 100%;
+  vertical-align: baseline;
+}
+
+aside,
+footer,
+header,
+nav,
+section,
+main {
+  display: block;
+}
+
+body {
+  line-height: 1;
+}
+
+ul {
+  list-style: none;
+}
+
+a,
+a:hover,
+a:focus {
+  text-decoration: none;
+}
+
+button {
+  background: transparent;
+}
+
+input:focus {
+  outline: none;
+}
+
+input:required,
+input:invalid {
+  box-shadow: none;
+}
+
+::-webkit-scrollbar {
+  width: 0px;
+  background: transparent;
+}
+
+body {
+  background: $color-white;
+}
+
+
+/* == general setting == */
+
+* {
+  box-sizing: border-box;
+  font-family: $text-font;
+  font-size: $font-size-basic;
+  font-weight: regular;
+  color: $color-black;
+}
+
+
+/* - heading - */
+
+h1,
+h2 {
+  font-weight: bold;
+}
+
+h3,
+h4,
+h5 {
+  font-weight: medium;
+}
+
+h1 {
+  font-size: 68px;
+}
+
+h2 {
+  font-size: 42px;
+}
+
+h3 {
+  font-size: 28px;
+}
+
+h4 {
+  font-size: 24px;
+}
+
+h5 {
+  font-size: 18px;
+}
+
+label {
+  font-size: $font-size-secondary;
+  line-height: 22px;
+  color: $color-gray-7;
+}

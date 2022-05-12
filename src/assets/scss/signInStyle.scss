@@ -1,0 +1,26 @@
+%signin {
+    margin: 0 auto;
+    text-align: center;
+    img {
+        width: 40px;
+        height: 40px;
+    }
+    ul {
+        display: flex;
+        justify-content: flex-end;
+        li a {
+            color: $color-primary;
+            text-decoration: underline;
+        }
+    }
+    form {
+        div {
+            @extend %input-style;
+            width: inherit;
+        }
+        button {
+            width: 100%;
+            @include setButton ( $color-white, $color-brand, 50px, 10px, 24px, )
+        }
+    }
+}

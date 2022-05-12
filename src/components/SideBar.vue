@@ -6,6 +6,7 @@
         <img src="../assets/icons/Icon.png" alt="icon" />
       </div>
       <ul class="sidebar__upper__menu mt-3">
+<<<<<<< HEAD
         <!-- router-link need to be set -->
         <li class="sidebar__upper__menu__item">
           <div
@@ -45,18 +46,38 @@
             }"
             >設定</router-link
           >
+=======
+        <!-- router to need to be set -->
+        <li class="sidebar__upper__menu__item">
+          <div class="menu__item__home-icon"></div>
+          <router-link to="/home">首頁</router-link>
+        </li>
+        <li class="sidebar__upper__menu__item">
+          <div class="menu__item__person-icon"></div>
+          <router-link to="/home">個人資料</router-link>
+        </li>
+        <li class="sidebar__upper__menu__item">
+          <div class="menu__item__set-icon"></div>
+          <router-link to="/home">設定</router-link>
+>>>>>>> b12f7b4 (side bar style , tune variables)
         </li>
       </ul>
       <button class="sidebar__upper__tweet mt-2">推文</button>
     </div>
     <button class="sidebar__log-out">
+<<<<<<< HEAD
       <div class="sidebar__log-out__icon"></div>
       <span class="sidebar__log-out__span">登出</span>
+=======
+      <div class="log-out__icon"></div>
+      <span class="log-out__span">登出</span>
+>>>>>>> b12f7b4 (side bar style , tune variables)
     </button>
   </div>
 </template>
 
 <script>
+<<<<<<< HEAD
 const dummyCurrentUser = {
   currentUser: {
     id: 1,
@@ -98,6 +119,11 @@ export default {
   created() {
     this.fetchCurrentUser();
   },
+=======
+
+export default {
+  name: "SideBar",
+>>>>>>> b12f7b4 (side bar style , tune variables)
 };
 </script>
 

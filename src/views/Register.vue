@@ -13,6 +13,15 @@
 <script>
 export default {
   name: 'Register',
+  data () {
+    return {
+      account: '',
+      name: '',
+      email: '',
+      password: '',
+      passwordConfirm: ''
+    }
+  },
 }
 </script>
 

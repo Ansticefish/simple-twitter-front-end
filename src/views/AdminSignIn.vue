@@ -5,15 +5,19 @@
         <h1>Admin sign in</h1>
         <h2>test Scss shared files.</h2>
       </div>
-      
     </div>
-    
   </div>
 </template>
 
 <script>
 export default {
   name: 'AdminSignIn',
+  data () {
+    return {
+      email: '',
+      password: '',
+    }
+  },
 }
 </script>
 

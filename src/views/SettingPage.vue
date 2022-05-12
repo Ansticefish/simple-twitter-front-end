@@ -18,7 +18,16 @@ export default {
   name: 'SettingPage',
   components: {
     SideBar,
-  }
+  },
+  data () {
+    return {
+      account: '',
+      name: '',
+      email: '',
+      password: '',
+      passwordConfirm: ''
+    }
+  },
 }
 </script>
 

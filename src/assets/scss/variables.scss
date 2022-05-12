@@ -47,16 +47,16 @@ $color-tab-line: #e6ecf0;
 
 /* - icons - */
 
-$icon-home: url("../icons/home.png");
-$icon-home-active: url("../icons/home-active.png");
-$icon-person: url("../icons/person.png");
-$icon-person-active: url("../icons/person-active.png");
-$icon-setting: url("../icons/setting.png");
-$icon-setting-active: url("../icons/setting-active.png");
-$icon-reply: url("../icons//reply.png");
-$icon-heart: url("../icons/heart.png");
-$icon-heart-liked: url("../icons/heart-liked.png");
-$icon-tweet: url("../icons//tweet.png");
+$icon-home: url("../assets/icons/home.png");
+$icon-home-active: url("../assets/icons/home-active.png");
+$icon-person: url("../assets/icons/person.png");
+$icon-person-active: url("../assets/icons/person-active.png");
+$icon-setting: url("../assets/icons/setting.png");
+$icon-setting-active: url("../assets/icons/setting-active.png");
+$icon-reply: url("../assets/icons//reply.png");
+$icon-heart: url("../assets/icons/heart.png");
+$icon-heart-liked: url("../assets/icons/heart-liked.png");
+$icon-tweet: url("../assets/icons/tweet.png");
 
 /* - sizes - */
 
@@ -216,7 +216,7 @@ $px,
 $py) {
   border: 1px solid $color-brand;
   border-radius: $radius;
-  padding: $px $py;
+  padding: $py $px;
   color: $color;
   background: $bgcolor;
   &:hover {
@@ -237,7 +237,7 @@ $active-icon-url) {
   width: $width;
   height: $height;
   background-image: $icon-url;
-  background-size: cover;
+  background-size: contain;
   &.active {
     background-image: $active-icon-url;
   }

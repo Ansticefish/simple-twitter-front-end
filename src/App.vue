@@ -13,6 +13,9 @@ export default {
 </script>
 
 <style lang="scss">
-// 全域style設定
+#app{
+  margin: auto;
+  max-width: 1200px;
+}
 
 </style>

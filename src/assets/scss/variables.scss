@@ -63,8 +63,7 @@ $icon-tweet: url("../assets/icons/tweet.png");
 $sizes: ( 25: 25%,
 50: 50%,
 75: 75%,
-100: 100%,
-);
+100: 100%);
 @each $prop,
 $abbrev in (width: w,
 height: h) {
@@ -80,23 +79,14 @@ height: h) {
 /* - spaces - */
 
 $spacer: 1.2rem;
-$spacers: ( 1: ( $spacer * 0.25,
-),
-2: ( $spacer * 0.5,
-),
-3: ( $spacer * 0.75,
-),
-4: ( $spacer * 1,
-),
-5: ( $spacer * 1.25,
-),
-6: ( $spacer * 1.5,
-),
-7: ( $spacer * 1.75,
-),
-8: ( $spacer * 2,
-),
-);
+$spacers: ( 1: ( $spacer * 0.25),
+2: ( $spacer * 0.5),
+3: ( $spacer * 0.75),
+4: ( $spacer * 1),
+5: ( $spacer * 1.25),
+6: ( $spacer * 1.5),
+7: ( $spacer * 1.75),
+8: ( $spacer * 2));
 @each $prop,
 $abbrev in (margin: m,
 padding: p) {
@@ -202,9 +192,6 @@ padding: p) {
     }
   }
 }
-
-
-/* - notification - */
 
 
 /* - button - */

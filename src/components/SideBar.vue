@@ -50,8 +50,8 @@
       <button class="sidebar__upper__tweet mt-2">推文</button>
     </div>
     <button class="sidebar__log-out">
-      <div class="log-out__icon"></div>
-      <span class="log-out__span">登出</span>
+      <div class="sidebar__log-out__icon"></div>
+      <span class="sidebar__log-out__span">登出</span>
     </button>
   </div>
 </template>
@@ -120,19 +120,21 @@ export default {
     }
   }
   .sidebar__upper__menu {
-    .sidebar__upper__menu__item {
+    &__item {
       padding: 1rem 0;
       display: flex;
       align-content: center;
-      .menu__item__home-icon {
-        @include setIcon(20px, 20px, $icon-home, $icon-home-active);
-      }
-      .menu__item__person-icon {
-        margin-left: 2px;
-        @include setIcon(20px, 20px, $icon-person, $icon-person-active);
-      }
-      .menu__item__set-icon {
-        @include setIcon(20px, 20px, $icon-setting, $icon-setting-active);
+      .menu__item {
+        &__home-icon {
+          @include setIcon(20px, 20px, $icon-home, $icon-home-active);
+        }
+        &__person-icon {
+          margin-left: 2px;
+          @include setIcon(20px, 20px, $icon-person, $icon-person-active);
+        }
+        &__set-icon {
+          @include setIcon(20px, 20px, $icon-setting, $icon-setting-active);
+        }
       }
       a {
         font-weight: bold;
@@ -153,7 +155,7 @@ export default {
 .sidebar__log-out {
   display: flex;
   align-content: center;
-  .log-out__icon {
+  &__icon {
     @include setIcon(
       18px,
       18px,
@@ -161,13 +163,13 @@ export default {
       url("../assets/icons/log-out.png")
     );
   }
-  .log-out__span {
+  &__span {
     font-weight: bold;
     font-size: 18px;
     line-height: 20px;
   }
-  &:hover{
-    opacity: .6;
+  &:hover {
+    opacity: 0.6;
   }
 }
 </style>

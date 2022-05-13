@@ -219,9 +219,6 @@ $py) {
   padding: $py $px;
   color: $color;
   background: $bgcolor;
-  &:hover {
-    cursor: pointer;
-  }
   @content;
 }
 
@@ -238,6 +235,7 @@ $active-icon-url) {
   height: $height;
   background-image: $icon-url;
   background-size: contain;
+  background-repeat: no-repeat;
   &.active {
     background-image: $active-icon-url;
   }

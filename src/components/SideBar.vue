@@ -6,18 +6,45 @@
         <img src="../assets/icons/Icon.png" alt="icon" />
       </div>
       <ul class="sidebar__upper__menu mt-3">
-        <!-- router to need to be set -->
+        <!-- router-link need to be set -->
         <li class="sidebar__upper__menu__item">
-          <div class="menu__item__home-icon"></div>
+          <div
+            :class="[
+              'menu__item__home-icon',
+              { active: this.$route.name === 'home-page' },
+            ]"
+          ></div>
           <router-link to="/home">首頁</router-link>
         </li>
         <li class="sidebar__upper__menu__item">
-          <div class="menu__item__person-icon"></div>
-          <router-link to="/home">個人資料</router-link>
+          <div
+            :class="[
+              'menu__item__person-icon',
+              { active: this.$route.path.includes('/users') },
+            ]"
+          ></div>
+          <router-link
+            :to="{
+              name: 'personal-page-root',
+              params: { userAccount: currentUser.account },
+            }"
+            >個人資料</router-link
+          >
         </li>
         <li class="sidebar__upper__menu__item">
-          <div class="menu__item__set-icon"></div>
-          <router-link to="/home">設定</router-link>
+          <div
+            :class="[
+              'menu__item__set-icon',
+              { active: this.$route.name === 'setting-page' },
+            ]"
+          ></div>
+          <router-link
+            :to="{
+              name: 'setting-page',
+              params: { userAccount: currentUser.account },
+            }"
+            >設定</router-link
+          >
         </li>
       </ul>
       <button class="sidebar__upper__tweet mt-2">推文</button>
@@ -30,9 +57,47 @@
 </template>
 
 <script>
+const dummyCurrentUser = {
+  currentUser: {
+    id: 1,
+    account: "user",
+    name: "user",
+    email: "user@email.com",
+    role: "",
+  },
+  isAuthenticated: true,
+};
 
 export default {
   name: "SideBar",
+  data() {
+    return {
+      currentUser: {
+        id: 1,
+        account: "",
+        name: "",
+        email: "",
+        role: "",
+      },
+      isAuthenticated: false,
+    };
+  },
+  methods: {
+    fetchCurrentUser() {
+      // 1. get current user api here
+      // 2. use store instead
+      this.currentUser = {
+        ...dummyCurrentUser.currentUser,
+      };
+      this.isAuthenticated = dummyCurrentUser.isAuthenticated;
+    },
+    postTweet() {
+      // function here
+    },
+  },
+  created() {
+    this.fetchCurrentUser();
+  },
 };
 </script>
 
@@ -55,44 +120,54 @@ export default {
     }
   }
   .sidebar__upper__menu {
-    .sidebar__upper__menu__item{
+    .sidebar__upper__menu__item {
       padding: 1rem 0;
       display: flex;
       align-content: center;
-      .menu__item__home-icon{
-        @include setIcon(22px, 20px, $icon-home, $icon-home-active);
+      .menu__item__home-icon {
+        @include setIcon(20px, 20px, $icon-home, $icon-home-active);
       }
-      .menu__item__person-icon{
+      .menu__item__person-icon {
         margin-left: 2px;
-        @include setIcon(17px, 20px, $icon-person, $icon-person-active);
+        @include setIcon(20px, 20px, $icon-person, $icon-person-active);
       }
-      .menu__item__set-icon{
+      .menu__item__set-icon {
         @include setIcon(20px, 20px, $icon-setting, $icon-setting-active);
       }
-      a{
+      a {
         font-weight: bold;
         font-size: 18px;
         line-height: 20px;
       }
+      .active + a {
+        color: $color-brand;
+      }
     }
   }
-  .sidebar__upper__tweet{
-        @include setButton($color-white, $color-brand, 50px, 16px, 8px){
-          width: 100%;
-        }
-      }
+  .sidebar__upper__tweet {
+    @include setButton($color-white, $color-brand, 50px, 16px, 8px) {
+      width: 100%;
+    }
+  }
 }
-.sidebar__log-out{
+.sidebar__log-out {
   display: flex;
   align-content: center;
-  .log-out__icon{
-    @include setIcon(18px, 18px, url("../assets/icons/log-out.png"), url("../assets/icons/log-out.png"));
+  .log-out__icon {
+    @include setIcon(
+      18px,
+      18px,
+      url("../assets/icons/log-out.png"),
+      url("../assets/icons/log-out.png")
+    );
   }
-  .log-out__span{
+  .log-out__span {
     font-weight: bold;
     font-size: 18px;
     line-height: 20px;
   }
-
+  &:hover{
+    opacity: .6;
+  }
 }
 </style>

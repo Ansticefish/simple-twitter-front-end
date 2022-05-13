@@ -1,0 +1,56 @@
+#sidebar {
+  padding: 1rem;
+  width: 100%;
+  height: 100vh;
+  display: flex;
+  flex-direction: column;
+  align-items: flex-start;
+  justify-content: space-between;
+}
+
+.sidebar__upper {
+  width: 100%;
+  .sidebar__upper__icon {
+    img {
+      width: 40px;
+      height: 40px;
+    }
+  }
+  .sidebar__upper__menu {
+    &__item {
+      padding: 1rem 0;
+      display: flex;
+      align-content: center;
+      a {
+        font-weight: bold;
+        font-size: 18px;
+        line-height: 20px;
+      }
+      .active+a {
+        color: $color-brand;
+      }
+    }
+  }
+  .sidebar__upper__tweet {
+    @include setButton($color-white, $color-brand, 50px, 16px, 8px) {
+      width: 100%;
+    }
+  }
+}
+
+.sidebar__log-out {
+  display: flex;
+  align-content: center;
+  &__icon {
+    @include setIcon(18px, 18px, url("../assets/icons/log-out.png"),
+    url("../assets/icons/log-out.png"));
+  }
+  &__span {
+    font-weight: bold;
+    font-size: 18px;
+    line-height: 20px;
+  }
+  &:hover {
+    opacity: 0.6;
+  }
+}

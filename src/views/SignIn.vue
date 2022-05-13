@@ -16,7 +16,7 @@
           登入 Alphitter
         </h3>
         <form 
-          @submit.stop.prevent=""
+          @submit.stop.prevent="handleSubmit"
           class="signin__form"
         >
           <div 
@@ -29,7 +29,8 @@
             </label>
             <input type="text" 
             v-model="account"
-            name="signin__form__wrapper__account"
+            @keypress="addAccountPrefix"
+            name="account"
             id="signin__form__wrapper__account" 
             placeholder="請輸入帳號" 
             required
@@ -44,9 +45,9 @@
             <label for="signin__form__wrapper__password">
             密碼
             </label>
-            <input type="text" 
+            <input type="password" 
             v-model="password"
-            name="signin__form__wrapper__password"
+            name="password"
             id="signin__form__wrapper__password" 
             placeholder="請輸入密碼" 
             required
@@ -55,8 +56,9 @@
           <button   
            class="signin__form__btn--submit
            mt-8"
+           :disabled="isProcessing"
           >
-            登入
+            {{ isProcessing? '處理中': '登入'}}
           </button>
         </form>
         <ul 
@@ -93,12 +95,80 @@
 </template>
 
 <script>
+import { Toast, ToastIcon } from '../utils/helpers'
+
+const dummyUser = {
+  account: 'root',
+  password: '12345678'
+}
+
+const dummyData = {
+  status: 'success',
+  message: 'You have signed in!',
+  token: '0516',
+  currentUser: {
+    id: 56,
+    account: 'root',
+    name: 'root99',
+    avatar: '@/assets/icons/bell.png',
+    isAdmin: '',
+  }
+}
+
 export default {
   name: 'SignIn',
   data () {
     return {
       account: '',
       password: '',
+      isProcessing: false
+    }
+  },
+  methods: {
+    handleSubmit () {
+
+      this.isProcessing = true
+      // avoid empty data
+      if (!this.account.slice(1).trim() || !this.password.trim()) {
+        Toast.fire({
+          title: '帳號、密碼不可空白！',
+          html: ToastIcon.redCrossHtml
+        })
+        this.isProcessing = false
+        return
+      }
+
+      // add API
+      // handle errors from server
+      if (dummyData.status !== 'success'){
+        throw new Error(dummyData.message)
+      }
+
+      // sign in successfully or not
+      if (this.account.slice(1).trim() === dummyUser.account && this.password === dummyUser.password){
+        Toast.fire({
+          title: '登入成功',
+          html: ToastIcon.greenCheckHtml
+        })
+        localStorage.setItem('token', dummyData.token)
+      } else {
+        Toast.fire({
+          title: '帳號密碼不正確，請重新確認',
+          html: ToastIcon.redCrossHtml
+        })
+        this.password = ''
+        this.isProcessing = false
+        return
+      }
+      
+      // if user successfully sign in
+      this.$store.commit('setCurrentUser', dummyData.user)
+      this.$router.push({ name: 'home-page'})
+    },
+    addAccountPrefix () {
+      const account  = this.account.trim()
+      if (account.length >= 1) return
+      this.account = '@' + account
     }
   },
 }

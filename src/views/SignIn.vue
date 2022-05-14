@@ -32,7 +32,7 @@
             @keypress="addAccountPrefix"
             name="account"
             id="signin__form__wrapper__account"
-            :class="{'error': accountError}" 
+            :class="{'error': a.error}" 
             placeholder="請輸入帳號" 
             required
             autofocus
@@ -40,7 +40,7 @@
             <label
              class="error-message"
             >
-              {{ accountMessage }}
+              {{ a.warning }}
             </label>
           </div> 
           <div 
@@ -53,7 +53,7 @@
             </label>
             <input type="password" 
             v-model="password"
-            :class="{'error': passwordError }"
+            :class="{'error': p.error }"
             name="password"
             id="signin__form__wrapper__password" 
             placeholder="請輸入密碼" 
@@ -62,7 +62,7 @@
             <label
              class="error-message"
             >
-              {{ passwordMessage}}
+              {{ p.warning }}
             </label>
           </div> 
           <button   
@@ -108,6 +108,7 @@
 
 <script>
 import { Toast, ToastIcon } from '../utils/helpers'
+import { preventInputBlank } from '../utils/mixins'
 
 const dummyUser = {
   account: 'root',
@@ -133,13 +134,18 @@ export default {
     return {
       account: '',
       password: '',
-      accountError: false,
-      passwordError: false,
-      accountMessage: '',
-      passwordMessage: '',
+      a: {
+        error: false,
+        warning: ''
+      },
+      p: {
+        error: false,
+        warning: ''
+      },
       isProcessing: false
     }
   },
+  mixins: [preventInputBlank],
   methods: {
     handleSubmit () {
 
@@ -161,8 +167,8 @@ export default {
       }
 
        // not registered before (error from server)
-        //  this.accountError = true
-        //  this.accountMessage = '帳號不存在！'
+        //  this.a.error = true
+        //  this.a.warning = '帳號不存在！'
         //  this.isProcessing = false
         //  return
     
@@ -193,30 +199,6 @@ export default {
       const account  = this.account.trim()
       if (account.length >= 1) return
       this.account = '@' + account
-    },
-  },
-  watch: {
-    'account': {
-      handler: function () {
-        if (!this.account.slice(1).trim()) {
-          this.accountError = true
-          this.accountMessage = '此欄位不可空白'
-        } else {
-          this.accountError = false
-          this.accountMessage = ''
-        }
-      }
-    },
-    'password': {
-      handler: function () {
-        if (!this.password.trim()) {
-          this.passwordError = true
-          this.passwordMessage = '此欄位不可空白'
-        } else {
-          this.passwordError = false
-          this.passwordMessage = ''
-        }
-      }
     },
   }
 }

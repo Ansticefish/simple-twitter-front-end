@@ -29,7 +29,7 @@
             </label>
             <input type="account" 
             v-model="account"
-            :class="{'error': accountError}"
+            :class="{'error': a.error}"
             @keypress="addAccountPrefix"
             name="account"
             id="admin__form__wrapper__account" 
@@ -40,7 +40,7 @@
             <label
              class="error-message"
             >
-              {{ accountMessage }}
+              {{ a.warning }}
             </label>
           </div> 
           <div 
@@ -53,7 +53,7 @@
             </label>
             <input type="password" 
             v-model="password"
-            :class="{'error': passwordError }"
+            :class="{'error': p.error }"
             name="password"
             id="admin__form__wrapper__password" 
             placeholder="請輸入密碼" 
@@ -62,7 +62,7 @@
             <label
              class="error-message"
             >
-              {{ passwordMessage}}
+              {{ p.warning}}
             </label>
           </div> 
           <button   
@@ -93,6 +93,7 @@
 
 <script>
 import { Toast, ToastIcon } from '../utils/helpers'
+import { preventInputBlank } from '../utils/mixins'
 
 const dummyAdmin = {
   account: 'admin',
@@ -119,13 +120,18 @@ export default {
     return {
       account: '',
       password: '',
-      accountError: false,
-      passwordError: false,
-      accountMessage: '',
-      passwordMessage: '',
+      a: {
+        error: false,
+        warning: ''
+      },
+      p: {
+        error: false,
+        warning: ''
+      },
       isProcessing: false
     }
   },
+  mixins: [preventInputBlank],
   methods: {
     handleSubmit () {
 
@@ -146,9 +152,9 @@ export default {
         throw new Error(dummyData.message)
       }
 
-      // not registered before (error from server)
-        //  this.accountError = true
-        //  this.accountMessage = '帳號不存在！'
+       // not registered before (error from server)
+        //  this.a.error = true
+        //  this.a.warning = '帳號不存在！'
         //  this.isProcessing = false
         //  return
       
@@ -179,30 +185,6 @@ export default {
       if (account.length >= 1) return
       this.account = '@' + account
     } 
-  },
-  watch: {
-    'account': {
-      handler: function () {
-        if (!this.account.slice(1).trim()) {
-          this.accountError = true
-          this.accountMessage = '此欄位不可空白'
-        } else {
-          this.accountError = false
-          this.accountMessage = ''
-        }
-      }
-    },
-    'password': {
-      handler: function () {
-        if (!this.password.trim()) {
-          this.passwordError = true
-          this.passwordMessage = '此欄位不可空白'
-        } else {
-          this.passwordError = false
-          this.passwordMessage = ''
-        }
-      }
-    },
   }
 }
 </script>

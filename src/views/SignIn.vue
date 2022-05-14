@@ -29,6 +29,7 @@
             </label>
             <input type="text" 
             v-model="account"
+            @focus="addAccountPrefix"
             @keypress="addAccountPrefix"
             name="account"
             id="signin__form__wrapper__account"
@@ -111,24 +112,6 @@ import { Toast, ToastIcon } from '../utils/helpers'
 import { preventInputBlank } from '../utils/mixins'
 import authorizationAPI from '../apis/authorization'
 
-// const dummyUser = {
-//   account: 'root',
-//   password: '12345678'
-// }
-
-const dummyData = {
-  status: 'success',
-  message: 'You have signed in!',
-  token: '0516',
-  currentUser: {
-    id: 56,
-    account: 'root',
-    name: 'root99',
-    avatar: '@/assets/icons/bell.png',
-    isAdmin: '',
-  }
-}
-
 export default {
   name: 'SignIn',
   data () {
@@ -149,7 +132,7 @@ export default {
   mixins: [preventInputBlank],
   methods: {
     async handleSubmit () {
-      try{
+      try {
         this.isProcessing = true
         // avoid empty data
         if (!this.account.slice(1).trim() || !this.password.trim()){
@@ -161,38 +144,31 @@ export default {
           return
         }
 
-        const response = await authorizationAPI.signIn( {
-          account: this.account,
+        const { data } = await authorizationAPI.signIn( {
+          account: this.account.slice(1),
           password: this.password
         })
-
-        console.log(response)
-
-        // handle errors from server
-      if (dummyData.status !== 'success'){
-        throw new Error(dummyData.message)
-      }
-
-       // not registered before (error from server)
-        //  this.a.error = true
-        //  this.a.warning = '帳號不存在！'
-        //  this.isProcessing = false
-        //  return
 
         Toast.fire({
           title: '登入成功',
           html: ToastIcon.greenCheckHtml
         })
-        localStorage.setItem('token', dummyData.token)
-        this.$store.commit('setCurrentUser', dummyData.user)
+        localStorage.setItem('token', data.token)
+        this.$store.commit('setCurrentUser', data.user)
         this.$router.push({ name: 'home-page'})
 
       } catch (error) {
-        console.log('error', error)
-        Toast.fire({
-          title: '帳號密碼不正確，請重新確認',
-          html: ToastIcon.redCrossHtml
-        })
+        const errorMsg = error.response.data.message
+        if( errorMsg === 'Error:帳號不存在！'){
+          this.a.error = true
+          this.a.warning = '帳號不存在！'
+        } else {
+          Toast.fire({
+            title: '帳號或密碼錯誤！',
+            html: ToastIcon.redCrossHtml
+          })
+        }
+        
         this.password = ''
         this.isProcessing = false
       }   
@@ -202,7 +178,7 @@ export default {
       if (account.length >= 1) return
       this.account = '@' + account
     },
-  }
+  },
 }
 </script>
 

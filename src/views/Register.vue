@@ -228,38 +228,21 @@ export default {
 
         // check password and checkPassword value
         if (this.password !== this.checkPassword) {
-          Toast.fire({
-            title: '兩次密碼不同，請重新輸入',
-            html: ToastIcon.redCrossHtml
-          })
-          this.checkPassword = ''
+          this.p.error = true
+          this.p.warning = '兩次密碼輸入不同'
+          this.cp.error = true
+          this.cp.warning = '兩次密碼輸入不同'
           this.isProcessing = false
           return
         }
         
-        const response = await authorizationAPI.register({
-           account: this.account,
+        await authorizationAPI.register({
+           account: this.account.slice(1),
            name: this.name,
            email: this.email,
            password: this.password,
            checkPassword: this.checkPassword
         })
-
-        console.log(response)
-
-      // handle errors from server
-
-       // account repeated (error from server)
-        //  this.a.error = true
-        //  this.a.warning = 'account已重複註冊！'
-        //  this.isProcessing = false
-        //  return
-
-       // email repeated (error from server)
-        //  this.m.error = true
-        //  this.m.warning = 'email已重複註冊！'
-        //  this.isProcessing = false
-        //  return
 
         // if successfully register
         Toast.fire({
@@ -269,11 +252,27 @@ export default {
         this.$router.push({ name: 'sign-in'})
 
       } catch (error) {
-        console.log('error', error)
-        Toast.fire({
-          title: '註冊失敗，請確認資料',
-          html: ToastIcon.redCrossHtml
-        })
+        this.isProcessing = false
+        const message = error.response.data.message
+        if (message === 'Error:此 Account 已被註冊！'){
+          Toast.fire({
+            title: 'Account已重複註冊',
+            html: ToastIcon.redCrossHtml
+          }) 
+        } else if (message === 'Error:此 Email 已被註冊！'){
+          Toast.fire({
+            title: 'Account已重複註冊',
+            html: ToastIcon.redCrossHtml
+          }) 
+        } else {
+          Toast.fire({
+            title: '註冊失敗，請確認資料',
+            html: ToastIcon.redCrossHtml
+          })
+        }
+
+        this.password = ''
+        this.checkPassword = ''
       }
     },
     addAccountPrefix () {

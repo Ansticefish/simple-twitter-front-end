@@ -154,9 +154,9 @@ router.beforeEach((to, from, next) => {
     if (isAuthenticated &&
         role == 'admin' &&
         pagesWithoutAuthentication.includes(to.name)) {
-        from.name === 'admin-users' ?
+        from.name === 'admin-posts' ?
             router.push('') : router.push({
-                name: 'admin-users'
+                name: 'admin-posts'
             })
     } else if (isAuthenticated &&
         role !== 'admin' &&
@@ -178,7 +178,7 @@ router.beforeEach((to, from, next) => {
             html: ToastIcon.redCrossHtml,
         })
         router.push({
-            name: 'admin-users'
+            name: 'admin-posts'
         })
     } else if (isAuthenticated &&
         role !== 'admin' &&

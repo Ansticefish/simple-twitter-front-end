@@ -109,11 +109,12 @@
 <script>
 import { Toast, ToastIcon } from '../utils/helpers'
 import { preventInputBlank } from '../utils/mixins'
+import authorizationAPI from '../apis/authorization'
 
-const dummyUser = {
-  account: 'root',
-  password: '12345678'
-}
+// const dummyUser = {
+//   account: 'root',
+//   password: '12345678'
+// }
 
 const dummyData = {
   status: 'success',
@@ -147,21 +148,27 @@ export default {
   },
   mixins: [preventInputBlank],
   methods: {
-    handleSubmit () {
+    async handleSubmit () {
+      try{
+        this.isProcessing = true
+        // avoid empty data
+        if (!this.account.slice(1).trim() || !this.password.trim()){
+          Toast.fire({
+            title: '帳號、密碼不可空白',
+            html: ToastIcon.redCrossHtml
+          })
+          this.isProcessing = false
+          return
+        }
 
-      this.isProcessing = true
-      // avoid empty data
-      if (!this.account.slice(1).trim() || !this.password.trim()){
-        Toast.fire({
-          title: '帳號、密碼不可空白',
-          html: ToastIcon.redCrossHtml
+        const response = await authorizationAPI.signIn( {
+          account: this.account,
+          password: this.password
         })
-        this.isProcessing = false
-        return
-      }
 
-      // add API
-      // handle errors from server
+        console.log(response)
+
+        // handle errors from server
       if (dummyData.status !== 'success'){
         throw new Error(dummyData.message)
       }
@@ -171,29 +178,24 @@ export default {
         //  this.a.warning = '帳號不存在！'
         //  this.isProcessing = false
         //  return
-    
-      
 
-      // sign in successfully or not
-      if (this.account.slice(1).trim() === dummyUser.account && this.password === dummyUser.password){
         Toast.fire({
           title: '登入成功',
           html: ToastIcon.greenCheckHtml
         })
         localStorage.setItem('token', dummyData.token)
-      } else {
+        this.$store.commit('setCurrentUser', dummyData.user)
+        this.$router.push({ name: 'home-page'})
+
+      } catch (error) {
+        console.log('error', error)
         Toast.fire({
           title: '帳號密碼不正確，請重新確認',
           html: ToastIcon.redCrossHtml
         })
         this.password = ''
         this.isProcessing = false
-        return
-      }
-
-      // if user successfully sign in
-      this.$store.commit('setCurrentUser', dummyData.user)
-      this.$router.push({ name: 'home-page'})
+      }   
     },
     addAccountPrefix () {
       const account  = this.account.trim()

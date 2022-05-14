@@ -165,6 +165,7 @@
 <script>
 import { Toast, ToastIcon } from '../utils/helpers'
 import { preventInputBlank } from '../utils/mixins'
+import authorizationAPI from '../apis/authorization'
 
 export default {
   name: 'Register',
@@ -200,42 +201,52 @@ export default {
   },
   mixins: [ preventInputBlank ],
   methods: {
-    handleSubmit() {
-      this.isProcessing = true
+    async handleSubmit() {
+      try {
+        this.isProcessing = true
 
-      // avoid empty data
-      if(!this.account.slice(1).trim() || 
-      !this.name.trim() ||
-      !this.email.trim() ||
-      !this.password.trim() ||
-      !this.checkPassword.trim()) {
-        Toast.fire({
-          title: '欄位不可空白',
-          html: ToastIcon.redCrossHtml
+        // avoid empty data
+        if(!this.account.slice(1).trim() || 
+        !this.name.trim() ||
+        !this.email.trim() ||
+        !this.password.trim() ||
+        !this.checkPassword.trim()) {
+          Toast.fire({
+            title: '欄位不可空白',
+            html: ToastIcon.redCrossHtml
+          })
+          this.isProcessing = false
+          return
+        }
+        
+        // account & name must be less than 50 characters
+        if (this.account.slice(1).length > 50 ||
+        this.name.length > 50 ) {
+          this.isProcessing = false
+          return
+        }
+
+        // check password and checkPassword value
+        if (this.password !== this.checkPassword) {
+          Toast.fire({
+            title: '兩次密碼不同，請重新輸入',
+            html: ToastIcon.redCrossHtml
+          })
+          this.checkPassword = ''
+          this.isProcessing = false
+          return
+        }
+        
+        const response = await authorizationAPI.register({
+           account: this.account,
+           name: this.name,
+           email: this.email,
+           password: this.password,
+           checkPassword: this.checkPassword
         })
-        this.isProcessing = false
-        return
-      }
-      
-     // account & name must be less than 50 characters
-      if (this.account.slice(1).length > 50 ||
-      this.name.length > 50 ) {
-        this.isProcessing = false
-        return
-      }
 
-      // check password and checkPassword value
-      if (this.password !== this.checkPassword) {
-        Toast.fire({
-          title: '兩次密碼不同，請重新輸入',
-          html: ToastIcon.redCrossHtml
-        })
-        this.checkPassword = ''
-        this.isProcessing = false
-        return
-      }
+        console.log(response)
 
-      // Add API
       // handle errors from server
 
        // account repeated (error from server)
@@ -250,15 +261,20 @@ export default {
         //  this.isProcessing = false
         //  return
 
+        // if successfully register
+        Toast.fire({
+          title: '註冊成功，請至登入頁面登入',
+          html: ToastIcon.greenCheckHtml
+        })
+        this.$router.push({ name: 'sign-in'})
 
-
-      // if successfully register
-      Toast.fire({
-        title: '註冊成功，請至登入頁面登入',
-        html: ToastIcon.greenCheckHtml
-      })
-      this.$router.push({ name: 'sign-in'})
-
+      } catch (error) {
+        console.log('error', error)
+        Toast.fire({
+          title: '註冊失敗，請確認資料',
+          html: ToastIcon.redCrossHtml
+        })
+      }
     },
     addAccountPrefix () {
       const account = this.account.trim()

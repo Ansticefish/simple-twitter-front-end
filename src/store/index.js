@@ -7,14 +7,14 @@ export default new Vuex.Store({
     state: {
         currentUser: {
             id: -1,
-            account: 'root',
-            name: 'root',
-            email: 'root@example.com',
+            account: '',
+            name: '',
+            email: '',
             avatar: '',
-            role: 'admin',
+            role: '',
         },
-        isAuthenticated: true,
-        token: '0516'
+        isAuthenticated: false,
+        token: ''
     },
     getters: {},
     mutations: {

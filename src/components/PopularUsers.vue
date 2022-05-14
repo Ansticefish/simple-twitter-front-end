@@ -16,7 +16,7 @@
             />
             <div class="list__card__info">
               <p class="list__card__info__name">{{ user.name }}</p>
-              <p class="list__card__info__account">{{ user.account }}</p>
+              <p class="list__card__info__account">{{ user.account|accountStyle }}</p>
             </div>
           </div>
           <button
@@ -118,6 +118,9 @@ export default {
   filters:{
     emptyAvatar(imgURL){
       return imgURL? imgURL: emptyAvatar
+    },
+    accountStyle(account){
+      return `@${account}`
     }
   },
   created() {

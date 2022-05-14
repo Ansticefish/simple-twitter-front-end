@@ -31,11 +31,17 @@
             v-model="account"
             @keypress="addAccountPrefix"
             name="account"
-            id="signin__form__wrapper__account" 
+            id="signin__form__wrapper__account"
+            :class="{'error': accountError}" 
             placeholder="請輸入帳號" 
             required
             autofocus
             >
+            <label
+             class="error-message"
+            >
+              {{ accountMessage }}
+            </label>
           </div> 
           <div 
             class="
@@ -47,11 +53,17 @@
             </label>
             <input type="password" 
             v-model="password"
+            :class="{'error': passwordError }"
             name="password"
             id="signin__form__wrapper__password" 
             placeholder="請輸入密碼" 
             required
             >
+            <label
+             class="error-message"
+            >
+              {{ passwordMessage}}
+            </label>
           </div> 
           <button   
            class="signin__form__btn--submit
@@ -121,6 +133,10 @@ export default {
     return {
       account: '',
       password: '',
+      accountError: false,
+      passwordError: false,
+      accountMessage: '',
+      passwordMessage: '',
       isProcessing: false
     }
   },
@@ -129,9 +145,9 @@ export default {
 
       this.isProcessing = true
       // avoid empty data
-      if (!this.account.slice(1).trim() || !this.password.trim()) {
+      if (!this.account.slice(1).trim() || !this.password.trim()){
         Toast.fire({
-          title: '帳號、密碼不可空白！',
+          title: '帳號、密碼不可空白',
           html: ToastIcon.redCrossHtml
         })
         this.isProcessing = false
@@ -143,6 +159,14 @@ export default {
       if (dummyData.status !== 'success'){
         throw new Error(dummyData.message)
       }
+
+       // not registered before (error from server)
+        //  this.accountError = true
+        //  this.accountMessage = '帳號不存在！'
+        //  this.isProcessing = false
+        //  return
+    
+      
 
       // sign in successfully or not
       if (this.account.slice(1).trim() === dummyUser.account && this.password === dummyUser.password){
@@ -160,7 +184,7 @@ export default {
         this.isProcessing = false
         return
       }
-      
+
       // if user successfully sign in
       this.$store.commit('setCurrentUser', dummyData.user)
       this.$router.push({ name: 'home-page'})
@@ -169,8 +193,32 @@ export default {
       const account  = this.account.trim()
       if (account.length >= 1) return
       this.account = '@' + account
-    }
+    },
   },
+  watch: {
+    'account': {
+      handler: function () {
+        if (!this.account.slice(1).trim()) {
+          this.accountError = true
+          this.accountMessage = '此欄位不可空白'
+        } else {
+          this.accountError = false
+          this.accountMessage = ''
+        }
+      }
+    },
+    'password': {
+      handler: function () {
+        if (!this.password.trim()) {
+          this.passwordError = true
+          this.passwordMessage = '此欄位不可空白'
+        } else {
+          this.passwordError = false
+          this.passwordMessage = ''
+        }
+      }
+    },
+  }
 }
 </script>
 

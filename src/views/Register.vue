@@ -30,12 +30,24 @@
             <input type="text" 
             v-model="account"
             @keypress="addAccountPrefix"
+            :class="{'error': a.error}"
             name="account"
             id="register__form__wrapper__account" 
-            placeholder="請輸入帳號" 
+            placeholder="請輸入帳號"
+            maxlength="51" 
             required
             autofocus
             >
+            <label
+               class="error-message"
+              >
+              {{ a.warning }}
+              </label>
+              <label
+               class="text-count"
+              >
+              {{ account.slice(1).length}} / 50
+              </label>
           </div> 
           <div 
             class="
@@ -47,13 +59,23 @@
             </label>
             <input type="text" 
             v-model="name"
-            @keyup="controlTextLength"
+            :class="{'error': n.error}"
             name="name"
             id="register__form__wrapper__name" 
             placeholder="請輸入名稱"
             maxlength="50"
             required
             >
+            <label
+               class="error-message"
+              >
+              {{ n.warning }}
+              </label>
+              <label
+               class="text-count"
+              >
+              {{ name.length }} / 50
+              </label>
           </div> 
           <div 
             class="
@@ -65,11 +87,17 @@
             </label>
             <input type="email" 
             v-model="email"
+            :class="{ 'error': m.error}"
             name="email"
             id="register__form__wrapper__email" 
             placeholder="請輸入Email" 
             required
             >
+            <label
+               class="error-message"
+              >
+              {{ m.warning }}
+              </label>
           </div>
           <div 
             class="
@@ -81,11 +109,17 @@
             </label>
             <input type="password" 
             v-model="password"
+            :class="{'error': p.error}"
             name="password"
             id="register__form__wrapper__password" 
             placeholder="請輸入密碼" 
             required
             >
+            <label
+               class="error-message"
+              >
+              {{ p.warning }}
+              </label>
           </div>  
           <div 
             class="
@@ -97,11 +131,17 @@
             </label>
             <input type="password" 
             v-model="checkPassword"
+            :class="{'error': cp.error}"
             name="checkPassword"
             id="register__form__wrapper__checkPassword" 
             placeholder="請再次輸入密碼" 
             required
             >
+             <label
+               class="error-message"
+              >
+              {{ cp.warning }}
+              </label>
           </div> 
           <button   
            class="register__form__btn--submit
@@ -124,6 +164,7 @@
 
 <script>
 import { Toast, ToastIcon } from '../utils/helpers'
+import { preventInputBlank } from '../utils/mixins'
 
 export default {
   name: 'Register',
@@ -134,9 +175,30 @@ export default {
       email: '',
       password: '',
       checkPassword: '',
+      a: {
+        error: false,
+        warning: ''
+      },
+      n: {
+        error: false,
+        warning: ''
+      },
+      m: {
+        error: false,
+        warning: ''
+      },
+      p: {
+        error: false,
+        warning: ''
+      },
+      cp: {
+        error: false,
+        warning: ''
+      },
       isProcessing: false
     }
   },
+  mixins: [ preventInputBlank ],
   methods: {
     handleSubmit() {
       this.isProcessing = true
@@ -155,12 +217,9 @@ export default {
         return
       }
       
-      // name < 50 characters
-      if (this.name.length > 50) {
-        Toast.fire({
-          title: '名稱不可超過50字',
-          html: ToastIcon.redCrossHtml
-        })
+     // account & name must be less than 50 characters
+      if (this.account.slice(1).length > 50 ||
+      this.name.length > 50 ) {
         this.isProcessing = false
         return
       }
@@ -178,6 +237,21 @@ export default {
 
       // Add API
       // handle errors from server
+
+       // account repeated (error from server)
+        //  this.a.error = true
+        //  this.a.warning = 'account已重複註冊！'
+        //  this.isProcessing = false
+        //  return
+
+       // email repeated (error from server)
+        //  this.m.error = true
+        //  this.m.warning = 'email已重複註冊！'
+        //  this.isProcessing = false
+        //  return
+
+
+
       // if successfully register
       Toast.fire({
         title: '註冊成功，請至登入頁面登入',
@@ -191,20 +265,12 @@ export default {
       if(account.length >= 1) return
       this.account = '@' + account
     },
-    controlTextLength () {
-      if (this.name.length > 50) {
-        Toast.fire({
-          title: '名稱不可超過50字',
-          html: ToastIcon.redCrossHtml
-        })
-      }
-    }
   }
 }
 </script>
 
 <style lang="scss" scoped>
-@import '../assets/scss/signInStyle.scss';
+@import '../assets/scss/signIn.scss';
 
 .register {
   @extend %signin;

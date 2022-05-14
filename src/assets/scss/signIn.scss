@@ -20,7 +20,7 @@
         }
         button {
             width: 100%;
-            @include setButton ( $color-white, $color-brand, 50px, 10px, 24px, )
+            @include setButton ( $color-white, $color-brand, 50px, 0px, 8px, )
         }
     }
 }

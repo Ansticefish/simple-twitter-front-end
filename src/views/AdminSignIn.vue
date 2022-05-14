@@ -29,12 +29,19 @@
             </label>
             <input type="account" 
             v-model="account"
+            :class="{'error': a.error}"
+            @keypress="addAccountPrefix"
             name="account"
             id="admin__form__wrapper__account" 
             placeholder="請輸入帳號" 
             required
             autofocus
             >
+            <label
+             class="error-message"
+            >
+              {{ a.warning }}
+            </label>
           </div> 
           <div 
             class="
@@ -46,11 +53,17 @@
             </label>
             <input type="password" 
             v-model="password"
+            :class="{'error': p.error }"
             name="password"
             id="admin__form__wrapper__password" 
             placeholder="請輸入密碼" 
             required
             >
+            <label
+             class="error-message"
+            >
+              {{ p.warning}}
+            </label>
           </div> 
           <button   
            class="admin__form__btn--submit
@@ -80,6 +93,7 @@
 
 <script>
 import { Toast, ToastIcon } from '../utils/helpers'
+import { preventInputBlank } from '../utils/mixins'
 
 const dummyAdmin = {
   account: 'admin',
@@ -106,20 +120,29 @@ export default {
     return {
       account: '',
       password: '',
+      a: {
+        error: false,
+        warning: ''
+      },
+      p: {
+        error: false,
+        warning: ''
+      },
       isProcessing: false
     }
   },
+  mixins: [preventInputBlank],
   methods: {
     handleSubmit () {
 
       this.isProcessing = true 
       // avoid empty data
-      if(!this.account.trim() || !this.password.trim()) {
+       if (!this.account.slice(1).trim() || !this.password.trim()){
         Toast.fire({
-          title: '帳號、密碼不可空白！',
-          html: ToastIcon.redCrossHtml 
+          title: '帳號、密碼不可空白',
+          html: ToastIcon.redCrossHtml
         })
-         this.isProcessing = false 
+        this.isProcessing = false
         return
       }
 
@@ -128,6 +151,12 @@ export default {
       if(dummyData.status !== 'success') {
         throw new Error(dummyData.message)
       }
+
+       // not registered before (error from server)
+        //  this.a.error = true
+        //  this.a.warning = '帳號不存在！'
+        //  this.isProcessing = false
+        //  return
       
       // sign in successfully or not
       if ( this.account === dummyAdmin.account && this.password === dummyAdmin.password ) {
@@ -142,6 +171,7 @@ export default {
           title: '登入失敗，請重新確認',
           html: ToastIcon.redCrossHtml 
         })
+        this.password = ''
         this.isProcessing = false
         return
       }
@@ -149,6 +179,11 @@ export default {
       // if successfully sign in 
       this.$store.commit('setCurrentUser', dummyData.currentUser)
       this.$router.push('/admin/users')
+    },
+    addAccountPrefix () {
+      const account = this.account.trim()
+      if (account.length >= 1) return
+      this.account = '@' + account
     } 
   }
 }

@@ -24,14 +24,14 @@
            admin__form__wrapper 
            mt-8"
           >
-            <label for="admin__form__wrapper__email">
-            Email
+            <label for="admin__form__wrapper__account">
+            帳號
             </label>
-            <input type="email" 
-            v-model="email"
-            name="email"
-            id="admin__form__wrapper__email" 
-            placeholder="請輸入Email" 
+            <input type="account" 
+            v-model="account"
+            name="account"
+            id="admin__form__wrapper__account" 
+            placeholder="請輸入帳號" 
             required
             autofocus
             >
@@ -82,7 +82,7 @@
 import { Toast, ToastIcon } from '../utils/helpers'
 
 const dummyAdmin = {
-  email: 'admin@example.com',
+  account: 'admin',
   password: '12345678'
 }
 
@@ -104,7 +104,7 @@ export default {
   name: 'AdminSignIn',
   data () {
     return {
-      email: '',
+      account: '',
       password: '',
       isProcessing: false
     }
@@ -114,9 +114,9 @@ export default {
 
       this.isProcessing = true 
       // avoid empty data
-      if(!this.email.trim() || !this.password.trim()) {
+      if(!this.account.trim() || !this.password.trim()) {
         Toast.fire({
-          title: 'Email、密碼不可空白！',
+          title: '帳號、密碼不可空白！',
           html: ToastIcon.redCrossHtml 
         })
          this.isProcessing = false 
@@ -130,7 +130,7 @@ export default {
       }
       
       // sign in successfully or not
-      if ( this.email === dummyAdmin.email && this.password === dummyAdmin.password ) {
+      if ( this.account === dummyAdmin.account && this.password === dummyAdmin.password ) {
         // if success, store token
         localStorage.setItem('token', dummyData.token)
         Toast.fire({

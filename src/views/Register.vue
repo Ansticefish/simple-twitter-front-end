@@ -165,6 +165,7 @@
 <script>
 import { Toast, ToastIcon } from '../utils/helpers'
 import { preventInputBlank } from '../utils/mixins'
+import authorizationAPI from '../apis/authorization'
 
 export default {
   name: 'Register',
@@ -200,65 +201,79 @@ export default {
   },
   mixins: [ preventInputBlank ],
   methods: {
-    handleSubmit() {
-      this.isProcessing = true
+    async handleSubmit() {
+      try {
+        this.isProcessing = true
 
-      // avoid empty data
-      if(!this.account.slice(1).trim() || 
-      !this.name.trim() ||
-      !this.email.trim() ||
-      !this.password.trim() ||
-      !this.checkPassword.trim()) {
-        Toast.fire({
-          title: '欄位不可空白',
-          html: ToastIcon.redCrossHtml
-        })
-        this.isProcessing = false
-        return
-      }
-      
-     // account & name must be less than 50 characters
-      if (this.account.slice(1).length > 50 ||
-      this.name.length > 50 ) {
-        this.isProcessing = false
-        return
-      }
+        // avoid empty data
+        if(!this.account.slice(1).trim() || 
+        !this.name.trim() ||
+        !this.email.trim() ||
+        !this.password.trim() ||
+        !this.checkPassword.trim()) {
+          Toast.fire({
+            title: '欄位不可空白',
+            html: ToastIcon.redCrossHtml
+          })
+          this.isProcessing = false
+          return
+        }
+        
+        // account & name must be less than 50 characters
+        if (this.account.slice(1).length > 50 ||
+        this.name.length > 50 ) {
+          this.isProcessing = false
+          return
+        }
 
-      // check password and checkPassword value
-      if (this.password !== this.checkPassword) {
-        Toast.fire({
-          title: '兩次密碼不同，請重新輸入',
-          html: ToastIcon.redCrossHtml
+        // check password and checkPassword value
+        if (this.password !== this.checkPassword) {
+          this.p.error = true
+          this.p.warning = '兩次密碼輸入不同'
+          this.cp.error = true
+          this.cp.warning = '兩次密碼輸入不同'
+          this.isProcessing = false
+          return
+        }
+        
+        await authorizationAPI.register({
+           account: this.account.slice(1),
+           name: this.name,
+           email: this.email,
+           password: this.password,
+           checkPassword: this.checkPassword
         })
+
+        // if successfully register
+        Toast.fire({
+          title: '註冊成功，請至登入頁面登入',
+          html: ToastIcon.greenCheckHtml
+        })
+        this.$router.push({ name: 'sign-in'})
+
+      } catch (error) {
+        this.isProcessing = false
+        const message = error.response.data.message
+        if (message === 'Error:此 Account 已被註冊！'){
+          Toast.fire({
+            title: 'Account已重複註冊',
+            html: ToastIcon.redCrossHtml
+          }) 
+        } else if (message === 'Error:此 Email 已被註冊！'){
+          Toast.fire({
+            title: 'Account已重複註冊',
+            html: ToastIcon.redCrossHtml
+          }) 
+        } else {
+          Toast.fire({
+            title: '註冊失敗，請確認資料',
+            html: ToastIcon.redCrossHtml
+          })
+        }
+
+        this.password = ''
         this.checkPassword = ''
-        this.isProcessing = false
-        return
       }
-
-      // Add API
-      // handle errors from server
-
-       // account repeated (error from server)
-        //  this.a.error = true
-        //  this.a.warning = 'account已重複註冊！'
-        //  this.isProcessing = false
-        //  return
-
-       // email repeated (error from server)
-        //  this.m.error = true
-        //  this.m.warning = 'email已重複註冊！'
-        //  this.isProcessing = false
-        //  return
-
-
-
-      // if successfully register
-      Toast.fire({
-        title: '註冊成功，請至登入頁面登入',
-        html: ToastIcon.greenCheckHtml
-      })
-      this.$router.push({ name: 'sign-in'})
-
     },
     addAccountPrefix () {
       const account = this.account.trim()

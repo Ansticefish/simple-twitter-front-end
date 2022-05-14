@@ -23,6 +23,7 @@
               </label>
               <input type="text" 
               v-model="account"
+              @focus="addAccountPrefix"
               @keypress="addAccountPrefix"
               :class="{'error': a.error}"
               name="account"
@@ -201,7 +202,7 @@ export default {
   methods: {
     fetchCurrentUser () {
       const { account, name, email } = this.currentUser
-      this.account = account
+      this.account = '@' + account
       this.name = name
       this.email = email
     },

@@ -220,7 +220,7 @@ export default {
 </script>
 
 <style lang="scss" scoped>
-@import '../assets/scss/signInStyle.scss';
+@import '../assets/scss/signIn.scss';
 .setting {
   height: 100vh;
   padding: 0;
@@ -246,6 +246,7 @@ export default {
 #setting__body__form__btn--submit {
   width: 88px;
   height: 46px;
+  padding: 0;
 }
 
 </style>

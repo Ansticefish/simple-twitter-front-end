@@ -204,7 +204,7 @@ export default {
 </script>
 
 <style lang="scss" scoped>
-@import '../assets/scss/signInStyle.scss';
+@import '../assets/scss/signIn.scss';
 
 .register {
   @extend %signin;

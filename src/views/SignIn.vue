@@ -153,9 +153,16 @@ export default {
           title: '登入成功',
           html: ToastIcon.greenCheckHtml
         })
+
+        
+
         localStorage.setItem('token', data.token)
         this.$store.commit('setCurrentUser', data.user)
+        sessionStorage.setItem('currentUser', JSON.stringify(data.user))
+        sessionStorage.setItem('token', JSON.stringify(data.token))
+        sessionStorage.setItem('isAuthenticated', JSON.stringify({isAuthenticated: true}))
         this.$router.push({ name: 'home-page'})
+      
 
       } catch (error) {
         const errorMsg = error.response.data.message

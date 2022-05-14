@@ -1,5 +1,5 @@
 <template>
-  <div id="sidebar">
+  <div id="admin-sidebar">
     <div class="sidebar__upper">
       <div class="sidebar__upper__icon">
         <img src="../assets/icons/Icon.png" alt="icon" />
@@ -24,9 +24,10 @@
           <router-link to="/admin/users">使用者列表</router-link>
         </li>
       </ul>
-      <button class="sidebar__upper__tweet mt-2">推文</button>
     </div>
-    <button class="sidebar__log-out">
+    <button 
+      @click = 'logout'
+      class="sidebar__log-out">
       <div class="sidebar__log-out__icon"></div>
       <span class="sidebar__log-out__span">登出</span>
     </button>
@@ -36,31 +37,49 @@
 <script>
 import { mapState } from "vuex";
 export default {
-  name: "SideBar",
+  name: "AdminSideBar",
   methods: {
-    postTweet() {
-      // function here
+    logout() {
+      this.$store.commit("revokeAuthentication");
+      this.$router.push("/admin/signIn");
     },
   },
-  computed:{
-    ...mapState(['currentUser','isAuthenticated'])
-  },
-  created() {
-    this.fetchCurrentUser();
-  },
+  computed: {
+    ...mapState(["currentUser", "isAuthenticated"]),
+  }
 };
 </script>
 
-<style lang="scss" >
+<style lang="scss" scoped >
 @import "../assets/scss/sidebar.scss";
 
-.menu__item {
-  &__home-icon {
-    @include setIcon(20px, 20px, $icon-home, $icon-home-active);
+#admin-sidebar {
+  @extend %sidebar-container;
+}
+.sidebar__upper {
+  width: 100%;
+  .sidebar__upper__icon {
+    @extend %sidebar-icon;
   }
-  &__person-icon {
-    margin-left: 2px;
-    @include setIcon(20px, 20px, $icon-person, $icon-person-active);
+  .sidebar__upper__menu {
+    @extend %sidebar-menu;
+    .menu__item {
+      &__home-icon {
+        @include setIcon(20px, 20px, $icon-home, $icon-home-active);
+      }
+      &__person-icon {
+        margin-left: 2px;
+        @include setIcon(20px, 20px, $icon-person, $icon-person-active);
+      }
+    }
   }
+  .sidebar__upper__tweet {
+    @include setButton($color-white, $color-brand, 50px, 16px, 8px) {
+      width: 100%;
+    }
+  }
+}
+.sidebar__log-out {
+  @extend %sidebar-logout;
 }
 </style>

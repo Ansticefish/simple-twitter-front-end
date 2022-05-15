@@ -67,12 +67,12 @@ $sizes: ( 25: 25%,
 @each $prop,
 $abbrev in (width: w,
 height: h) {
-    @each $key,
-    $value in $sizes {
-        .#{$abbrev}-#{$key} {
-            #{$prop}: #{$value};
-        }
+  @each $key,
+  $value in $sizes {
+    .#{$abbrev}-#{$key} {
+      #{$prop}: #{$value};
     }
+  }
 }
 
 
@@ -90,107 +90,107 @@ $spacers: ( 1: ( $spacer * 0.25),
 @each $prop,
 $abbrev in (margin: m,
 padding: p) {
-    @each $key,
-    $value in $spacers {
-        .#{$abbrev}-#{$key} {
-            #{$prop}: #{$value};
-        }
-        .#{$abbrev}t-#{$key} {
-            #{$prop}-top: #{$value};
-        }
-        .#{$abbrev}b-#{$key} {
-            #{$prop}-bottom: #{$value};
-        }
-        .#{$abbrev}l-#{$key} {
-            #{$prop}-left: #{$value};
-        }
-        .#{$abbrev}r-#{$key} {
-            #{$prop}-right: #{$value};
-        }
-        .#{$abbrev}x-#{$key} {
-            #{$prop}-left: #{$value};
-            #{$prop}-right: #{$value};
-        }
-        .#{$abbrev}y-#{$key} {
-            #{$prop}-top: #{$value};
-            #{$prop}-bottom: #{$value};
-        }
+  @each $key,
+  $value in $spacers {
+    .#{$abbrev}-#{$key} {
+      #{$prop}: #{$value};
     }
+    .#{$abbrev}t-#{$key} {
+      #{$prop}-top: #{$value};
+    }
+    .#{$abbrev}b-#{$key} {
+      #{$prop}-bottom: #{$value};
+    }
+    .#{$abbrev}l-#{$key} {
+      #{$prop}-left: #{$value};
+    }
+    .#{$abbrev}r-#{$key} {
+      #{$prop}-right: #{$value};
+    }
+    .#{$abbrev}x-#{$key} {
+      #{$prop}-left: #{$value};
+      #{$prop}-right: #{$value};
+    }
+    .#{$abbrev}y-#{$key} {
+      #{$prop}-top: #{$value};
+      #{$prop}-bottom: #{$value};
+    }
+  }
 }
 
 
 /* - input - */
 
 %input-style {
-    position: relative;
-    width: 540px;
-    label {
-        position: absolute;
-        top: 2px;
-        left: 1rem;
+  position: relative;
+  width: 540px;
+  label {
+    position: absolute;
+    top: 2px;
+    left: 1rem;
+  }
+  input {
+    padding: 1.6rem 1rem 0.4rem 1rem;
+    width: 100%;
+    height: 54px;
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    background: $color-input-bg;
+    border-bottom: 2px solid $color-aid-gray;
+    &:hover,
+    &:focus {
+      border-color: $color-aid-blue;
     }
-    input {
-        padding: 1.6rem 1rem 0.4rem 1rem;
-        width: 100%;
-        height: 54px;
-        display: flex;
-        flex-direction: column;
-        justify-content: center;
-        background: $color-input-bg;
-        border-bottom: 2px solid $color-aid-gray;
-        &.error {
-            border-color: $color-error;
-            &+.error-message {
-                display: block;
-            }
-        }
-        &:hover,
-        &:focus {
-            border-color: $color-aid-blue;
-        }
-        &:disabled {
-            border-color: $color-gray-4;
-        }
+    &.error {
+      border-color: $color-error;
+      &+.error-message {
+        display: block;
+      }
     }
-    .error-message {
-        display: none;
-        top: 54px;
-        left: 0;
-        font-size: $font-size-small;
-        color: $color-error;
+    &:disabled {
+      border-color: $color-gray-4;
     }
-    .text-count {
-        top: 54px;
-        left: unset;
-        right: 0px;
-        font-size: $font-size-small;
-    }
+  }
+  .error-message {
+    display: none;
+    top: 54px;
+    left: 0;
+    font-size: $font-size-small;
+    color: $color-error;
+  }
+  .text-count {
+    top: 54px;
+    left: unset;
+    right: 0px;
+    font-size: $font-size-small;
+  }
 }
 
 
 /* - tabs - */
 
 %tab-style {
-    display: flex;
-    li {
-        width: 130px;
-        text-align: center;
-        border-bottom: 2px solid $color-tab-line;
-        a {
-            color: $color-aid-gray;
-            line-height: 52px;
-            font-weight: bold;
-        }
-        &.active {
-            border-bottom: 2px solid $color-brand;
-            a {
-                color: $color-brand;
-            }
-        }
-        &:hover {
-            cursor: pointer;
-        }
+  display: flex;
+  li {
+    width: 130px;
+    text-align: center;
+    border-bottom: 2px solid $color-tab-line;
+    a {
+      color: $color-aid-gray;
+      line-height: 52px;
+      font-weight: bold;
     }
+    &.active {
+      border-bottom: 2px solid $color-brand;
+      a {
+        color: $color-brand;
+      }
+    }
+    &:hover {
+      cursor: pointer;
+    }
+  }
 }
 
 
@@ -201,12 +201,12 @@ $bgcolor,
 $radius,
 $px,
 $py) {
-    border: 1px solid $color-brand;
-    border-radius: $radius;
-    padding: $py $px;
-    color: $color;
-    background: $bgcolor;
-    @content;
+  border: 1px solid $color-brand;
+  border-radius: $radius;
+  padding: $py $px;
+  color: $color;
+  background: $bgcolor;
+  @content;
 }
 
 
@@ -216,15 +216,15 @@ $py) {
 $height,
 $icon-url,
 $active-icon-url) {
-    display: inline-block;
-    margin-right: 1rem;
-    width: $width;
-    height: $height;
-    background-image: $icon-url;
-    background-size: contain;
-    background-repeat: no-repeat;
-    &.active {
-        background-image: $active-icon-url;
-    }
-    @content;
+  display: inline-block;
+  margin-right: 1rem;
+  width: $width;
+  height: $height;
+  background-image: $icon-url;
+  background-size: contain;
+  background-repeat: no-repeat;
+  &.active {
+    background-image: $active-icon-url;
+  }
+  @content;
 }

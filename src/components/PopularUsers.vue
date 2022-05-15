@@ -10,26 +10,35 @@
         >
           <div class="list__card">
             <img
+              @click="getIntoPersonalPage(user.account)"
               class="list__card__avatar"
               :src="user.avatar | emptyAvatar"
               alt=""
             />
             <div class="list__card__info">
-              <p class="list__card__info__name">{{ user.name }}</p>
-              <p class="list__card__info__account">{{ user.account|accountStyle }}</p>
+              <p
+                @click="getIntoPersonalPage(user.account)"
+                class="list__card__info__name"
+              >
+                {{ user.name }}
+              </p>
+              <p class="list__card__info__account">
+                {{ user.account | accountShow }}
+              </p>
             </div>
           </div>
           <button
-          @click.prevent.stop ="unfollow(user.id)"
-            v-show="user.isFollowed"
+            v-if="user.isFollowed"
+            @click.prevent.stop="unfollow(user.id)"
             class="list__card__follow-btn active"
           >
             正在跟隨
           </button>
-          
-          <button 
-            @click.prevent.stop ="follow(user.id)"
-            v-show="!user.isFollowed" class="list__card__follow-btn">
+          <button
+            v-else
+            @click.prevent.stop="follow(user.id)"
+            class="list__card__follow-btn"
+          >
             跟隨
           </button>
         </div>
@@ -39,7 +48,7 @@
 </template>
 
 <script>
-import emptyAvatar from "../assets/icons/avatar-empty.png"
+import { accountShow, emptyAvatar } from "../utils/mixins";
 const dummyData = {
   users: [
     {
@@ -81,6 +90,7 @@ const dummyData = {
 };
 export default {
   name: "PopularUsers",
+  mixins: [accountShow, emptyAvatar],
   data() {
     return {
       users: [],
@@ -88,40 +98,43 @@ export default {
   },
   methods: {
     fecthUsers() {
+      // api here
       this.users = [...dummyData.users];
     },
-    follow(userId){
-      this.users = this.users.map(user => {
+    follow(userId) {
+      // api here
+      this.users = this.users.map((user) => {
         if (user.id === userId) {
           return {
             ...user,
-            isFollowed: true
-          }
-        }else{
-          return {...user}
+            isFollowed: true,
+          };
+        } else {
+          return { ...user };
         }
-      })
+      });
     },
-    unfollow(userId){
-      this.users = this.users.map(user => {
+    unfollow(userId) {
+      // api here
+      this.users = this.users.map((user) => {
         if (user.id === userId) {
           return {
             ...user,
-            isFollowed: false
-          }
-        }else{
-          return {...user}
+            isFollowed: false,
+          };
+        } else {
+          return { ...user };
         }
-      })
-    }
-  },
-  filters:{
-    emptyAvatar(imgURL){
-      return imgURL? imgURL: emptyAvatar
+      });
     },
-    accountStyle(account){
-      return `@${account}`
-    }
+    getIntoPersonalPage(userAccount) {
+      if (this.$route.params.userAccount !== userAccount) {
+        this.$router.push({
+          name: "personal-page-root",
+          params: { userAccount: userAccount },
+        });
+      }
+    },
   },
   created() {
     this.fecthUsers();
@@ -153,11 +166,21 @@ export default {
           width: 50px;
           height: 50px;
           object-fit: cover;
+          &:hover {
+            cursor: pointer;
+            & + div .list__card__info__name {
+              text-decoration: underline;
+            }
+          }
         }
         &__info {
           &__name {
             line-height: 26px;
             font-weight: bold;
+            &:hover {
+              cursor: pointer;
+              text-decoration: underline;
+            }
           }
           &__account {
             line-height: 22px;

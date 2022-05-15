@@ -61,5 +61,21 @@ export const preventInputBlank = {
                 }
             }
         },
+  }
+}
+
+export const accountShow = {
+  filters: {
+    accountShow(account) {
+      return `@${account}`
     }
+  },
+}
+
+export const emptyAvatar = {
+  filters: {
+    emptyAvatar(imgURL) {
+      return imgURL || "https://imgpile.com/images/5S6lFC.png"
+    },
+  }
 }

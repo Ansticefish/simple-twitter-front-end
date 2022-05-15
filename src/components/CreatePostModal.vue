@@ -2,8 +2,9 @@
   <div :class="['modal', { 'home-style' : isHome}]">
     <div class="
       modal__header
-      modal-header
-    ">
+      modal-header"
+      v-if="!isHome"
+    >
       <img
        v-show="!isHome"
        @click.stop.prevent="closeModal" 
@@ -14,7 +15,7 @@
     </div>
     <form 
       @submit.stop.prevent="createPost"
-      class="modal__content">
+      :class="['modal__content', { 'home-style': isHome } ]">
       <img 
         :src="currentUser.avatar | emptyAvatar" 
         alt="avatar"
@@ -22,7 +23,7 @@
       >
       <textarea
         v-model="postContent"
-        class="modal__content__textarea ml-2"
+        class="modal__content__textarea ml-3"
         placeholder="有什麼新鮮事？"
         :disabled="isHome"
       >
@@ -125,6 +126,12 @@ export default {
 // style used in HomePage 
 .home-style {
   width: 100%;
+  height: 136px;
+}
+
+.modal__content.home-style {
+  height: 136px;
+  flex-wrap: nowrap;
 }
  
 </style>

@@ -2,7 +2,7 @@
   <div class="container">
     <div class="row">
       <div class="col-lg-2 col-xl-2">
-        <SideBar />
+        <SideBar/>
       </div>
       <div 
         class="
@@ -10,26 +10,50 @@
         col-lg-7 
         col-xl-7"
       >  
-        <div class="home__header">
-
+        <div 
+        class="home__header"
+        >
+          <h4>首頁</h4>
         </div>
         <div 
           class="home__createPost"
           @click="openCreateModal">
-          <CreatePostModal :hideCross="true"/>
-        </div>
-          
-        <PostBlockShort />
+          <CreatePostModal 
+          :isHome="true"/>
+        </div> 
+        <!-- Render Posts -->
+        <PostBlockShort /><PostBlockShort /><PostBlockShort /><PostBlockShort /><PostBlockShort /><PostBlockShort /><PostBlockShort /><PostBlockShort /><PostBlockShort />
+        <PostBlockShort /><PostBlockShort /><PostBlockShort /><PostBlockShort /><PostBlockShort /><PostBlockShort /><PostBlockShort /><PostBlockShort /><PostBlockShort />
+        <PostBlockShort /><PostBlockShort /><PostBlockShort /><PostBlockShort /><PostBlockShort /><PostBlockShort /><PostBlockShort /><PostBlockShort /><PostBlockShort />
+        <PostBlockShort /><PostBlockShort /><PostBlockShort /><PostBlockShort /><PostBlockShort /><PostBlockShort /><PostBlockShort /><PostBlockShort /><PostBlockShort />
+        <button 
+        @click.stop.prevent="openReplyModal"
+        >
+          Reply Modal Fake Trigger
+        </button>
       </div>
-      <div class="col-lg-3 col-xl-3">
+      <div 
+       class="
+       col-lg-3 
+       col-xl-3"
+       >
         <PopularUsers /> 
       </div>
-      <!-- <div class="modal-backdrop">
-         <CreateReplyModal />
-      </div>  -->
-      <div class="modal-backdrop" v-show="openCreate">
+      <!-- Modals -->
+      <div 
+        class="modal-backdrop" 
+        v-if="openReply"
+      >
+         <CreateReplyModal 
+         :postId="selectedPostId"
+         @closeReplyModal="closeReplyModal"/>
+      </div> 
+      <div 
+        class="modal-backdrop" 
+        v-if="openCreate"
+      >
         <CreatePostModal 
-        :hideCross="false"
+        :isHome="false"
         @closeCreateModal="closeCreateModal"/>  
       </div>
     </div> 
@@ -41,7 +65,7 @@ import SideBar from '../components/SideBar.vue'
 import PopularUsers from '../components/PopularUsers.vue'
 import CreatePostModal from '../components/CreatePostModal.vue'
 import PostBlockShort from '../components/PostBlockShort.vue'
-// import CreateReplyModal from '../components/CreateReplyModal.vue'
+import CreateReplyModal from '../components/CreateReplyModal.vue'
 
 export default {
   name: 'HomePage',
@@ -50,11 +74,13 @@ export default {
     PopularUsers,
     CreatePostModal,
     PostBlockShort,
-    // CreateReplyModal,
+    CreateReplyModal,
   },
   data () {
     return {
-      openCreate: false
+      openCreate: false,
+      openReply: false,
+      selectedPostId: 5, 
     }
   },
   methods: {
@@ -63,6 +89,12 @@ export default {
     },
     closeCreateModal () {
       this.openCreate = false
+    },
+    openReplyModal () {
+      this.openReply = true
+    },
+    closeReplyModal () {
+      this.openReply = false
     }
   }
 }
@@ -70,23 +102,55 @@ export default {
 
 <style lang="scss" scoped>  
 
+.home {
+  height: 100vh;
+  overflow-y: scroll;
+  padding: 0px;
+  border-right: 1px solid $color-tab-line;
+  border-left: 1px solid $color-tab-line;
+  &__header {
+    width: 100%;
+    height: 74px;
+    border-bottom: 1px solid $color-tab-line;
+    h4 {
+      margin-left: 24px;
+      line-height: 74px;
+    }
+  }
+  &__createPost {
+      width: 100%;
+      height: 146px;
+      padding: 0;
+      border-bottom: 10px solid $color-tab-line;
+      margin-bottom: 50px;
+      z-index: 100;
+    }
+}
 
+::-webkit-scrollbar {
+  background-color: #ffffff;
+  width: 8px;
+}
 
+::-webkit-scrollbar-thumb {
+  background-color: $color-gray-2;
+  border-radius: 5px;
+}
 
+.popular-users {
+  position: absolute;
+}
 .modal-backdrop {
     position: fixed;
     top: 0;
     bottom: 0;
     left: 0;
     right: 0;
-    background-color: rgba(0, 0, 0, 0.3);
+    background-color: #00000077;
     display: flex;
     justify-content: center;
     padding: 56px;
 }
-
-
-
 
 
 </style>

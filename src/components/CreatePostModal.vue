@@ -1,8 +1,11 @@
 <template>
-  <div class="modal">
-    <div class="modal__header">
+  <div :class="['modal', { 'home-style' : isHome}]">
+    <div class="
+      modal__header
+      modal-header
+    ">
       <img
-       v-show="!hideCross"
+       v-show="!isHome"
        @click.stop.prevent="closeModal" 
        class="modal__header__btn--close
        ml-3"
@@ -12,24 +15,28 @@
     <form 
       @submit.stop.prevent="createPost"
       class="modal__content">
-      <img :src="currentUser.avatar | emptyAvatar" 
+      <img 
+        :src="currentUser.avatar | emptyAvatar" 
         alt="avatar"
         class="modal__content__avatar"
       >
       <textarea
         v-model="postContent"
-        class="modal__content__textarea mr-3"
+        class="modal__content__textarea ml-2"
         placeholder="有什麼新鮮事？"
+        :disabled="isHome"
       >
       </textarea>
-      <div class="modal__content__wrapper">
+      <div class="modal__content__wrapper modal-footer mb-3">
         <p 
-          v-show="!hideCross"
-          class="modal__content__wrapper__warning mr-3">
+          v-show="!isHome"
+          class="modal__content__wrapper__warning 
+          warning
+          mr-3">
           {{ warning }}
         </p>
         <button type="submit"
-          class="modal__content__wrapper__btn--submit mb-2 mr-2"
+          class="modal__content__wrapper__btn--submit  mr-2"
           :disabled="isProcessing"
         >
           推文
@@ -46,7 +53,7 @@ import { emptyAvatar } from "../utils/mixins"
 export default {
   name: 'CreatePostModal',
   props: {
-    hideCross: {
+    isHome: {
       type: Boolean,
       default: false
     }
@@ -106,71 +113,18 @@ export default {
 </script>
 
 <style lang="scss" scoped>
+@import '../assets/scss/modal.scss';
 .modal {
-    width: 634px;
-    height: 300px;
-    border-radius: 14px;
-    background: #FFFFFF;
-    &__header {
-      height: 56px;
-      border-bottom: 1px solid #E6ECF0;
-      padding-top: 19.5px;
-      &__btn--close {
-        width: 15px;
-        height: 15px;
-        cursor: pointer;
-      }
-    }
-  }
+  @extend %modal;
+}
 
-  .modal__content {
-    position: relative;
-    width: 100%;
-    height: 243px;
-    display: flex;
-    flex-direction: column;
-    align-items: flex-end;
-    flex-wrap: wrap;
-    &__avatar {
-      position: absolute;
-      top: 16px;
-      left: 24px;
-      height: 50px;
-      width: 50px;
-      border-radius: 50%;
-    }
-    &__textarea {
-      width: 85%;
-      flex-grow: 1;
-      padding: 28px 5px;
-      appearance: none;
-      resize: none;
-      border: none;
-      color: #6C757D;
-      font-size: 16px;
-      &:focus {
-        outline: none;
-      }
-    }
-    &__wrapper {
-      display: flex;
-      align-items: center;
-      &__warning {
-        color: $color-error;
-        font-size: 15px;
-        font-weight: 500;
-      }
-      &__btn--submit {
-        appearance: none;
-        @include setButton(
-          $color-white,
-          $color-brand,
-          50px,
-          16px,
-          8px
-        )
-      }
-    }
-  }
+.modal__content {
+  @extend %modal-form;
+}
 
+// style used in HomePage 
+.home-style {
+  width: 100%;
+}
+ 
 </style>

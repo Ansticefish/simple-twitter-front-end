@@ -2,10 +2,10 @@ export const preventInputBlank = {
     watch: {
         'account': {
             handler: function() {
-                if (!this.account.slice(1).trim()) {
+                if (!this.account.trim()) {
                     this.a.error = true
                     this.a.warning = '此欄位不可空白'
-                } else if (this.account.slice(1).length > 50) {
+                } else if (this.account.length > 50) {
                     this.a.error = true
                     this.a.warning = '字數超出上限！'
                 } else {

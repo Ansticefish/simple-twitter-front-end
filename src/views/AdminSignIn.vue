@@ -30,7 +30,6 @@
             <input type="account" 
             v-model="account"
             :class="{'error': a.error}"
-            @keypress="addAccountPrefix"
             name="account"
             id="admin__form__wrapper__account" 
             placeholder="請輸入帳號" 
@@ -109,7 +108,7 @@ const dummyData = {
     account: 'admin',
     name: 'admin',
     avatar: '@/assets/icons/bell.png',
-    isAdmin: 'admin',
+    role: 'admin',
   }
 }
 
@@ -137,7 +136,7 @@ export default {
 
       this.isProcessing = true 
       // avoid empty data
-       if (!this.account.slice(1).trim() || !this.password.trim()){
+       if (!this.account.trim() || !this.password.trim()){
         Toast.fire({
           title: '帳號、密碼不可空白',
           html: ToastIcon.redCrossHtml
@@ -177,14 +176,12 @@ export default {
       }
 
       // if successfully sign in 
+      sessionStorage.setItem('currentUser', JSON.stringify(dummyData.currentUser))
+      sessionStorage.setItem('token', JSON.stringify(dummyData.token))
+      sessionStorage.setItem('isAuthenticated', JSON.stringify({isAuthenticated: true}))
       this.$store.commit('setCurrentUser', dummyData.currentUser)
       this.$router.push('/admin/users')
-    },
-    addAccountPrefix () {
-      const account = this.account.trim()
-      if (account.length >= 1) return
-      this.account = '@' + account
-    } 
+    }
   }
 }
 </script>

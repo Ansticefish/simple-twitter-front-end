@@ -1,5 +1,5 @@
 <template>
-  <div id="personal-info" class="personal">
+  <div id="personal-info" class="personal mb-3">
     <div class="personal__cover">
       <img :src="user.cover | emptyCover" alt="" />
     </div>
@@ -13,10 +13,11 @@
       <button class="personal__buttons__mail">
         <div class="mail__icon"></div>
       </button>
-      <button 
-        @click.prevent.stop = "toggleAlert"
-        :class="['personal__buttons__alert',{active: Undevelop.isAlert}]">
-        <div :class="['alert__icon', {active: Undevelop.isAlert}]"></div>
+      <button
+        @click.prevent.stop="toggleAlert"
+        :class="['personal__buttons__alert', { active: Undevelop.isAlert }]"
+      >
+        <div :class="['alert__icon', { active: Undevelop.isAlert }]"></div>
       </button>
       <button
         v-if="user.isFollowed"
@@ -65,24 +66,15 @@
 import { accountShow, emptyAvatar } from "../utils/mixins";
 import { mapState } from "vuex";
 
-const dummyData = {
-  user: {
-    id: 0,
-    account: "root",
-    name: "root",
-    avatar: "",
-    introduction:
-      "enim facilisis gravida neque convallis a cras semper auctor neque vitae tempus quam pellentesque nec nam aliquam sem et tortor consequat id porta nibh venenatis cras sed felis eget velit aliquet sagittis id consectetur purus ut faucibus pulvinar elementum integer enim neque volutpat ac tincidunt vitae semper quis lectus nulla",
-    following_count: 30,
-    follower_count: 20,
-    cover: "",
-    isFollowed: false,
-  },
-};
-
 export default {
   mixins: [accountShow, emptyAvatar],
   name: "PersonalInfo",
+  props: {
+    initialUser: {
+      type: Object,
+      required: true
+    },
+  },
   data() {
     return {
       user: {
@@ -105,7 +97,7 @@ export default {
   methods: {
     fetchUser() {
       // get user api here
-      this.user = { ...dummyData.user };
+      this.user = { ...this.initialUser };
     },
     follow() {
       // api here
@@ -115,7 +107,7 @@ export default {
       // api here
       this.user.isFollowed = false;
     },
-    
+
     // function undeveloped
     toggleAlert() {
       this.Undevelop.isAlert = !this.Undevelop.isAlert;
@@ -159,7 +151,7 @@ export default {
     }
   }
   &__info {
-    margin: 78px 1rem;
+    margin: 78px 1rem 0;
     &__name {
       line-height: 26px;
     }
@@ -207,7 +199,7 @@ export default {
       height: 40px;
       border: 1px solid $color-brand;
       border-radius: 50%;
-      &.active{
+      &.active {
         background: $color-brand;
       }
     }

@@ -5,7 +5,7 @@
     display: flex;
     flex-direction: column;
     align-items: flex-start;
-    justify-content: space-between;
+    // justify-content: space-between;
   }
   
   %sidebar-icon {
@@ -32,6 +32,8 @@
   }
   
   %sidebar-logout {
+    position: fixed;
+    bottom: 1rem;
     display: flex;
     align-content: center;
     div {

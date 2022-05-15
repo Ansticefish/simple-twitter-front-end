@@ -29,12 +29,11 @@
             </label>
             <input type="text" 
             v-model="account"
-            @keypress="addAccountPrefix"
             :class="{'error': a.error}"
             name="account"
             id="register__form__wrapper__account" 
             placeholder="請輸入帳號"
-            maxlength="51" 
+            maxlength="50" 
             required
             autofocus
             >
@@ -46,7 +45,7 @@
               <label
                class="text-count"
               >
-              {{ account.slice(1).length}} / 50
+              {{ account.length}} / 50
               </label>
           </div> 
           <div 
@@ -206,7 +205,7 @@ export default {
         this.isProcessing = true
 
         // avoid empty data
-        if(!this.account.slice(1).trim() || 
+        if(!this.account.trim() || 
         !this.name.trim() ||
         !this.email.trim() ||
         !this.password.trim() ||
@@ -220,7 +219,7 @@ export default {
         }
         
         // account & name must be less than 50 characters
-        if (this.account.slice(1).length > 50 ||
+        if (this.account.length > 50 ||
         this.name.length > 50 ) {
           this.isProcessing = false
           return
@@ -237,7 +236,7 @@ export default {
         }
         
         await authorizationAPI.register({
-           account: this.account.slice(1),
+           account: this.account,
            name: this.name,
            email: this.email,
            password: this.password,
@@ -274,11 +273,6 @@ export default {
         this.password = ''
         this.checkPassword = ''
       }
-    },
-    addAccountPrefix () {
-      const account = this.account.trim()
-      if(account.length >= 1) return
-      this.account = '@' + account
     },
   }
 }

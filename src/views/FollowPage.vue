@@ -5,6 +5,7 @@
         <SideBar />
       </div>
       <div class="col-lg-7 col-xl-7">
+        <PersonalPageHeader />
         main content
         <router-view />
         <!-- Two sub-pages -->
@@ -19,12 +20,14 @@
 <script>
 import SideBar from '../components/SideBar.vue'
 import PopularUsers from '../components/PopularUsers.vue'
+import PersonalPageHeader from '../components/PersonalPageHeader.vue'
 
 export default {
   name: 'FollowPage',
   components: {
     SideBar,
     PopularUsers,
+    PersonalPageHeader,
   }
 }
 </script>

@@ -29,8 +29,6 @@
             </label>
             <input type="text" 
             v-model="account"
-            @focus="addAccountPrefix"
-            @keypress="addAccountPrefix"
             name="account"
             id="signin__form__wrapper__account"
             :class="{'error': a.error}" 
@@ -135,7 +133,7 @@ export default {
       try {
         this.isProcessing = true
         // avoid empty data
-        if (!this.account.slice(1).trim() || !this.password.trim()){
+        if (!this.account.trim() || !this.password.trim()){
           Toast.fire({
             title: '帳號、密碼不可空白',
             html: ToastIcon.redCrossHtml
@@ -145,7 +143,7 @@ export default {
         }
 
         const { data } = await authorizationAPI.signIn( {
-          account: this.account.slice(1),
+          account: this.account,
           password: this.password
         })
 
@@ -153,9 +151,16 @@ export default {
           title: '登入成功',
           html: ToastIcon.greenCheckHtml
         })
+
+        
+
         localStorage.setItem('token', data.token)
         this.$store.commit('setCurrentUser', data.user)
+        sessionStorage.setItem('currentUser', JSON.stringify(data.user))
+        sessionStorage.setItem('token', JSON.stringify(data.token))
+        sessionStorage.setItem('isAuthenticated', JSON.stringify({isAuthenticated: true}))
         this.$router.push({ name: 'home-page'})
+      
 
       } catch (error) {
         const errorMsg = error.response.data.message
@@ -172,12 +177,7 @@ export default {
         this.password = ''
         this.isProcessing = false
       }   
-    },
-    addAccountPrefix () {
-      const account  = this.account.trim()
-      if (account.length >= 1) return
-      this.account = '@' + account
-    },
+    }
   },
 }
 </script>

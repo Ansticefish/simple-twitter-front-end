@@ -129,9 +129,21 @@ router.beforeEach((to, from, next) => {
     const token = localStorage.getItem('token')
     let isAuthenticated = store.state.isAuthenticated
     let role = store.state.currentUser.role
+    let userToken = store.state.token
+    const isAuthenticatedStored = JSON.parse(sessionStorage.getItem('isAuthenticated'))
+        //to solve data loss problem due to page refresh
+    if (isAuthenticatedStored &&
+        isAuthenticatedStored !== isAuthenticated) {
+        const currentUser = JSON.parse(sessionStorage.getItem('currentUser'))
+        const tokenStored = JSON.parse(sessionStorage.getItem('token'))
+        isAuthenticated = isAuthenticatedStored
+        role = currentUser.role
+        userToken = tokenStored
+    }
+
 
     //if token is different
-    if (token && token !== store.state.token) {
+    if (token && token !== userToken) {
         // ask API to fetch currentUser again, and set isAuthenticated value based on return value
         isAuthenticated = false
         localStorage.removeItem('token')

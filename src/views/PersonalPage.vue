@@ -147,6 +147,7 @@ export default {
       },
       replies:[],
       isEditing: false,
+
       // undevelop function
       Undevelop: {
         isAlert: false,

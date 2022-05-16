@@ -6,6 +6,7 @@
       </div>
       <div class="col-lg-7 col-xl-7">
         <PersonalPageHeader />
+        <!-- header need props 'user' -->
         main content
         <router-view />
         <!-- Two sub-pages -->

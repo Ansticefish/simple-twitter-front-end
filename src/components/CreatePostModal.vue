@@ -23,7 +23,7 @@
       >
       <textarea
         v-model="postContent"
-        class="modal__content__textarea ml-3"
+        class="modal__content__textarea mr-1"
         placeholder="有什麼新鮮事？"
         :disabled="isHome"
       >
@@ -84,15 +84,11 @@ export default {
         return
       }
 
-      if(this.postContent.length > 140){
-        this.warning = '字數不可超過140字'
-        this.isProcessing = false
-        return
-      }
 
       // send request
       console.log('create')
       // if succeed
+      this.$emit('update-data')
       this.closeModal()
       this.postContent = ''
     },
@@ -104,8 +100,10 @@ export default {
           this.postContent.length < 141
         ) {
           this.warning = ''
+          this.isProcessing = false
         } else if (this.postContent.length > 140) {
           this.warning = '字數不可超過140字'
+          this.isProcessing = true
         }
       }
     }

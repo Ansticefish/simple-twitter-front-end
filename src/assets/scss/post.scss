@@ -1,0 +1,47 @@
+%post-header-font {
+    &>p {
+        color: #1c1c1c;
+        font-size: 15px;
+        font-weight: 700;
+    }
+    &>p~p {
+        color: $color-secondary;
+        font-size: 14px;
+        font-weight: 400;
+    }
+    &>p~p~p {
+        color: $color-secondary;
+        font-size: 14px;
+        font-weight: 400;
+    }
+    div {
+        width: 3px;
+        height: 3px;
+        border-radius: 50%;
+        background-color: $color-secondary;
+    }
+}
+
+%avatar {
+    position: absolute;
+    top: 16px;
+    left: 24px;
+    height: 50px;
+    width: 50px;
+    border-radius: 50%;
+}
+
+%description-font {
+    color: #1c1c1c;
+    font-weight: 400;
+    font-size: 15px;
+    line-height: 26px;
+}
+
+// numbers next to icons
+%post-footer-font {
+    color: $color-secondary;
+    font-size: 14px;
+    line-height: 14px;
+    font-weight: 600;
+}

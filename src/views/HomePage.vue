@@ -104,8 +104,9 @@ export default {
 
 .home {
   height: 100vh;
-  overflow-y: scroll;
+  overflow-y: auto;
   padding: 0px;
+  margin-right: -8px;
   border-right: 1px solid $color-tab-line;
   border-left: 1px solid $color-tab-line;
   &__header {
@@ -127,15 +128,6 @@ export default {
     }
 }
 
-::-webkit-scrollbar {
-  background-color: #ffffff;
-  width: 8px;
-}
-
-::-webkit-scrollbar-thumb {
-  background-color: $color-gray-2;
-  border-radius: 5px;
-}
 
 .popular-users {
   position: absolute;

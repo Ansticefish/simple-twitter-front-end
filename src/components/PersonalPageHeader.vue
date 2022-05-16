@@ -1,9 +1,9 @@
 <template>
   <div id="personal-header" class="py-3 px-4">
-    <div @click.prevent.stop="backToHome" class="back-btn">
+    <div @click.prevent.stop="backToPersonalPage" class="back-btn">
       <div class="back-btn__icon"></div>
       <div class="back-btn__descript">
-        <h5 class="back-btn__descript__name">{{currentUser.name}}</h5>
+        <h5 class="back-btn__descript__name">{{this.user.name}}</h5>
         <p class="back-btn__descript__num-tweets">{{tweetsAmount}} 推文</p>
       </div>
     </div>
@@ -11,24 +11,29 @@
 </template>
 
 <script>
-import { mapState } from "vuex";
 
 // check post numbers
 
 export default {
   name: "PersonalPageHeader",
+  props:{
+    user:{
+      type: Object,
+      required: true
+    }
+  },
   data(){
     return{
       tweetsAmount: 25
     }
   },
   methods: {
-    backToHome() {
-      this.$router.push("/home");
+    backToPersonalPage() {
+      this.$router.push({
+        name: 'personal-page-posts',
+        params: {userAccount: this.user.account}
+      });
     },
-  },
-  computed: {
-    ...mapState(['currentUser'])
   },
 };
 </script>

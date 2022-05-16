@@ -5,9 +5,10 @@
         <SideBar />
       </div>
       <div class="main col-lg-7 col-xl-7 p-0">
-          <PersonalPageHeader />
-          <PersonalInfo :initial-user="user"/>
-          <EditPersonalInfo class="d-none"> </EditPersonalInfo>
+          <PersonalPageHeader :user="user" />
+          <PersonalInfo 
+            :initial-user="user"
+            @edit="handleEdit"/>
           <PersonalPageTabs :user-account="user.account"/>
           <router-view :replies="replies"/>
           <!--Three sub-pages -->
@@ -16,6 +17,11 @@
         <PopularUsers />
       </div>
     </div>
+    <EditPersonalInfo 
+      v-if="isEditing"
+      @cancelEdit= 'handleCancelEdit'
+      @saveEdit = 'handleSaveEdit'
+      :initial-user="user" />
   </div>
 </template>
 
@@ -29,7 +35,7 @@ import PersonalPageTabs from "../components/PersonalPageTabs.vue";
 
 const dummyData = {
   user: {
-    id: 0,
+    id: -1,
     account: "root",
     name: "root",
     avatar: "",
@@ -47,7 +53,7 @@ const dummyData = {
       updatedAt: "2022-05-15T08:38:46.106Z",
       comment: "vel pharetra vel turpis nunc eget lorem dolor sed viverra",
       post_user: {
-        id: 1,
+        id: -1,
         name: "root",
         account: "root",
       },
@@ -65,7 +71,7 @@ const dummyData = {
       comment:
         "enim ut sem viverra aliquet eget sit amet tellus cras adipiscing enim eu turpis egestas pretium aenean pharetra magna ac",
       post_user: {
-        id: 1,
+        id: -1,
         name: "root",
         account: "root",
       },
@@ -83,7 +89,7 @@ const dummyData = {
       comment:
         "risus nullam eget felis eget nunc lobortis mattis aliquam faucibus purus in massa tempor nec",
       post_user: {
-        id: 1,
+        id: -1,
         name: "root",
         account: "root",
       },
@@ -101,7 +107,7 @@ const dummyData = {
       comment:
         "quam vulputate dignissim suspendisse in est ante in nibh mauris cursus mattis molestie a iaculis",
       post_user: {
-        id: 1,
+        id: -1,
         name: "root",
         account: "root",
       },
@@ -140,6 +146,7 @@ export default {
         isFollowed: false,
       },
       replies:[],
+      isEditing: false,
       // undevelop function
       Undevelop: {
         isAlert: false,
@@ -155,6 +162,15 @@ export default {
       // api here
       this.replies = [...dummyData.replies];
     },
+    handleEdit(){
+      this.isEditing = true
+    },
+    handleCancelEdit(){
+      this.isEditing = false
+    },
+    handleSaveEdit(){
+
+    }
   },
   created(){
     this.fetchUser()

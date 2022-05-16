@@ -5,6 +5,12 @@
 <script>
 export default {
   name: 'PostBlockShort',
+  props: {
+    posts: {
+      type: Array,
+      required: true
+    }
+  }
 }
 </script>
 

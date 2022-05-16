@@ -1,3 +1,5 @@
+import moment from 'moment'
+
 export const preventInputBlank = {
     watch: {
         'account': {
@@ -63,8 +65,6 @@ export const preventInputBlank = {
         },
     }
 }
-
-
 export const accountShow = {
     filters: {
         accountShow(account) {
@@ -72,11 +72,18 @@ export const accountShow = {
         }
     },
 }
-
 export const emptyAvatar = {
     filters: {
         emptyAvatar(imgURL) {
             return imgURL || "https://imgpile.com/images/5S6lFC.png"
         },
+    }
+}
+
+export const fromNow = {
+    filters: {
+        fromNow(datetime) {
+            return datetime ? moment(datetime).fromNow() : '--'
+        }
     }
 }

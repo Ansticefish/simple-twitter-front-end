@@ -72,7 +72,6 @@
 </template>
 
 <script>
-import { mapState } from 'vuex'
 import { emptyAvatar, accountShow } from "../utils/mixins"
 
 const dummyPost = {
@@ -95,10 +94,11 @@ export default {
     postId: {
       type: Number,
       required: true
+    },
+    currentUser: {
+      type: Object,
+      required: true
     }
-  },
-  computed: {
-    ...mapState(['currentUser'])
   },
   mixins: [emptyAvatar, accountShow],
   data () {

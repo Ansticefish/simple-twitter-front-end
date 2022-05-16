@@ -35,7 +35,8 @@ button {
   background: transparent;
 }
 
-input:focus {
+input:focus,
+textarea:focus {
   outline: none;
 }
 

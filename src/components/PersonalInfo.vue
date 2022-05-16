@@ -122,6 +122,11 @@ export default {
   computed: {
     ...mapState(["currentUser"]),
   },
+  watch:{
+    initialUser(){
+      this.fetchUser()
+    }
+  },
   created() {
     this.fetchUser();
   },

@@ -3,43 +3,68 @@
     <div class="modal__mask">
       <div class="modal__container">
         <div class="modal__container__header my-1 py-2 px-3">
-          <div 
-            @click.prevent.stop="cancelEdit"
-            class="cancel-icon"></div>
+          <div @click.prevent.stop="cancelEdit" class="cancel-icon"></div>
           <h5 class="modal__container__header__title">編輯個人資料</h5>
-          <button 
+          <button
             @click.prevent.stop="saveEdit"
-            class="modal__container__header__save">儲存</button>
+            class="modal__container__header__save"
+          >
+            儲存
+          </button>
         </div>
         <div class="modal__container__main">
           <div class="modal__container__main__cover">
             <img :src="user.cover | emptyCover" alt="" />
             <div class="modal__container__main__cover__icons">
-              <div class="camera-icon"></div>
-              <div class="cancel-icon"></div>
+              <label for="cover-upload"><div class="camera-icon"></div></label>
+              <button @click.prevent.stop="regretCoverChange">
+                <div class="cancel-icon"></div>
+              </button>
+              <form action="" ref="coverupload">
+                <input
+                  id="cover-upload"
+                  @change="handleCoverChange"
+                  type="file"
+                  accpet="image/*"
+                />
+              </form>
             </div>
           </div>
           <div class="modal__container__main__avatar">
             <div class="avatar-mask"></div>
             <img :src="user.avatar | emptyAvatar" alt="" />
-            <div class="camera-icon"></div>
+            <label for="avatar-upload"><div class="camera-icon"></div></label>
+            <input
+              id="avatar-upload"
+              @change="handleAvatarChange"
+              type="file"
+              accpet="image/*"
+            />
           </div>
           <div class="modal__container__main__info p-3">
             <div class="modal__container__main__info__name">
-              <label for="">Label</label>
+              <label for="">名稱</label>
               <input
                 v-model="user.name"
                 type="text"
                 placeholder="Placeholder"
+                :class="{ error: nameTextArea.warning !== '' }"
               />
-              <label for="" class="error-message">error message</label>
-              <label for="" class="text-count">11/50</label>
+              <label for="" class="error-message">{{
+                nameTextArea.warning
+              }}</label>
+              <label for="" class="text-count">{{ nameTextLength }}/50</label>
             </div>
             <div class="modal__container__main__info__introduction">
-              <label for="">Label</label>
-              <textarea v-model="user.introduction" />
-              <label for="" class="error-message">error message</label>
-              <label for="" class="text-count">11/50</label>
+              <label for="">自我介紹</label>
+              <textarea
+                v-model="user.introduction"
+                :class="{ error: introTextArea.warning !== '' }"
+              />
+              <label for="" class="error-message">{{
+                introTextArea.warning
+              }}</label>
+              <label for="" class="text-count">{{ introTextLength }}/160</label>
             </div>
           </div>
         </div>
@@ -67,6 +92,13 @@ export default {
         name: "",
         introduction: "",
       },
+      nameTextArea: {
+        warning: "",
+      },
+      introTextArea: {
+        warning: "",
+      },
+      tempCover: "",
     };
   },
   methods: {
@@ -79,15 +111,69 @@ export default {
         introduction,
       };
     },
-    cancelEdit(){
-      this.$emit('cancelEdit')
+    cancelEdit() {
+      this.$emit("cancelEdit");
     },
-    saveEdit(){
-      this.$emit('saveEdit')
-    }
+    saveEdit() {
+      // add api here
+      this.$emit("saveEdit", this.user);
+    },
+    handleCoverChange(e) {
+      const { files } = e.target;
+      if (files.length === 0) {
+        this.user.cover = "";
+      } else {
+        const coverURL = window.URL.createObjectURL(files[0]);
+        this.user.cover = coverURL;
+      }
+    },
+    handleAvatarChange(e) {
+      const { files } = e.target;
+      console.log(e.target.parentElement);
+      if (files.length === 0) {
+        this.user.avatar = "";
+      } else {
+        const avatarURL = window.URL.createObjectURL(files[0]);
+        this.user.avatar = avatarURL;
+      }
+    },
+    regretCoverChange() {
+      this.user.cover = this.tempCover;
+      this.$refs.coverupload.reset();
+    },
+    textLength(text) {
+      return text.trim().length;
+    },
+  },
+  computed: {
+    nameTextLength() {
+      return this.textLength(this.user.name);
+    },
+    introTextLength() {
+      return this.textLength(this.user.introduction);
+    },
+  },
+  watch: {
+    "user.name"(text) {
+      if (this.textLength(text) === 0) {
+        this.nameTextArea.warning = "名稱不可空白";
+      } else if (this.textLength(text) > 50) {
+        this.nameTextArea.warning = "字數超出上限";
+      } else {
+        this.nameTextArea.warning = "";
+      }
+    },
+    "user.introduction"(text) {
+      if (this.textLength(text) > 160) {
+        this.introTextArea.warning = "字數超出上限";
+      } else {
+        this.introTextArea.warning = "";
+      }
+    },
   },
   created() {
     this.loadUserData();
+    this.tempCover = this.user.cover;
   },
 };
 </script>
@@ -101,7 +187,7 @@ export default {
     left: 0;
     width: 100%;
     height: 100%;
-    background: rgba(0, 0, 0, 0.5);
+    background: rgba(0, 0, 0, 0.4);
     transition: opacity 0.3s;
   }
   &__container {
@@ -153,6 +239,7 @@ export default {
           width: 100%;
           height: 200px;
           opacity: 0.5;
+          object-fit: cover;
         }
         &__icons {
           position: absolute;
@@ -207,6 +294,7 @@ export default {
           height: 140px;
           border: 4px solid $color-white;
           border-radius: 50%;
+          object-fit: cover;
         }
         .camera-icon {
           position: absolute;
@@ -249,5 +337,11 @@ export default {
       }
     }
   }
+}
+#cover-upload {
+  display: none;
+}
+#avatar-upload {
+  display: none;
 }
 </style>

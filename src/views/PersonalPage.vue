@@ -5,23 +5,22 @@
         <SideBar />
       </div>
       <div class="main col-lg-7 col-xl-7 p-0">
-          <PersonalPageHeader :user="user" />
-          <PersonalInfo 
-            :initial-user="user"
-            @edit="handleEdit"/>
-          <PersonalPageTabs :user-account="user.account"/>
-          <router-view :replies="replies"/>
-          <!--Three sub-pages -->
+        <PersonalPageHeader :user="user" />
+        <PersonalInfo :initial-user="user" @edit="handleEdit" />
+        <PersonalPageTabs :user-account="user.account" />
+        <router-view :replies="replies" />
+        <!--Three sub-pages -->
       </div>
       <div class="col-lg-3 col-xl-3">
         <PopularUsers />
       </div>
     </div>
-    <EditPersonalInfo 
+    <EditPersonalInfo
       v-if="isEditing"
-      @cancelEdit= 'handleCancelEdit'
-      @saveEdit = 'handleSaveEdit'
-      :initial-user="user" />
+      @cancelEdit="handleCancelEdit"
+      @saveEdit="handleSaveEdit"
+      :initial-user="user"
+    />
   </div>
 </template>
 
@@ -40,7 +39,7 @@ const dummyData = {
     name: "root",
     avatar: "",
     introduction:
-      "enim facilisis gravida neque convallis a cras semper auctor neque vitae tempus quam pellentesque nec nam aliquam sem et tortor consequat id porta nibh venenatis cras sed felis eget velit aliquet sagittis id consectetur purus ut faucibus pulvinar elementum integer enim neque volutpat ac tincidunt vitae semper quis lectus nulla",
+      "enim facilisis gravida neque convallis a cras semper auctor neque vitae tempus quam pellentesque nec nam aliquam sem et tortor consequat id porta ",
     following_count: 30,
     follower_count: 20,
     cover: "",
@@ -121,7 +120,6 @@ const dummyData = {
   ],
 };
 
-
 export default {
   name: "PersonalPage",
   components: {
@@ -145,7 +143,7 @@ export default {
         cover: "",
         isFollowed: false,
       },
-      replies:[],
+      replies: [],
       isEditing: false,
 
       // undevelop function
@@ -163,20 +161,28 @@ export default {
       // api here
       this.replies = [...dummyData.replies];
     },
-    handleEdit(){
-      this.isEditing = true
+    handleEdit() {
+      this.isEditing = true;
     },
-    handleCancelEdit(){
+    handleCancelEdit() {
+      this.isEditing = false;
+    },
+    handleSaveEdit(userEdited) {
+      const { name, avatar, cover, introduction } = userEdited;
+      this.user = {
+        ...this.user,
+        name,
+        avatar,
+        cover,
+        introduction,
+      };
       this.isEditing = false
     },
-    handleSaveEdit(){
-
-    }
   },
-  created(){
-    this.fetchUser()
-    this.fectchReplies()
-  }
+  created() {
+    this.fetchUser();
+    this.fectchReplies();
+  },
 };
 </script>
 
@@ -189,7 +195,7 @@ export default {
 }
 
 // test
-d-none{
+d-none {
   display: none;
 }
 </style>

@@ -6,7 +6,7 @@
       v-if="!isHome"
     >
       <img
-       v-show="!isHome"
+       v-if="!isHome"
        @click.stop.prevent="closeModal" 
        class="modal__header__btn--close
        ml-3"
@@ -48,7 +48,6 @@
 </template>
 
 <script>
-import { mapState } from "vuex"
 import { emptyAvatar } from "../utils/mixins"
 
 export default {
@@ -57,6 +56,10 @@ export default {
     isHome: {
       type: Boolean,
       default: false
+    },
+    currentUser: {
+      type: Object,
+      required: true,
     }
   },
   data () {
@@ -65,9 +68,6 @@ export default {
       warning: '',
       isProcessing: false
     }
-  },
-  computed: {
-    ...mapState(['currentUser'])
   },
   mixins: [ emptyAvatar ],
   methods: {

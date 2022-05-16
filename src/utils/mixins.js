@@ -65,6 +65,7 @@ export const preventInputBlank = {
         },
     }
 }
+
 export const accountShow = {
     filters: {
         accountShow(account) {
@@ -72,6 +73,7 @@ export const accountShow = {
         }
     },
 }
+
 export const emptyAvatar = {
     filters: {
         emptyAvatar(imgURL) {

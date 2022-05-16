@@ -24,7 +24,7 @@
           <div class="ml-1">
           </div>
           <p class="ml-1">
-           {{ post.createdAt }}
+           {{ post.createdAt | fromNow }}
           </p>
         </div>
         <p class="modal__post__content__body">
@@ -72,7 +72,7 @@
 </template>
 
 <script>
-import { emptyAvatar, accountShow } from "../utils/mixins"
+import { emptyAvatar, accountShow, fromNow } from "../utils/mixins"
 
 const dummyPost = {
   id: 55,
@@ -100,7 +100,7 @@ export default {
       required: true
     }
   },
-  mixins: [emptyAvatar, accountShow],
+  mixins: [emptyAvatar, accountShow, fromNow],
   data () {
     return {
       post: {

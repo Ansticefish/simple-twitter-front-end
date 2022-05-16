@@ -44,7 +44,9 @@
         <CreatePostModal
         :currentUser="currentUser" 
         :isHome="false"
-        @closeCreateModal="closeCreateModal"/>  
+        @closeCreateModal="closeCreateModal"
+        @update-data="updateData"
+        />  
       </div>
     </div> 
   </div>
@@ -153,6 +155,10 @@ export default {
     fetchPosts () {
       // Add API
       this.posts = dummyPosts
+    },
+    updateData () {
+      console.log('update')
+      this.fetchPosts()
     },
     openCreateModal () {
       this.openCreate = true

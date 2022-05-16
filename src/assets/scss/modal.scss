@@ -44,6 +44,8 @@
         border: none;
         color: #6C757D;
         font-size: 16px;
+        font-weight: 700;
+        line-height: 26px;
         &:focus {
             outline: none;
         }
@@ -53,6 +55,7 @@
     }
 }
 
+// button and warning style
 .modal-footer {
     display: flex;
     align-items: center;
@@ -64,6 +67,23 @@
     }
     button {
         appearance: none;
-        @include setButton( $color-white, $color-brand, 50px, 16px, 8px)
+        @include setButton( $color-white, $color-brand, 50px, 16px, 8px);
+        &:disabled {
+          opacity: 0.6;
+        }
     }
+}
+
+//modal backdrop
+%modal-backdrop {
+    position: fixed;
+    top: 0;
+    bottom: 0;
+    left: 0;
+    right: 0;
+    background-color: rgba(0, 0, 0, 0.4);
+    display: flex;
+    justify-content: center;
+    padding: 56px;
+    z-index: 99;
 }

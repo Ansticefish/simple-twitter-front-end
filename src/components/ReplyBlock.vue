@@ -23,7 +23,9 @@
         <p class="reply__content">
           {{ reply.comment }}
         </p>
-        <div class="reply__response mt-2">
+        <div 
+          v-if="reply.post_user.id !== currentUser.id"
+          class="reply__response mt-2">
           <div class="reply__response__reply mr-8">
             <div class="reply__response__reply__icon"></div>
             <span class="reply__response__reply__num">25</span>
@@ -40,6 +42,7 @@
 
 <script>
 import { accountShow, emptyAvatar, fromNow } from "../utils/mixins";
+import {mapState} from 'vuex'
 
 export default {
   name: "ReplyBlock",
@@ -50,6 +53,9 @@ export default {
       required: true,
     },
   },
+  computed:{
+    ...mapState(['currentUser'])
+  }
 };
 </script>
 

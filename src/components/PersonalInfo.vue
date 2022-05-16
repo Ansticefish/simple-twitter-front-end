@@ -6,7 +6,10 @@
     <div class="personal__avatar">
       <img :src="user.avatar | emptyAvatar" alt="" />
     </div>
-    <button v-if="user.id === currentUser.id" class="personal__edit-btn">
+    <button 
+      v-if="user.id === currentUser.id" 
+      @click.prevent.stop="edit"
+      class="personal__edit-btn">
       編輯個人資料
     </button>
     <div v-else class="personal__buttons">
@@ -63,11 +66,11 @@
 </template>
 
 <script>
-import { accountShow, emptyAvatar } from "../utils/mixins";
+import { accountShow, emptyAvatar, emptyCover } from "../utils/mixins";
 import { mapState } from "vuex";
 
 export default {
-  mixins: [accountShow, emptyAvatar],
+  mixins: [accountShow, emptyAvatar, emptyCover],
   name: "PersonalInfo",
   props: {
     initialUser: {
@@ -107,6 +110,9 @@ export default {
       // api here
       this.user.isFollowed = false;
     },
+    edit(){
+      this.$emit('edit')
+    },
 
     // function undeveloped
     toggleAlert() {
@@ -114,12 +120,7 @@ export default {
     },
   },
   computed: {
-    ...mapState(["currentUser", "isAuthenticated"]),
-  },
-  filters: {
-    emptyCover(coverURL) {
-      return coverURL || "https://imgpile.com/images/5SSoXP.png";
-    },
+    ...mapState(["currentUser"]),
   },
   created() {
     this.fetchUser();

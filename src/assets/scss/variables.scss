@@ -240,3 +240,50 @@ $active-icon-url) {
   }
   @content;
 }
+
+
+/* - main part (middle) - */
+
+%main-conatiner_ {
+  height: 100vh;
+  border-left: 1px solid $color-tab-line;
+  border-right: 1px solid $color-tab-line;
+  overflow-y: auto;
+}
+
+
+/* - for block - */
+
+%avatar_ {
+  width: 50px;
+  height: 50px;
+  border-radius: 50%;
+  object-fit: cover;
+  &:hover {
+    cursor: pointer;
+  }
+}
+
+%name_ {
+  font-weight: bold;
+  &:hover {
+    cursor: pointer;
+    text-decoration: underline;
+  }
+}
+
+%account_ {
+  font-size: $font-size-secondary;
+  line-height: 22px;
+  color: $color-secondary;
+}
+
+%content_ {
+  line-height: 26px;
+}
+
+%num_ {
+  font-size: $font-size-secondary;
+  font-weight: bold;
+  color: $color-secondary;
+}

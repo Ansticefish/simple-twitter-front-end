@@ -7,6 +7,9 @@
           <h5 class="modal__container__header__title">編輯個人資料</h5>
           <button
             @click.prevent.stop="saveEdit"
+            :disabled="
+              nameTextArea.warning !== '' || introTextArea.warning !== ''
+            "
             class="modal__container__header__save"
           >
             儲存
@@ -75,6 +78,7 @@
 
 <script>
 import { accountShow, emptyAvatar, emptyCover } from "../utils/mixins";
+import { Toast, ToastIcon } from "../utils/helpers";
 export default {
   name: "EditPersonalInfo",
   mixins: [accountShow, emptyAvatar, emptyCover],
@@ -116,7 +120,26 @@ export default {
     },
     saveEdit() {
       // add api here
-      this.$emit("saveEdit", this.user);
+      if (this.nameTextArea.warning !== "") {
+        Toast.fire({
+          title: `姓名${this.nameTextArea.warning}`,
+          html: ToastIcon.redCrossHtml,
+        });
+        return;
+      } else if (this.introTextArea.warning !== "") {
+        Toast.fire({
+          title: `自我介紹${this.introTextArea.warning}`,
+          html: ToastIcon.redCrossHtml,
+        });
+        return;
+      }else{
+        this.$emit("saveEdit", this.user);
+        Toast.fire({
+          title: '成功儲存個人資料',
+          html: ToastIcon.greenCheckHtml,
+        });
+      }
+      
     },
     handleCoverChange(e) {
       const { files } = e.target;
@@ -179,25 +202,12 @@ export default {
 </script>
 
 <style lang="scss" scoped>
+@import "../assets/scss/modal.scss";
 .modal {
   &__mask {
-    position: fixed;
-    z-index: 2;
-    top: 0;
-    left: 0;
-    width: 100%;
-    height: 100%;
-    background: rgba(0, 0, 0, 0.4);
-    transition: opacity 0.3s;
+    @extend %modal-backdrop;
   }
   &__container {
-    position: absolute;
-    z-index: 3;
-    top: 0;
-    right: 0;
-    bottom: 0;
-    left: 0;
-    margin: auto;
     width: 640px;
     height: 610px;
     background: $color-white;
@@ -225,7 +235,13 @@ export default {
         margin-left: 55px;
       }
       &__save {
-        @include setButton($color-white, $color-brand, 50px, 16px, 8px);
+        @include setButton($color-white, $color-brand, 50px, 16px, 8px) {
+          &:disabled {
+            color: $color-white;
+            background: $color-gray-4;
+            border-color: $color-gray-3;
+          }
+        }
       }
     }
     &__main {

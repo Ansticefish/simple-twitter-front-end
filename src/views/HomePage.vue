@@ -85,7 +85,6 @@ export default {
       }
     },
     updateData () {
-      console.log('update')
       this.fetchPosts()
     },
     openCreateModal () {

@@ -61,11 +61,11 @@ const routes = [{
             import ('../views/AdminSignIn')
     },
     {
-        path: '/users/:userAccount',
+        path: '/users/:id',
         name: 'personal-page-root',
         component: () =>
             import ('../views/PersonalPage'),
-        redirect: '/users/:userAccount/posts',
+        redirect: '/users/:id/posts',
         children: [{
                 path: 'posts',
                 name: 'personal-page-posts',
@@ -87,11 +87,11 @@ const routes = [{
         ]
     },
     {
-        path: '/users/:userAccount/follow',
+        path: '/users/:id/follow',
         name: 'follow-page-root',
         component: () =>
             import ('../views/FollowPage'),
-        redirect: '/users/:userAccount/follow/followers',
+        redirect: '/users/:id/follow/followers',
         children: [{
                 path: 'followers',
                 name: 'follow-page-followers',
@@ -107,7 +107,7 @@ const routes = [{
         ]
     },
     {
-        path: '/setting/:userAccount',
+        path: '/setting/:id',
         name: 'setting-page',
         component: () =>
             import ('../views/SettingPage')

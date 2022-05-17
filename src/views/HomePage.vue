@@ -24,9 +24,7 @@
         </div> 
         <!-- Render Posts -->
         <PostBlockShort
-         v-for="post in posts"
-         :key="post.id"
-         :post="post" 
+         :initial-posts="posts" 
         />
       </div>
       <div 

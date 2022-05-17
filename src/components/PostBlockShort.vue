@@ -1,8 +1,11 @@
 <template>
 <div>
-  <div class="post">
+  <div 
+   v-for="post in posts"
+   :key="post.id"
+   class="post">
       <img 
-        @click.stop.prevent="toPersonalPage"
+        @click.stop.prevent="toPersonalPage(post.TweetUser.account)"
         :src="post.TweetUser.avatar | emptyAvatar" 
         alt="avatar"
         class="post__avatar"
@@ -10,7 +13,7 @@
       <div class="post__content">
         <div class="post__content__header">
           <p 
-           @click.stop.prevent="toPersonalPage"
+           @click.stop.prevent="toPersonalPage(post.TweetUser.account)"
            class="name"
           >
             {{ post.TweetUser.name}}
@@ -25,7 +28,7 @@
           </p>
         </div>
         <p 
-         @click.stop.prevent="toPostPage"
+         @click.stop.prevent="toPostPage(post.id)"
          class="post__content__body">
           {{ post.description }}
         </p>
@@ -36,17 +39,17 @@
              @click.stop.prevent="openReplyModal(post.id)"
              src="../assets/icons/reply.png" alt="">
             <span class="ml-1"> 
-              {{ replyCount }}
+              {{ post.replyCount }}
             </span>
           </div>
           <div 
-            v-if="isLiked"
+            v-if="post.isLiked"
             class="post__content__footer__like ml-8">
             <img 
              @click.stop.prevent="unlikePost(post.id)"
              src="../assets/icons/heart-liked.png" alt="">
             <span class="ml-1"> 
-              {{ likeCount }}
+              {{ post.likeCount }}
             </span>
           </div>
           <div 
@@ -56,7 +59,7 @@
              @click.stop.prevent="likePost(post.id)"
              src="../assets/icons/heart.png" alt="">
             <span class="ml-1"> 
-              {{ likeCount }}
+              {{ post.likeCount }}
             </span>
           </div>
         </div>
@@ -68,9 +71,8 @@
       v-if="openReply"
     >
         <CreateReplyModal 
-        :postId="selectedPostId"
+        :post="selectedPost"
         :currentUser="currentUser"
-        :initial-post="post"
         @closeReplyModal="closeReplyModal"
         @add-reply="addReply"
         />
@@ -91,18 +93,16 @@ export default {
     CreateReplyModal,
   },
   props: {
-    post: {
-      type: Object,
+    initialPosts: {
+      type: Array,
       required: true
-    }
+    },
   },
   data () {
     return {
-      replyCount: this.post.replyCount,
-      likeCount: this.post.likeCount,
-      isLiked: this.post.isLiked,
+      posts: [],
       openReply: false,
-      selectedPostId: '',
+      selectedPost: ''
     }
   },
   computed: {
@@ -110,30 +110,42 @@ export default {
   },
   mixins: [ accountShow, emptyAvatar, fromNow ],
   methods: {
-    toPersonalPage () {
+    fetchPosts () {
+      this.posts = this.initialPosts
+    },
+    toPersonalPage (userAccount) {
       if (this.$route.name === 'home-page' ||
-       this.$route.params.userAccount !== this.post.user.account) {
+       this.$route.params.userAccount !== userAccount) {
         this.$router.push({
           name: "personal-page-root",
-          params: { userAccount: this.post.user.account },
+          params: { userAccount: userAccount },
         });
       }
     },
-    toPostPage () {
+    toPostPage ( postId ) {
         this.$router.push({
           name: "single-post",
-          params: { id: this.post.id },
+          params: { id: postId },
         });
     },
     async likePost (postId) {
       try {
-        await postsAPI.likePost({
+        await postsAPI.likePost(
           postId,
-          userId: this.currentUser.id
+        )
+
+        this.posts = this.posts.map( post=> {
+          if( post.id === postId) {
+            return {
+              ...post,
+              isLiked: true,
+              likeCount: post.likeCount + 1
+            }
+          } else {
+            return post
+          }
         })
 
-        this.isLiked = true
-        this.likeCount += 1
       } catch (error) {
         const errorMsg = error.response.data.message
         if(errorMsg === 'Error:已對這篇推文按過Like！') {
@@ -146,12 +158,22 @@ export default {
     },
     async unlikePost (postId) {
       try {
-        await postsAPI.unlikePost({
+        await postsAPI.unlikePost(
           postId,
-          userId: this.currentUser.id
+        )
+
+        this.posts = this.posts.map( post=> {
+          if( post.id === postId) {
+            return {
+              ...post,
+              isLiked: false,
+              likeCount: post.likeCount - 1
+            }
+          } else {
+            return post
+          }
         })
-        this.isLiked = false
-        this.likeCount -= 1
+
       } catch (error){
         const errorMsg = error.response.data.message
         if(errorMsg === 'Error:已對這篇推文按過Like！') {
@@ -164,14 +186,30 @@ export default {
     },
     openReplyModal (postId) {
       this.openReply = true
-      this.selectedPostId = postId
+      this.selectedPost = this.posts.find( post => post.id === postId)
     },
     closeReplyModal () {
       this.openReply = false
     },
-    addReply () {
-      console.log('add replyCount')
-      this.replyCount += 1
+    addReply (postId) {
+       this.posts = this.posts.map( post=> {
+          if( post.id === postId) {
+            return {
+              ...post,
+              replyCount: post.replyCount + 1
+            }
+          } else {
+            return post
+          }
+        })
+    }
+  },
+  created () {
+    this.fetchPosts ()
+  },
+  watch: {
+    'initialPosts':{
+      handler: 'fetchPosts'
     }
   }
 }

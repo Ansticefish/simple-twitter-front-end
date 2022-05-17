@@ -9,17 +9,17 @@
        >
     </div>
     <div class="modal__post">
-      <img :src="post.avatar | emptyAvatar" 
+      <img :src="post.TweetUser.avatar | emptyAvatar" 
         alt="avatar"
         class="modal__post__avatar"
       >
       <div class="modal__post__content mr-3">
         <div class="modal__post__content__header">
           <p>
-            {{ post.name }}
+            {{ post.TweetUser.name }}
           </p>
           <p class="ml-2">
-            {{ post.account | accountShow }}
+            {{ post.TweetUser.account | accountShow }}
           </p> 
           <div class="ml-2">
           </div>
@@ -35,13 +35,13 @@
             回覆給
           </p>
           <p class="ml-1">
-            {{ post.account | accountShow }}
+            {{ post.TweetUser.account | accountShow }}
           </p>
         </div>
       </div>
     </div>
     <form 
-      @submit.stop.prevent="createReply"
+      @submit.stop.prevent="createReply(post.id)"
       class="modal__reply">
       <img :src="currentUser.avatar | emptyAvatar" 
         alt="avatar"
@@ -78,48 +78,24 @@ import { emptyAvatar, accountShow, fromNow } from "../utils/mixins"
 export default {
   name: 'CreateReplyModal',
   props: {
-    postId: {
-      type: Number,
+    post: {
+      type: Object,
       required: true
     },
     currentUser: {
       type: Object,
       required: true
     },
-    initialPost: {
-      type: Object,
-      required: true
-    }
   },
   mixins: [emptyAvatar, accountShow, fromNow],
   data () {
     return {
-      post: {
-        id: -1,
-        createdAt: '',
-        description: '',
-        account: '',
-        name: '',
-        avatar: '',
-      },
       replyContent: '',
       warning: '',
       isProcessing: false
     }
   },
   methods: {
-    fetchPost () {
-      const { id, createdAt, description, TweetUser } = this.initialPost
-
-      this.post = {
-          id,
-          createdAt,
-          description,
-          account: TweetUser.account,
-          name: TweetUser.name,
-          avatar: TweetUser.avatar
-        }
-    },
     closeModal () {
       this.postContent = ''
       this.$emit('closeReplyModal')
@@ -137,14 +113,11 @@ export default {
       console.log('create')
       // if succeed
       //ask postBlockShort to update replyCount
-      this.$emit('add-reply')
+      this.$emit('add-reply', this.post.id)
       this.replyContent = ''
       this.closeModal()
       
     },
-  },
-  created ( ) {
-    this.fetchPost (this.postId)
   },
   watch: {
     'replyContent': {

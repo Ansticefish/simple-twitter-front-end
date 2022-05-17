@@ -3,7 +3,7 @@
   <div class="post">
       <img 
         @click.stop.prevent="toPersonalPage"
-        :src="post.user.avatar | emptyAvatar" 
+        :src="post.TweetUser.avatar | emptyAvatar" 
         alt="avatar"
         class="post__avatar"
       >
@@ -13,10 +13,10 @@
            @click.stop.prevent="toPersonalPage"
            class="name"
           >
-            {{ post.user.name}}
+            {{ post.TweetUser.name}}
           </p>
           <p class="ml-1">
-            {{ post.user.account | accountShow }}
+            {{ post.TweetUser.account | accountShow }}
           </p> 
           <div class="ml-1">
           </div>
@@ -70,6 +70,7 @@
         <CreateReplyModal 
         :postId="selectedPostId"
         :currentUser="currentUser"
+        :initial-post="post"
         @closeReplyModal="closeReplyModal"
         @add-reply="addReply"
         />
@@ -81,6 +82,8 @@
 import { accountShow, emptyAvatar, fromNow } from "../utils/mixins"
 import CreateReplyModal  from "./CreateReplyModal.vue"
 import { mapState } from 'vuex'
+import postsAPI from '../apis/posts'
+import { Toast, ToastIcon } from '../utils/helpers'
 
 export default {
   name: 'PostBlockShort',
@@ -122,19 +125,42 @@ export default {
           params: { id: this.post.id },
         });
     },
-    likePost (postId) {
-      // Add API
-      console.log(postId)
+    async likePost (postId) {
+      try {
+        await postsAPI.likePost({
+          postId,
+          userId: this.currentUser.id
+        })
 
-      this.isLiked = true
-      this.likeCount += 1
+        this.isLiked = true
+        this.likeCount += 1
+      } catch (error) {
+        const errorMsg = error.response.data.message
+        if(errorMsg === 'Error:已對這篇推文按過Like！') {
+          Toast.fire({
+            title: '已經對這篇貼文按過讚',
+            html: ToastIcon.yellowWarningHtml
+          })
+        }
+      }
     },
-    unlikePost (postId) {
-      // Add API
-      console.log(postId)
-
-      this.isLiked = false
-      this.likeCount -= 1
+    async unlikePost (postId) {
+      try {
+        await postsAPI.unlikePost({
+          postId,
+          userId: this.currentUser.id
+        })
+        this.isLiked = false
+        this.likeCount -= 1
+      } catch (error){
+        const errorMsg = error.response.data.message
+        if(errorMsg === 'Error:已對這篇推文按過Like！') {
+          Toast.fire({
+            title: '已經對這篇貼文按過讚',
+            html: ToastIcon.yellowWarningHtml
+          })
+        }
+      }
     },
     openReplyModal (postId) {
       this.openReply = true

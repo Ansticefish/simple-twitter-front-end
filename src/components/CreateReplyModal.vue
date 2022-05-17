@@ -16,7 +16,7 @@
       <div class="modal__post__content mr-3">
         <div class="modal__post__content__header">
           <p>
-            {{ post.name}}
+            {{ post.name }}
           </p>
           <p class="ml-2">
             {{ post.account | accountShow }}
@@ -73,20 +73,7 @@
 
 <script>
 import { emptyAvatar, accountShow, fromNow } from "../utils/mixins"
-
-const dummyPost = {
-  id: 55,
-  createdAt: '2020/10/10',
-  updatedAt: '',
-  description: 'Lorem ipsum dolor sit amet, consectetuer adipiscing elit. Aenean commodo ligula eget dolor. Aenean massa. Cum sociis natoque penatibus et ma',
-  user: {
-    id: 6,
-    account: 'Twitter',
-    name: 'Twit',
-    avatar: null,
-  }
-}
-
+// import postsAPI from '../apis/posts'
 
 export default {
   name: 'CreateReplyModal',
@@ -96,6 +83,10 @@ export default {
       required: true
     },
     currentUser: {
+      type: Object,
+      required: true
+    },
+    initialPost: {
       type: Object,
       required: true
     }
@@ -117,19 +108,17 @@ export default {
     }
   },
   methods: {
-    fetchPost (postId) {
-      console.log( postId )
-      // fetch post through API
-      const { id, createdAt, description, user } = dummyPost
-      
+    fetchPost () {
+      const { id, createdAt, description, TweetUser } = this.initialPost
+
       this.post = {
-        id,
-        createdAt,
-        description,
-        account: user.account,
-        name: user.name,
-        avatar: user.avatar
-      }
+          id,
+          createdAt,
+          description,
+          account: TweetUser.account,
+          name: TweetUser.name,
+          avatar: TweetUser.avatar
+        }
     },
     closeModal () {
       this.postContent = ''
@@ -155,7 +144,7 @@ export default {
     },
   },
   created ( ) {
-    this.fetchPost ( this.postId )
+    this.fetchPost (this.postId)
   },
   watch: {
     'replyContent': {

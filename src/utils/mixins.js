@@ -3,7 +3,7 @@ import moment from 'moment'
 export const preventInputBlank = {
     watch: {
         'account': {
-            handler: function() {
+            handler: function () {
                 if (!this.account.trim()) {
                     this.a.error = true
                     this.a.warning = '此欄位不可空白'
@@ -17,7 +17,7 @@ export const preventInputBlank = {
             }
         },
         'name': {
-            handler: function() {
+            handler: function () {
                 if (!this.name.trim()) {
                     this.n.error = true
                     this.n.warning = '此欄位不可空白'
@@ -31,7 +31,7 @@ export const preventInputBlank = {
             }
         },
         'email': {
-            handler: function() {
+            handler: function () {
                 if (!this.email.trim()) {
                     this.m.error = true
                     this.m.warning = '此欄位不可空白'
@@ -42,7 +42,7 @@ export const preventInputBlank = {
             }
         },
         'password': {
-            handler: function() {
+            handler: function () {
                 if (!this.password.trim()) {
                     this.p.error = true
                     this.p.warning = '此欄位不可空白'
@@ -53,7 +53,7 @@ export const preventInputBlank = {
             }
         },
         'checkPassword': {
-            handler: function() {
+            handler: function () {
                 if (!this.checkPassword.trim()) {
                     this.cp.error = true
                     this.cp.warning = '此欄位不可空白'

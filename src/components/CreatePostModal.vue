@@ -49,6 +49,8 @@
 
 <script>
 import { emptyAvatar } from "../utils/mixins"
+import postsAPI from '../apis/posts'
+import { Toast, ToastIcon } from '../utils/helpers'
 
 export default {
   name: 'CreatePostModal',
@@ -75,22 +77,36 @@ export default {
       this.postContent = ''
       this.$emit('closeCreateModal')
     },
-    createPost () {
-      this.isProcessing = true
+    async createPost () {
+      try {
+        this.isProcessing = true
 
-      if (!this.postContent.trim()) {
-        this.warning = '內容不可空白'
-        this.isProcessing = false
-        return
+        if (!this.postContent.trim()) {
+          this.warning = '內容不可空白'
+          this.isProcessing = false
+          return
+        }
+
+        await postsAPI.createPost({
+          description: this.postContent
+        })
+
+        this.$emit('update-data')
+        this.closeModal()
+        this.postContent = ''
+
+      } catch (error) {
+        const errorMsg = error.response.data.message
+        if (errorMsg === 'Error:推文內容不可空白！') {
+          Toast.fire({
+            title: '內容不可空白',
+            html: ToastIcon.redCrossHtml
+          })
+        }
       }
+      
 
-
-      // send request
-      console.log('create')
-      // if succeed
-      this.$emit('update-data')
-      this.closeModal()
-      this.postContent = ''
+      
     },
   },
   watch: {

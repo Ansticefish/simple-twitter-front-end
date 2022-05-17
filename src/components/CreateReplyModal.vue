@@ -18,12 +18,12 @@
           <p>
             {{ post.name}}
           </p>
-          <p class="ml-1">
+          <p class="ml-2">
             {{ post.account | accountShow }}
           </p> 
-          <div class="ml-1">
+          <div class="ml-2">
           </div>
-          <p class="ml-1">
+          <p class="ml-2">
            {{ post.createdAt | fromNow }}
           </p>
         </div>
@@ -76,9 +76,9 @@ import { emptyAvatar, accountShow, fromNow } from "../utils/mixins"
 
 const dummyPost = {
   id: 55,
-  createdAt: '',
+  createdAt: '2020/10/10',
   updatedAt: '',
-  description: '',
+  description: 'Lorem ipsum dolor sit amet, consectetuer adipiscing elit. Aenean commodo ligula eget dolor. Aenean massa. Cum sociis natoque penatibus et ma',
   user: {
     id: 6,
     account: 'Twitter',
@@ -144,17 +144,14 @@ export default {
         return
       }
 
-      if(this.replyContent.length > 140){
-        this.warning = '字數不可超過140字'
-        this.isProcessing = false
-        return
-      }
-
       // send request
       console.log('create')
       // if succeed
-      this.closeModal()
+      //ask postBlockShort to update replyCount
+      this.$emit('add-reply')
       this.replyContent = ''
+      this.closeModal()
+      
     },
   },
   created ( ) {
@@ -167,8 +164,10 @@ export default {
           this.replyContent.length < 141
         ) {
           this.warning = ''
+          this.isProcessing = false
         } else if (this.replyContent.length > 140) {
           this.warning = '字數不可超過140字'
+          this.isProcessing = true
         }
       }
     }
@@ -179,6 +178,7 @@ export default {
 
 <style lang="scss" scoped>
 @import '../assets/scss/modal.scss';
+@import '../assets/scss/post.scss';
 .modal {
   @extend %modal;
   height: 450px;
@@ -200,12 +200,7 @@ export default {
     top: 82px;
   }
   &__avatar {
-    position: absolute;
-    top: 16px;
-    left: 24px;
-    height: 50px;
-    width: 50px;
-    border-radius: 50%;
+   @extend %avatar;
   }
   &__content {
     width: 85%;
@@ -216,9 +211,7 @@ export default {
     }
     &__body {
       margin-top: 8px;
-      color: #1c1c1c;
-      font-weight: 400;
-      font-size: 15px;
+      @extend %description-font;
     }
     &__footer {
       display: flex;
@@ -230,27 +223,7 @@ export default {
 
 // font-style
 .modal__post__content__header {
-  & > p {
-      color: #1c1c1c;
-      font-size: 15px;
-      font-weight: 700; 
-    }
-    & > p ~ p {
-      color: $color-secondary;
-      font-size: 14px;
-      font-weight: 400; 
-    }
-    & > p ~ p ~ p {
-      color: $color-secondary;
-      font-size: 14px;
-      font-weight: 400; 
-    }
-    div {
-      width: 3px;
-      height: 3px;
-      border-radius: 50%;
-      background-color: $color-secondary;
-    }
+  @extend %post-header-font;
 }
 
 .modal__post__content__footer {

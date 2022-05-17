@@ -145,6 +145,7 @@
             >
               儲存
             </button>
+            <button @click.stop.prevent="testAPI"> API TEST </button>
           </form>
         </div>
       </div>  
@@ -157,6 +158,7 @@ import SideBar from '../components/SideBar.vue'
 import { Toast, ToastIcon } from '../utils/helpers'
 import { mapState } from 'vuex'
 import { preventInputBlank } from '../utils/mixins'
+import usersAPI from '../apis/users'
 
 export default {
   name: 'SettingPage',
@@ -204,7 +206,23 @@ export default {
       this.name = name
       this.email = email
     },
-    handleSubmit () {
+    async handleSubmit () {
+      try {
+        const response = await usersAPI.userSetting({
+          userId: this.currentUser.id,
+          account: this.account,
+          name: this.name,
+          email: this.email,
+          password: this.password,
+          checkPassword: this.checkPassword
+        })
+
+        console.log(response)
+
+      } catch(error) {
+        console.log('error', error)
+      }
+
       this.isProcessing = true
       // avoid empty data
       if(!this.account.trim() || 
@@ -271,11 +289,6 @@ export default {
       this.$store.commit('setCurrentUser', newUserInfo)
       sessionStorage.setItem('currentUser', JSON.stringify(newUserInfo))
 
-    },
-    addAccountPrefix () {
-      const account = this.account.trim()
-      if(account.length >= 1) return
-      this.account = '@' + account
     },
   },
   created () {

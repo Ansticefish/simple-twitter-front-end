@@ -5,7 +5,7 @@
    :key="post.id"
    class="post">
       <img 
-        @click.stop.prevent="toPersonalPage(post.TweetUser.account)"
+        @click.stop.prevent="toPersonalPage(post.TweetUser.id)"
         :src="post.TweetUser.avatar | emptyAvatar" 
         alt="avatar"
         class="post__avatar"
@@ -13,7 +13,7 @@
       <div class="post__content">
         <div class="post__content__header">
           <p 
-           @click.stop.prevent="toPersonalPage(post.TweetUser.account)"
+           @click.stop.prevent="toPersonalPage(post.TweetUser.id)"
            class="name"
           >
             {{ post.TweetUser.name}}
@@ -113,12 +113,12 @@ export default {
     fetchPosts () {
       this.posts = this.initialPosts
     },
-    toPersonalPage (userAccount) {
+    toPersonalPage (userId) {
       if (this.$route.name === 'home-page' ||
-       this.$route.params.userAccount !== userAccount) {
+       this.$route.params.id !== userId) {
         this.$router.push({
           name: "personal-page-root",
-          params: { userAccount: userAccount },
+          params: { id: userId },
         });
       }
     },

@@ -24,12 +24,10 @@
         </div> 
         <!-- Render Posts -->
         <PostBlockShort
-         :posts="posts" />
-        <button 
-        @click.stop.prevent="openReplyModal"
-        >
-          Reply Modal Fake Trigger
-        </button>
+         v-for="post in posts"
+         :key="post.id"
+         :post="post" 
+        />
       </div>
       <div 
        class="
@@ -41,21 +39,14 @@
       <!-- Modals -->
       <div 
         class="modal-backdrop" 
-        v-if="openReply"
-      >
-         <CreateReplyModal 
-         :postId="selectedPostId"
-         :currentUser="currentUser"
-         @closeReplyModal="closeReplyModal"/>
-      </div> 
-      <div 
-        class="modal-backdrop" 
         v-if="openCreate"
       >
         <CreatePostModal
         :currentUser="currentUser" 
         :isHome="false"
-        @closeCreateModal="closeCreateModal"/>  
+        @closeCreateModal="closeCreateModal"
+        @update-data="updateData"
+        />  
       </div>
     </div> 
   </div>
@@ -66,12 +57,11 @@ import SideBar from '../components/SideBar.vue'
 import PopularUsers from '../components/PopularUsers.vue'
 import CreatePostModal from '../components/CreatePostModal.vue'
 import PostBlockShort from '../components/PostBlockShort.vue'
-import CreateReplyModal from '../components/CreateReplyModal.vue'
 import { mapState } from 'vuex'
 
 const dummyPosts = [
   {
-    id: 5,
+    id: 1,
     description: 'hihihihihi',
     user: {
       id: 6,
@@ -85,8 +75,8 @@ const dummyPosts = [
     isLiked: true
   },
   {
-    id: 5,
-    description: 'hihihihihihihihihihihihihihihi',
+    id: 2,
+    description: 'hihihihihihihihihihihihihihihi 55555555555555555555555555   55555555555555555555555555  555555555555555',
     user: {
       id: 6,
       account: 'test4',
@@ -99,8 +89,8 @@ const dummyPosts = [
     isLiked: true
   },
   {
-    id: 5,
-    description: 'hihihihihihihihihihihihihihihi',
+    id: 3,
+    description: 'Lorem ipsum dolor sit amet, consectetuer adipiscing elit. Aenean commodo ligula eget dolor. Aenean massa. Cum sociis natoque penatibus et ma',
     user: {
       id: 6,
       account: 'test3',
@@ -113,7 +103,7 @@ const dummyPosts = [
     isLiked: true
   },
   {
-    id: 5,
+    id: 4,
     description: 'no no no no no ',
     user: {
       id: 6,
@@ -151,13 +141,10 @@ export default {
     PopularUsers,
     CreatePostModal,
     PostBlockShort,
-    CreateReplyModal,
   },
   data () {
     return {
-      openCreate: false,
-      openReply: false,
-      selectedPostId: 5, 
+      openCreate: false, 
       posts: []
     }
   },
@@ -169,18 +156,16 @@ export default {
       // Add API
       this.posts = dummyPosts
     },
+    updateData () {
+      console.log('update')
+      this.fetchPosts()
+    },
     openCreateModal () {
       this.openCreate = true
     },
     closeCreateModal () {
       this.openCreate = false
     },
-    openReplyModal () {
-      this.openReply = true
-    },
-    closeReplyModal () {
-      this.openReply = false
-    }
   },
   created () {
     this.fetchPosts ()
@@ -189,12 +174,12 @@ export default {
 </script>
 
 <style lang="scss" scoped>  
+@import '../assets/scss/modal.scss';
 
 .home {
   height: 100vh;
   overflow-y: auto;
   padding: 0px;
-  margin-right: -8px;
   border-right: 1px solid $color-tab-line;
   border-left: 1px solid $color-tab-line;
   &__header {
@@ -211,7 +196,6 @@ export default {
       height: 146px;
       padding: 0;
       border-bottom: 10px solid $color-tab-line;
-      margin-bottom: 50px;
       cursor: pointer;
     }
 }
@@ -221,15 +205,7 @@ export default {
   position: absolute;
 }
 .modal-backdrop {
-    position: fixed;
-    top: 0;
-    bottom: 0;
-    left: 0;
-    right: 0;
-    background-color: #00000077;
-    display: flex;
-    justify-content: center;
-    padding: 56px;
+    @extend %modal-backdrop;
 }
 
 

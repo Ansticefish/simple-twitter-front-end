@@ -90,12 +90,17 @@ export default {
         await postsAPI.createPost({
           description: this.postContent
         })
-
+        
+        Toast.fire({
+          title: '推文發送成功',
+          html: ToastIcon.greenCheckHtml
+        })
         this.$emit('update-data')
         this.closeModal()
         this.postContent = ''
 
       } catch (error) {
+        this.isProcessing = false
         const errorMsg = error.response.data.message
         if (errorMsg === 'Error:推文內容不可空白！') {
           Toast.fire({
@@ -104,9 +109,6 @@ export default {
           })
         }
       }
-      
-
-      
     },
   },
   watch: {

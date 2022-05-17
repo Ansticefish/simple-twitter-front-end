@@ -73,7 +73,7 @@
 
 <script>
 import { emptyAvatar, accountShow, fromNow } from "../utils/mixins"
-// import postsAPI from '../apis/posts'
+import { Toast, ToastIcon } from '../utils/helpers'
 
 export default {
   name: 'CreateReplyModal',
@@ -116,6 +116,13 @@ export default {
       this.$emit('add-reply', this.post.id)
       this.replyContent = ''
       this.closeModal()
+
+      
+      Toast.fire({
+        title: '已成功回覆貼文',
+        html: ToastIcon.greenCheckHtml
+      })
+
       
     },
   },

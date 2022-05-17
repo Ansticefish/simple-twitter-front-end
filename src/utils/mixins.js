@@ -10,9 +10,11 @@ export const preventInputBlank = {
                 } else if (this.account.length > 50) {
                     this.a.error = true
                     this.a.warning = '字數超出上限！'
+                    this.isProcessing = true
                 } else {
                     this.a.error = false
                     this.a.warning = ''
+                    this.isProcessing = false
                 }
             }
         },
@@ -24,9 +26,11 @@ export const preventInputBlank = {
                 } else if (this.name.length > 50) {
                     this.n.error = true
                     this.n.warning = '字數超出上限！'
+                    this.isProcessing = true
                 } else {
                     this.n.error = false
                     this.n.warning = ''
+                    this.isProcessing = false
                 }
             }
         },

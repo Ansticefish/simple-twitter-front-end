@@ -244,11 +244,21 @@ $active-icon-url) {
 
 /* - main part (middle) - */
 
-%main-conatiner_ {
+%main-container_ {
   height: 100vh;
+  padding: 0;
   border-left: 1px solid $color-tab-line;
   border-right: 1px solid $color-tab-line;
   overflow-y: auto;
+}
+
+%header_ {
+  width: 100%;
+  height: 74px;
+  padding: 16px 24px;
+  display: flex;
+  align-items: center;
+  border-bottom: 1px solid $color-tab-line;
 }
 
 
@@ -283,7 +293,7 @@ $active-icon-url) {
 }
 
 %num_ {
-  font-size: $font-size-secondary;
+  font-family: $number-font;
   font-weight: bold;
   color: $color-secondary;
 }

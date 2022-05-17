@@ -104,11 +104,8 @@ export default {
 @import '../assets/scss/modal.scss';
 
 .home {
-  height: 100vh;
-  overflow-y: auto;
-  padding: 0px;
-  border-right: 1px solid $color-tab-line;
-  border-left: 1px solid $color-tab-line;
+ @extend %main-container_;
+ padding: 0;
   &__header {
     width: 100%;
     height: 74px;

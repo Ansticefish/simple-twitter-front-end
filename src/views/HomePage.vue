@@ -58,81 +58,7 @@ import PopularUsers from '../components/PopularUsers.vue'
 import CreatePostModal from '../components/CreatePostModal.vue'
 import PostBlockShort from '../components/PostBlockShort.vue'
 import { mapState } from 'vuex'
-
-const dummyPosts = [
-  {
-    id: 1,
-    description: 'hihihihihi',
-    user: {
-      id: 6,
-      account: 'test5',
-      name: 'test5',
-      avatar: null,
-    },
-    createdAt: 2020/10/3,
-    replyCount: 55,
-    likeCount: 60,
-    isLiked: true
-  },
-  {
-    id: 2,
-    description: 'hihihihihihihihihihihihihihihi 55555555555555555555555555   55555555555555555555555555  555555555555555',
-    user: {
-      id: 6,
-      account: 'test4',
-      name: 'test4',
-      avatar: null,
-    },
-    createdAt: 2020/10/3,
-    replyCount: 55,
-    likeCount: 60,
-    isLiked: true
-  },
-  {
-    id: 3,
-    description: 'Lorem ipsum dolor sit amet, consectetuer adipiscing elit. Aenean commodo ligula eget dolor. Aenean massa. Cum sociis natoque penatibus et ma',
-    user: {
-      id: 6,
-      account: 'test3',
-      name: 'test3',
-      avatar: null,
-    },
-    createdAt: 2020/10/3,
-    replyCount: 55,
-    likeCount: 60,
-    isLiked: true
-  },
-  {
-    id: 4,
-    description: 'no no no no no ',
-    user: {
-      id: 6,
-      account: 'test2',
-      name: 'test2',
-      avatar: null,
-    },
-    createdAt: 2020/10/3,
-    replyCount: 55,
-    likeCount: 60,
-    isLiked: true
-  },
-  {
-    id: 5,
-    description: '555 66666 666',
-    user: {
-      id: 6,
-      account: 'test1',
-      name: 'test1',
-      avatar: null,
-    },
-    createdAt: 2020/10/3,
-    replyCount: 55,
-    likeCount: 60,
-    isLiked: true
-  }
-]
-
-
+import postsAPI from '../apis/posts'
 
 export default {
   name: 'HomePage',
@@ -152,9 +78,13 @@ export default {
     ...mapState(['currentUser'])
   },
   methods: {
-    fetchPosts () {
-      // Add API
-      this.posts = dummyPosts
+    async fetchPosts () {
+      try {
+         const { data } = await postsAPI.getPosts()
+         this.posts = data
+      } catch (error) {
+        console.log('error', error)
+      }
     },
     updateData () {
       console.log('update')

@@ -1,5 +1,4 @@
 import { apiHelper } from "../utils/helpers";
-const getToken = () => localStorage.getItem('token')
 
 export default {
   getPosts() {
@@ -10,11 +9,7 @@ export default {
   },
   // untest
   getPostReplies(postId) {
-    return apiHelper.get(`/tweets/${postId}/replies`, {
-      headers: {
-        Authorization: `Bearer ${getToken()}`
-      }
-    })
+    return apiHelper.get(`/tweets/${postId}/replies`)
   },
   createPost({ description }) {
     return apiHelper.post('/tweets', { description })

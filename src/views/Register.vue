@@ -148,7 +148,7 @@
            mb-6"
            :disabled="isProcessing"
           >
-            {{ isProcessing? '資料處理中': '註冊'}}
+           註冊
           </button>
         </form>
         <router-link 
@@ -218,12 +218,6 @@ export default {
           return
         }
         
-        // account & name must be less than 50 characters
-        if (this.account.length > 50 ||
-        this.name.length > 50 ) {
-          this.isProcessing = false
-          return
-        }
 
         // check password and checkPassword value
         if (this.password !== this.checkPassword) {
@@ -260,7 +254,7 @@ export default {
           }) 
         } else if (message === 'Error:此 Email 已被註冊！'){
           Toast.fire({
-            title: 'Account已重複註冊',
+            title: 'Email已重複註冊',
             html: ToastIcon.redCrossHtml
           }) 
         } else {

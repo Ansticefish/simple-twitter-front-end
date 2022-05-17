@@ -5,7 +5,7 @@
    :key="post.id"
    class="post">
       <img 
-        @click.stop.prevent="toPersonalPage(post.TweetUser.account)"
+        @click.stop.prevent="toPersonalPage(post.TweetUser.id)"
         :src="post.TweetUser.avatar | emptyAvatar" 
         alt="avatar"
         class="post__avatar"
@@ -13,17 +13,17 @@
       <div class="post__content">
         <div class="post__content__header">
           <p 
-           @click.stop.prevent="toPersonalPage(post.TweetUser.account)"
+           @click.stop.prevent="toPersonalPage(post.TweetUser.id)"
            class="name"
           >
             {{ post.TweetUser.name}}
           </p>
-          <p class="ml-1">
+          <p class="ml-2">
             {{ post.TweetUser.account | accountShow }}
           </p> 
-          <div class="ml-1">
+          <div class="ml-2">
           </div>
-          <p class="ml-1">
+          <p class="ml-2">
            {{ post.createdAt | fromNow }}
           </p>
         </div>
@@ -113,12 +113,12 @@ export default {
     fetchPosts () {
       this.posts = this.initialPosts
     },
-    toPersonalPage (userAccount) {
+    toPersonalPage (userId) {
       if (this.$route.name === 'home-page' ||
-       this.$route.params.userAccount !== userAccount) {
+       this.$route.params.id !== userId) {
         this.$router.push({
           name: "personal-page-root",
-          params: { userAccount: userAccount },
+          params: { id: userId },
         });
       }
     },
@@ -226,10 +226,6 @@ export default {
   border-bottom: 1px solid $color-tab-line;
   &__avatar {
     @extend %avatar;
-    cursor: pointer;
-    &:hover + div > div > .name {
-      text-decoration: underline;
-    }
   }
   &__content {
     width: 85%;
@@ -238,10 +234,7 @@ export default {
       display: flex;
       align-items: center;
       & .name {
-        cursor: pointer;
-        &:hover {
-          text-decoration: underline;
-        }
+        @extend %name_;
       }
     }
     &__body {

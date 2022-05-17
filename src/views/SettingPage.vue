@@ -145,7 +145,6 @@
             >
               儲存
             </button>
-            <button @click.stop.prevent="testAPI"> API TEST </button>
           </form>
         </div>
       </div>  
@@ -208,8 +207,35 @@ export default {
     },
     async handleSubmit () {
       try {
-        const response = await usersAPI.userSetting({
-          userId: this.currentUser.id,
+
+        this.isProcessing = true
+        // avoid empty data
+        if(!this.account.trim() || 
+        !this.name.trim() ||
+        !this.email.trim() ||
+        !this.password.trim() ||
+        !this.checkPassword.trim()) {
+          Toast.fire({
+            title: '欄位不可空白',
+            html: ToastIcon.redCrossHtml
+          })
+          this.isProcessing = false
+          return
+        }
+        
+        // check password and checkPassword value
+        if (this.password !== this.checkPassword) {
+          Toast.fire({
+            title: '兩次密碼不同，請重新輸入',
+            html: ToastIcon.redCrossHtml
+          })
+          this.checkPassword = ''
+          this.isProcessing = false
+          return
+        }
+
+        await usersAPI.editUserSetting({
+          id: this.currentUser.id,
           account: this.account,
           name: this.name,
           email: this.email,
@@ -217,78 +243,42 @@ export default {
           checkPassword: this.checkPassword
         })
 
-        console.log(response)
+ 
+        Toast.fire({
+          title: '資料更新成功',
+          html: ToastIcon.greenCheckHtml
+        })
+
+        this.isProcessing = false
+        // save new user data to vuex
+        this.$store.dispatch('fetchCurrentUser')
 
       } catch(error) {
-        console.log('error', error)
-      }
-
-      this.isProcessing = true
-      // avoid empty data
-      if(!this.account.trim() || 
-      !this.name.trim() ||
-      !this.email.trim() ||
-      !this.password.trim() ||
-      !this.checkPassword.trim()) {
-        Toast.fire({
-          title: '欄位不可空白',
-          html: ToastIcon.redCrossHtml
-        })
         this.isProcessing = false
-        return
+        const message = error.response.data.message
+        if ( message === 'Error:密碼與確認密碼不符！') {
+          Toast.fire({
+            title: '兩次密碼不同，請重新輸入',
+            html: ToastIcon.redCrossHtml
+          })
+          this.checkPassword = ''
+        } else if (message === 'Error:此帳號已被註冊！') {
+          Toast.fire({
+            title: 'Account已重複註冊',
+            html: ToastIcon.redCrossHtml
+          })
+        } else if ( message === 'Error:此 Email 已被註冊！') {
+          Toast.fire({
+            title: 'Email已重複註冊',
+            html: ToastIcon.redCrossHtml
+          })
+        } else {
+          Toast.fire({
+            title: '資料更新失敗',
+            html: ToastIcon.redCrossHtml
+          })
+        }
       }
-      
-      // account & name must be less than 50 characters
-      if (this.account.length > 50 ||
-      this.name.length > 50 ) {
-        this.isProcessing = false
-        return
-      }
-  
-      
-      // check password and checkPassword value
-      if (this.password !== this.checkPassword) {
-        Toast.fire({
-          title: '兩次密碼不同，請重新輸入',
-          html: ToastIcon.redCrossHtml
-        })
-        this.checkPassword = ''
-        this.isProcessing = false
-        return
-      }
-
-      // Add API
-      // handle errors from server
-
-      // account repeated (error from server)
-        //  this.a.error = true
-        //  this.a.warning = 'account已重複註冊！'
-        //  this.isProcessing = false
-        //  return
-
-       // email repeated (error from server)
-        //  this.m.error = true
-        //  this.m.warning = 'email已重複註冊！'
-        //  this.isProcessing = false
-        //  return
-
-
-      // if successfully edited
-      Toast.fire({
-        title: '資料更新成功',
-        html: ToastIcon.greenCheckHtml
-      })
-
-      this.isProcessing = false
-      // save new user data to vuex
-      const newUserInfo = {
-        account: this.account,
-        name: this.name,
-        email: this.email,
-      }
-      this.$store.commit('setCurrentUser', newUserInfo)
-      sessionStorage.setItem('currentUser', JSON.stringify(newUserInfo))
-
     },
   },
   created () {
@@ -300,10 +290,8 @@ export default {
 <style lang="scss" scoped>
 @import '../assets/scss/signIn.scss';
 .setting {
-  height: 100vh;
+  @extend %main-container_;
   padding: 0;
-  border-right: 1px solid $color-tab-line;
-  border-left: 1px solid $color-tab-line;
   &__header {
     width: 100%;
     height: 74px;
@@ -325,6 +313,9 @@ export default {
   width: 88px;
   height: 46px;
   padding: 0;
+  &:disabled {
+    opacity: 0.6;
+  }
 }
 
 </style>

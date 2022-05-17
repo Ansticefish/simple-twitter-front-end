@@ -74,6 +74,7 @@
 <script>
 import { emptyAvatar, accountShow, fromNow } from "../utils/mixins"
 import { Toast, ToastIcon } from '../utils/helpers'
+import postsAPI from '../apis/posts'
 
 export default {
   name: 'CreateReplyModal',
@@ -97,34 +98,50 @@ export default {
   },
   methods: {
     closeModal () {
-      this.postContent = ''
+      this.replyContent = ''
       this.$emit('closeReplyModal')
     },
-    createReply () {
-      this.isProcessing = true
+    async createReply () {
+      try {
+        this.isProcessing = true
 
-      if (!this.replyContent.trim()) {
-        this.warning = '內容不可空白'
+        if (!this.replyContent.trim()) {
+          this.warning = '內容不可空白'
+          this.isProcessing = false
+          return
+        }
+
+        await postsAPI.createReply({
+          postId: this.post.id,
+          comment: this.replyContent
+        })
+
+        //ask postBlockShort to update replyCount
+        this.$emit('add-reply', this.post.id)
+        this.replyContent = ''
+        this.closeModal()
+
+      
+        Toast.fire({
+          title: '已成功回覆貼文',
+          html: ToastIcon.greenCheckHtml
+        })   
+
+
+      } catch (error) {
         this.isProcessing = false
-        return
+        const message = error.response.data.message
+        console.log(message)
       }
-
-      // send request
-      console.log('create')
-      // if succeed
-      //ask postBlockShort to update replyCount
-      this.$emit('add-reply', this.post.id)
-      this.replyContent = ''
-      this.closeModal()
-
-      
-      Toast.fire({
-        title: '已成功回覆貼文',
-        html: ToastIcon.greenCheckHtml
-      })
-
-      
     },
+    async testAPI () {
+      try {
+        const response = await postsAPI.getReplies(this.post.id)
+        console.log(response)
+      } catch (error) {
+        console.log(error)
+      }
+    }
   },
   watch: {
     'replyContent': {
@@ -180,6 +197,7 @@ export default {
     }
     &__body {
       margin-top: 8px;
+      height: 85px;
       @extend %description-font;
     }
     &__footer {
@@ -202,7 +220,7 @@ export default {
       font-weight: 400; 
     }
   & > p ~ p {
-    color: $color-aid-orange;
+    color: $color-brand;
   } 
 }
 

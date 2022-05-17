@@ -134,7 +134,7 @@ export default {
           params: { userAccount: userAccount },
         });
       }
-    },
+    }
   },
   created() {
     this.fecthUsers();
@@ -163,27 +163,18 @@ export default {
         align-items: center;
         &__avatar {
           margin-right: 8px;
-          width: 50px;
-          height: 50px;
-          object-fit: cover;
-          &:hover {
-            cursor: pointer;
-            & + div .list__card__info__name {
-              text-decoration: underline;
-            }
+          @extend %avatar_;
+          &:hover + div .list__card__info__name {
+            text-decoration: underline;
           }
         }
         &__info {
           &__name {
-            line-height: 26px;
-            font-weight: bold;
-            &:hover {
-              cursor: pointer;
-              text-decoration: underline;
-            }
+            @extend %name_;
           }
           &__account {
-            line-height: 22px;
+            @extend %account_;
+            
             font-size: $font-size-secondary;
             color: $color-gray-6;
           }

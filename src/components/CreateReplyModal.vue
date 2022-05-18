@@ -130,16 +130,14 @@ export default {
 
       } catch (error) {
         this.isProcessing = false
-        const message = error.response.data.message
-        console.log(message)
-      }
-    },
-    async testAPI () {
-      try {
-        const response = await postsAPI.getReplies(this.post.id)
-        console.log(response)
-      } catch (error) {
-        console.log(error)
+        const errorMsg = error.response.data.message
+        if( errorMsg ) {
+          const message = errorMsg.slice(6)
+          Toast.fire({
+            title: `${message}`,
+            html: ToastIcon.redCrossHtml
+          })
+        }
       }
     }
   },

@@ -148,10 +148,11 @@ export default {
 
       } catch (error) {
         const errorMsg = error.response.data.message
-        if(errorMsg === 'Error:已對這篇推文按過Like！') {
+        if( errorMsg ) {
+          const message = errorMsg.slice(6)
           Toast.fire({
-            title: '已經對這篇貼文按過讚',
-            html: ToastIcon.yellowWarningHtml
+            title: `${message}`,
+            html: ToastIcon.redCrossHtml
           })
         }
       }
@@ -176,10 +177,11 @@ export default {
 
       } catch (error){
         const errorMsg = error.response.data.message
-        if(errorMsg === 'Error:已對這篇推文按過Like！') {
+        if( errorMsg ) {
+          const message = errorMsg.slice(6)
           Toast.fire({
-            title: '已經對這篇貼文按過讚',
-            html: ToastIcon.yellowWarningHtml
+            title: `${message}`,
+            html: ToastIcon.redCrossHtml
           })
         }
       }

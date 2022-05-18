@@ -62,11 +62,14 @@ export default {
         const { data } = await adminAPI.getPosts()
         this.posts = data
       } catch (error) {
-        console.log('error', error)
-        Toast.fire({
-          title: '無法取得推文清單',
-          html: ToastIcon.redCrossHtml
-        })
+        const errorMsg = error.response.data.message
+        if( errorMsg ) {
+          const message = errorMsg.slice(6)
+          Toast.fire({
+            title: `${message}`,
+            html: ToastIcon.redCrossHtml
+          })
+        }
       }
     },
     async deletePost( id ) {

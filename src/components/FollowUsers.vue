@@ -87,7 +87,14 @@ export default {
         this.followList = data 
         this.isLoading = false
       } catch (error) {
-        console.log(error)
+        const errorMsg = error.response.data.message
+        if( errorMsg ) {
+          const message = errorMsg.slice(6)
+          Toast.fire({
+            title: `${message}`,
+            html: ToastIcon.redCrossHtml
+          })
+        }
         this.isLoading = false
       }
     },
@@ -97,7 +104,14 @@ export default {
         this.followList = data
         this.isLoading = false
       } catch (error) {
-        console.log(error)
+        const errorMsg = error.response.data.message
+        if( errorMsg ) {
+          const message = errorMsg.slice(6)
+          Toast.fire({
+            title: `${message}`,
+            html: ToastIcon.redCrossHtml
+          })
+        }
         this.isLoading = false
       }
     },
@@ -120,9 +134,8 @@ export default {
       try {
         const id = this.getUserId(account)
 
-        const response = await usersAPI.followUser(id)
-        
-        console.log(response)
+         await usersAPI.followUser(id)
+      
         this.followList = this.followList.map( follow => {
           if( follow.account === account) {
             return {
@@ -135,17 +148,13 @@ export default {
         })
 
       } catch (error) {
-        const errorMsg = error.response.data.message
-        if (errorMsg === 'Error:不能追蹤自己!') {
+       const errorMsg = error.response.data.message
+        if( errorMsg ) {
+          const message = errorMsg.slice(6)
           Toast.fire({
-            title: '不能追蹤自己！',
+            title: `${message}`,
             html: ToastIcon.redCrossHtml
-          }) 
-          } else if (errorMsg === 'Error:你已經追蹤該使用者！') {
-            Toast.fire({
-              title: '已追蹤該使用者',
-              html: ToastIcon.yellowWarningHtml
-            }) 
+          })
         } else { 
           Toast.fire({
             title: '追蹤失敗',
@@ -172,21 +181,16 @@ export default {
         })
 
       } catch (error) {
-        // need to be tested 
         const errorMsg = error.response.data.message
-        if (errorMsg === 'Error:不能追蹤自己!') {
+        if( errorMsg ) {
+          const message = errorMsg.slice(6)
           Toast.fire({
-            title: '不能追蹤自己！',
+            title: `${message}`,
             html: ToastIcon.redCrossHtml
-          }) 
-          } else if (errorMsg === 'Error:你已經追蹤該使用者！') {
-            Toast.fire({
-              title: '已追蹤該使用者',
-              html: ToastIcon.redCrossHtml
-            }) 
+          })
         } else { 
           Toast.fire({
-            title: '追蹤失敗',
+            title: '取消追蹤失敗',
             html: ToastIcon.redCrossHtml
           }) 
         } 

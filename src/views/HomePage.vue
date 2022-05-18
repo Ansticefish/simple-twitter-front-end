@@ -57,6 +57,7 @@ import CreatePostModal from '../components/CreatePostModal.vue'
 import PostBlockShort from '../components/PostBlockShort.vue'
 import { mapState } from 'vuex'
 import postsAPI from '../apis/posts'
+import { Toast, ToastIcon } from '../utils/helpers'
 
 export default {
   name: 'HomePage',
@@ -81,7 +82,14 @@ export default {
          const { data } = await postsAPI.getPosts()
          this.posts = data
       } catch (error) {
-        console.log('error', error)
+        const errorMsg = error.response.data.message
+        if( errorMsg ) {
+          const message = errorMsg.slice(6)
+          Toast.fire({
+            title: `${message}`,
+            html: ToastIcon.redCrossHtml
+          })
+        }
       }
     },
     updateData () {

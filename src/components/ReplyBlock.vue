@@ -21,10 +21,10 @@
           >
         </div>
         <p
-          @click="toPersonalPage(reply.PostUser.account)"
+          @click="toPersonalPage(reply.Tweet.account)"
           class="reply__creater mb-2"
         >
-          回覆 <span>{{ reply.PostUser.account | accountShow }}</span>
+          回覆 <span>{{ reply.Tweet.account | accountShow }}</span>
         </p>
         <p class="reply__content">
           {{ reply.comment }}

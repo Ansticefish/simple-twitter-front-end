@@ -6,12 +6,25 @@
       </div>
       <div class="main col-lg-7 col-xl-7">
         <SinglePostheader />
-        <PostBlockFull :post="post" />
-        <ReplyBlock :replies="replies" />
-        <CreateReplyModal />
+        <PostBlockFull
+          v-show="!isLoading"
+          :post="post"
+          @replyPost="openReplyModal"
+          @likePost="likePost"
+          @unlikePost="unlikePost"
+        />
+        <ReplyBlock v-show="!isLoading" :replies="replies" />
       </div>
       <div class="col-lg-3 col-xl-3">
         <PopularUsers />
+      </div>
+      <div class="modal-backdrop" v-if="openReply">
+        <CreateReplyModal
+          :post="post"
+          :currentUser="currentUser"
+          @closeReplyModal="closeReplyModal"
+          @add-reply="addReply"
+        />
       </div>
     </div>
   </div>
@@ -20,103 +33,14 @@
 <script>
 import SideBar from "../components/SideBar.vue";
 import PopularUsers from "../components/PopularUsers.vue";
-import SinglePostheader from '../components/SinglePostHeader.vue'
+import SinglePostheader from "../components/SinglePostHeader.vue";
 import PostBlockFull from "../components/PostBlockFull.vue";
 import ReplyBlock from "../components/ReplyBlock.vue";
 import CreateReplyModal from "../components/CreateReplyModal.vue";
 
-const dummyData = {
-  tweet: {
-    id: 11,
-    description:
-      "Nam magnam eos iusto corporis repellendus alias. Rerum voluptatem ev",
-    UserId: 1,
-    replyCount: 3,
-    likeCount: 1,
-    createdAt: "2022-05-17T02:44:15.000Z",
-    updatedAt: "2022-05-17T02:44:15.000Z",
-    TweetUser: {
-      id: 1,
-      account: "root",
-      name: "root",
-      avatar: "https://i.imgur.com/q6bwDGO.png",
-    },
-    isLiked: false,
-  },
-  replies: [
-    {
-      id: 1,
-      createdAt: "2022-05-14T08:38:46.106Z",
-      updatedAt: "2022-05-15T08:38:46.106Z",
-      comment: "vel pharetra vel turpis nunc eget lorem dolor sed viverra",
-      ReplyUser: {
-        id: -1,
-        name: "root",
-        account: "root",
-        avatar: "",
-      },
-      PostUser: {
-        id: 1,
-        name: "Hello",
-        account: "Word",
-      },
-    },
-    {
-      id: 2,
-      createdAt: "2022-05-14T08:38:46.106Z",
-      updatedAt: "2022-05-15T08:38:46.106Z",
-      comment:
-        "enim ut sem viverra aliquet eget sit amet tellus cras adipiscing enim eu turpis egestas pretium aenean pharetra magna ac",
-      ReplyUser: {
-        id: -1,
-        name: "root",
-        account: "root",
-        avatar: "",
-      },
-      PostUser: {
-        id: 1,
-        name: "Hello",
-        account: "Word",
-      },
-    },
-    {
-      id: 3,
-      createdAt: "2022-05-13T08:38:46.106Z",
-      updatedAt: "2022-05-14T08:38:46.106Z",
-      comment:
-        "risus nullam eget felis eget nunc lobortis mattis aliquam faucibus purus in massa tempor nec",
-      ReplyUser: {
-        id: -1,
-        name: "root",
-        account: "root",
-        avatar: "",
-      },
-      PostUser: {
-        id: 1,
-        name: "Hello",
-        account: "Word",
-      },
-    },
-    {
-      id: 4,
-      createdAt: "2022-05-12T08:38:46.106Z",
-      updatedAt: "2022-05-12T08:38:46.106Z",
-      comment:
-        "quam vulputate dignissim suspendisse in est ante in nibh mauris cursus mattis molestie a iaculis",
-      ReplyUser: {
-        id: -1,
-        name: "root",
-        account: "root",
-        avatar: "",
-      },
-      PostUser: {
-        id: 1,
-        name: "Hello",
-        account: "Word",
-      },
-    },
-  ],
-};
+import { mapState } from "vuex";
+import postAPI from "../apis/posts";
+import { Toast, ToastIcon } from "../utils/helpers";
 
 export default {
   name: "SinglePost",
@@ -147,24 +71,102 @@ export default {
         isLiked: false,
       },
       replies: [],
+      openReply: false,
+      isLoading: true,
     };
   },
   methods: {
-    fetchPost() {
-      this.post = {...dummyData.tweet}
+    async fetchPost(postId) {
+      try {
+        const { data } = await postAPI.getPost(postId);
+        const {
+          id,
+          description,
+          UserId,
+          replyCount,
+          likeCount,
+          createdAt,
+          TweetUser,
+          isLiked,
+        } = data;
+        this.post = {
+          id,
+          description,
+          UserId,
+          replyCount,
+          likeCount,
+          createdAt,
+          TweetUser: { ...TweetUser },
+          isLiked,
+        };
+        return TweetUser;
+      } catch (err) {
+        console.log(err.message);
+        Toast.fire({
+          title: "無法取得貼文資料",
+          html: ToastIcon.redCrossHtml,
+        });
+      }
     },
-    fetchReplies() {
-      this.replies = [...dummyData.replies];
+    async fetchReplies(postId, createrAccount) {
+      try {
+        const { data } = await postAPI.getPostReplies(postId);
+        this.replies = data.map((reply) => ({
+          ...reply,
+          Tweet: {
+            account: createrAccount,
+          },
+        }));
+        this.isLoading = false;
+      } catch (err) {
+        console.log(err.message);
+        Toast.fire({
+          title: "無法取得回覆資料",
+          html: ToastIcon.redCrossHtml,
+        });
+      }
+    },
+    likePost() {
+      this.post.isLiked = true;
+      this.fetchPost(this.post.id);
+    },
+    unlikePost() {
+      this.post.isLiked = false;
+      this.fetchPost(this.post.id);
+    },
+    openReplyModal() {
+      this.openReply = true;
+    },
+    closeReplyModal() {
+      this.openReply = false;
+    },
+    addReply() {
+      this.post.reply++;
+      this.fetchReplies(this.post.id)
     },
   },
-  created() {
-    this.fetchPost();
-    this.fetchReplies();
+  computed: {
+    ...mapState(["currentUser"]),
+  },
+  async created() {
+    const { id } = this.$route.params;
+    const { account } = await this.fetchPost(id);
+    this.fetchReplies(id, account);
+  },
+  async beforeRouteUpdate(to, from, next) {
+    const { id } = to.params;
+    const { account } = await this.fetchPost(id);
+    this.fetchReplies(id, account);
+    next();
   },
 };
 </script>
 
 <style lang="scss" scoped>
+@import '../assets/scss/modal.scss';
+.modal-backdrop{
+  @extend %modal-backdrop;
+}
 .main {
   @extend %main-container_;
 }

@@ -45,91 +45,8 @@
 
 <script>
 import { accountShow, emptyAvatar, fromNow } from "../utils/mixins"
-// import adminAPI from '../apis/admin'
-
-const dummyPosts = [
-  {
-    TweetUser: {
-      account: 'user1',
-      avatar: '',
-      id: 14,
-      name: 'newUser1'
-    },
-    UserId: 14,
-    createdAt: '2022-05-18T02:03:19.000Z',
-    description: '點擊side bar「推文清單」按鈕，可以在推文清單中看所有推文，並可在推文清單上瀏覽推文的前 50 個字。點擊side bar「推文清單」按鈕，可以在推文清單中看所有推文，並可在推文清單上瀏覽推文的前 50 個字。',
-    id: 3,
-    isLiked: false,
-    likeCount: 1,
-    replyCount: 0,
-    updatedAt: '2022-05-18T02:03:19.000Z'
-  },
-  {
-    TweetUser: {
-      account: 'user1',
-      avatar: '',
-      id: 24,
-      name: 'newUser1'
-    },
-    UserId: 14,
-    createdAt: '2022-05-18T02:03:19.000Z',
-    description: 'Lorem ipsum dolor sit amet, consectetuer adipiscing elit. Aenean commodo ligula eget dolor. Aenean massa. Cum sociis natoque penatibus et ma',
-    id: 4,
-    isLiked: false,
-    likeCount: 1,
-    replyCount: 0,
-    updatedAt: '2022-05-18T02:03:19.000Z'
-  },
-  {
-    TweetUser: {
-      account: 'user1',
-      avatar: '',
-      id: 34,
-      name: 'newUser1'
-    },
-    UserId: 14,
-    createdAt: '2022-05-18T02:03:19.000Z',
-    description: 'nsistent design standards that align to business goals. With SwaggerHub, you can accelerate your team’s design',
-    id: 5,
-    isLiked: false,
-    likeCount: 1,
-    replyCount: 0,
-    updatedAt: '2022-05-18T02:03:19.000Z'
-  },
-  {
-    TweetUser: {
-      account: 'user1',
-      avatar: '',
-      id: 44,
-      name: 'newUser1'
-    },
-    UserId: 14,
-    createdAt: '2022-05-18T02:03:19.000Z',
-    description: 'ff',
-    id: 2,
-    isLiked: false,
-    likeCount: 1,
-    replyCount: 0,
-    updatedAt: '2022-05-18T02:03:19.000Z'
-  },
-  {
-    TweetUser: {
-      account: 'user1',
-      avatar: '',
-      id: 54,
-      name: 'newUser1'
-    },
-    UserId: 14,
-    createdAt: '2022-05-18T02:03:19.000Z',
-    description: 'ff',
-    id: 1,
-    isLiked: false,
-    likeCount: 1,
-    replyCount: 0,
-    updatedAt: '2022-05-18T02:03:19.000Z'
-  }
-]
-  
+import adminAPI from '../apis/admin'
+import { Toast, ToastIcon } from '../utils/helpers'
 
 export default {
   name: 'AdminPostList',
@@ -141,29 +58,43 @@ export default {
   mixins: [ accountShow, emptyAvatar, fromNow ],
   methods: {
     async fetchPosts () {
-      // try {
-      //   const response = await adminAPI.getPosts()
-
-      //   console.log(response)
-      // } catch (error) {
-      //   console.log('error', error)
-      // }
-
-      this.posts = dummyPosts
+      try {
+        const { data } = await adminAPI.getPosts()
+        this.posts = data
+      } catch (error) {
+        console.log('error', error)
+        Toast.fire({
+          title: '無法取得推文清單',
+          html: ToastIcon.redCrossHtml
+        })
+      }
     },
     async deletePost( id ) {
       try {
-        // const response = await adminAPI.deletePost(id)
-
-        // console.log(response)
+        await adminAPI.deletePost(id)
 
         this.posts = this.posts.filter( post => 
           post.id !== id
         )
 
+        Toast.fire({
+          title: '推文刪除成功',
+          html: ToastIcon.greenCheckHtml
+        })
       } catch (error) {
-        console.log('error', error)
-        // Error:推文不存在！
+        const errorMsg = error.response.data.message
+        if( errorMsg ) {
+          const message = errorMsg.slice(6)
+          Toast.fire({
+            title: `${message}`,
+            html: ToastIcon.redCrossHtml
+          })
+        } else {
+          Toast.fire({
+            title: '推文刪除失敗',
+            html: ToastIcon.redCrossHtml
+          })
+        }
       }
     }
   },

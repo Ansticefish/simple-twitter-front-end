@@ -123,7 +123,7 @@ export default {
           } else if (errorMsg === 'Error:你已經追蹤該使用者！') {
             Toast.fire({
               title: '已追蹤該使用者',
-              html: ToastIcon.redCrossHtml
+              html: ToastIcon.yellowWarningHtml
             }) 
         } else { 
           Toast.fire({
@@ -180,6 +180,15 @@ export default {
     }  
     this.fetchFollowings( id )
   },
+  beforeRouteCreated (to, from, next) {
+    const { id } = this.$route.params
+    if(this.$route.name === 'follow-page-followers') {
+      this.fetchFollowers( id )
+      return
+    }  
+    this.fetchFollowings( id )
+    next()
+  }
 }
 </script>
 

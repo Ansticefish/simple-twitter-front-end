@@ -1,5 +1,5 @@
 <template>
-  <div class="container">
+  <div v-if="!isLoading" class="container">
     <div class="row">
       <div class="col-lg-2 col-xl-2">
         <SideBar/>
@@ -57,6 +57,7 @@ import CreatePostModal from '../components/CreatePostModal.vue'
 import PostBlockShort from '../components/PostBlockShort.vue'
 import { mapState } from 'vuex'
 import postsAPI from '../apis/posts'
+import { Toast, ToastIcon } from '../utils/helpers'
 
 export default {
   name: 'HomePage',
@@ -69,7 +70,8 @@ export default {
   data () {
     return {
       openCreate: false, 
-      posts: []
+      posts: [],
+      isLoading: true,
     }
   },
   computed: {
@@ -80,8 +82,18 @@ export default {
       try {
          const { data } = await postsAPI.getPosts()
          this.posts = data
+         this.isLoading = false
       } catch (error) {
-        console.log('error', error)
+        const errorMsg = error.response.data.message
+        if( errorMsg ) {
+          const message = errorMsg.slice(6)
+          Toast.fire({
+            title: `${message}`,
+            html: ToastIcon.redCrossHtml
+          })
+        }
+
+        this.isLoading = false
       }
     },
     updateData () {

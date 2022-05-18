@@ -144,15 +144,15 @@ export default {
       } catch (error) {
         this.isProcessing = false
         const errorMsg = error.response.data.message
-        if( errorMsg === 'Error:帳號或密碼錯誤！') {
-          Toast.fire({
-            title: '帳號或密碼錯誤',
-            html: ToastIcon.redCrossHtml 
-          })
-          this.password = ''
-        } else if ( errorMsg === 'Error:帳號不存在！') {
+        if( errorMsg === 'Error:只有管理者帳號可以登入後台！') {
           this.a.error = true
           this.a.warning = '帳號不存在！'
+        } else if( errorMsg ) {
+          const message = errorMsg.slice(6)
+          Toast.fire({
+            title: `${message}`,
+            html: ToastIcon.redCrossHtml
+          })
         } else {
           Toast.fire({
             title: '登入失敗，請重新確認',

@@ -239,24 +239,20 @@ export default {
 
         // if successfully register
         Toast.fire({
-          title: '註冊成功，請至登入頁面登入',
+          title: '已成功註冊！',
           html: ToastIcon.greenCheckHtml
         })
         this.$router.push({ name: 'sign-in'})
 
       } catch (error) {
         this.isProcessing = false
-        const message = error.response.data.message
-        if (message === 'Error:此 Account 已被註冊！'){
+        const errorMsg = error.response.data.message
+        if( errorMsg ) {
+          const message = errorMsg.slice(6)
           Toast.fire({
-            title: 'Account已重複註冊',
+            title: `${message}`,
             html: ToastIcon.redCrossHtml
-          }) 
-        } else if (message === 'Error:此 Email 已被註冊！'){
-          Toast.fire({
-            title: 'Email已重複註冊',
-            html: ToastIcon.redCrossHtml
-          }) 
+          })
         } else {
           Toast.fire({
             title: '註冊失敗，請確認資料',

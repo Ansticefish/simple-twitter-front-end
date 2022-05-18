@@ -60,6 +60,7 @@ import SideBar from '../components/SideBar.vue'
 import PopularUsers from '../components/PopularUsers.vue'
 import PersonalPageHeader from '../components/PersonalPageHeader.vue'
 import usersAPI from '../apis/users'
+import { Toast, ToastIcon } from '../utils/helpers'
 
 export default {
   name: 'FollowPage',
@@ -79,7 +80,14 @@ export default {
         const { data } = await usersAPI.getUser( { id })
         this.user = data
       } catch (error) {
-        console.log(error)
+        const errorMsg = error.response.data.message
+        if( errorMsg ) {
+          const message = errorMsg.slice(6)
+          Toast.fire({
+            title: `${message}`,
+            html: ToastIcon.redCrossHtml
+          })
+        }
       }
     },
   },

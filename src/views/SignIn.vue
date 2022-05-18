@@ -156,13 +156,11 @@ export default {
 
         localStorage.setItem('token', data.token)
         this.$store.commit('setCurrentUser', data.user)
-        sessionStorage.setItem('currentUser', JSON.stringify(data.user))
-        sessionStorage.setItem('token', JSON.stringify(data.token))
-        sessionStorage.setItem('isAuthenticated', JSON.stringify({isAuthenticated: true}))
         this.$router.push({ name: 'home-page'})
       
 
       } catch (error) {
+        this.isProcessing = false
         const errorMsg = error.response.data.message
         if( errorMsg === 'Error:帳號不存在！'){
           this.a.error = true
@@ -172,10 +170,8 @@ export default {
             title: '帳號或密碼錯誤！',
             html: ToastIcon.redCrossHtml
           })
+          this.password = ''
         }
-        
-        this.password = ''
-        this.isProcessing = false
       }   
     }
   },

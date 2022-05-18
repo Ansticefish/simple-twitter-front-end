@@ -93,25 +93,7 @@
 <script>
 import { Toast, ToastIcon } from '../utils/helpers'
 import { preventInputBlank } from '../utils/mixins'
-
-const dummyAdmin = {
-  account: 'admin',
-  password: '12345678'
-}
-
-const dummyData = {
-  status: 'success',
-  message: 'You have signed in!',
-  token: '0777',
-  currentUser: {
-    id: 66,
-    account: 'admin',
-    name: 'admin',
-    avatar: '@/assets/icons/bell.png',
-    role: 'admin',
-  }
-}
-
+import adminAPI from '../apis/admin'
 
 export default {
   name: 'AdminSignIn',
@@ -132,55 +114,53 @@ export default {
   },
   mixins: [preventInputBlank],
   methods: {
-    handleSubmit () {
+    async handleSubmit () {
+      try {
+        this.isProcessing = true 
+        // avoid empty data
+        if (!this.account.trim() || !this.password.trim()){
+          Toast.fire({
+            title: '帳號、密碼不可空白',
+            html: ToastIcon.redCrossHtml
+          })
+          this.isProcessing = false
+          return
+        }
 
-      this.isProcessing = true 
-      // avoid empty data
-       if (!this.account.trim() || !this.password.trim()){
-        Toast.fire({
-          title: '帳號、密碼不可空白',
-          html: ToastIcon.redCrossHtml
+        // add API 
+        const { data } = await adminAPI.signIn({
+          account: this.account,
+          password: this.password
         })
-        this.isProcessing = false
-        return
-      }
 
-      // add API
-      // handle errors from server
-      if(dummyData.status !== 'success') {
-        throw new Error(dummyData.message)
-      }
-
-       // not registered before (error from server)
-        //  this.a.error = true
-        //  this.a.warning = '帳號不存在！'
-        //  this.isProcessing = false
-        //  return
-      
-      // sign in successfully or not
-      if ( this.account === dummyAdmin.account && this.password === dummyAdmin.password ) {
-        // if success, store token
-        localStorage.setItem('token', dummyData.token)
+        localStorage.setItem('token', data.token)
         Toast.fire({
           title: '登入成功',
           html: ToastIcon.greenCheckHtml
         })
-      } else {
-        Toast.fire({
-          title: '登入失敗，請重新確認',
-          html: ToastIcon.redCrossHtml 
-        })
-        this.password = ''
-        this.isProcessing = false
-        return
-      }
+        this.$store.commit('setCurrentUser', data.user)
+        this.$router.push('/admin/posts')
 
-      // if successfully sign in 
-      sessionStorage.setItem('currentUser', JSON.stringify(dummyData.currentUser))
-      sessionStorage.setItem('token', JSON.stringify(dummyData.token))
-      sessionStorage.setItem('isAuthenticated', JSON.stringify({isAuthenticated: true}))
-      this.$store.commit('setCurrentUser', dummyData.currentUser)
-      this.$router.push('/admin/users')
+      } catch (error) {
+        this.isProcessing = false
+        const errorMsg = error.response.data.message
+        if( errorMsg === 'Error:帳號或密碼錯誤！') {
+          Toast.fire({
+            title: '帳號或密碼錯誤',
+            html: ToastIcon.redCrossHtml 
+          })
+          this.password = ''
+        } else if ( errorMsg === 'Error:帳號不存在！') {
+          this.a.error = true
+          this.a.warning = '帳號不存在！'
+        } else {
+          Toast.fire({
+            title: '登入失敗，請重新確認',
+            html: ToastIcon.redCrossHtml 
+          })
+          this.password = ''
+        }
+      }
     }
   }
 }

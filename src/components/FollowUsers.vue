@@ -193,6 +193,9 @@ export default {
   border-bottom: 1px solid $color-tab-line;
   &__avatar {
     @extend %avatar;
+    &:hover ~ div > div > p {
+      text-decoration: underline;
+    }
   }
   &__wrapper {
     width: 80%;

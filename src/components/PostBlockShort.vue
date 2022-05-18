@@ -219,13 +219,12 @@ export default {
 @import '../assets/scss/modal.scss';
 @import '../assets/scss/post.scss';
 .post {
-  position: relative;
-  display: flex;
-  justify-content: flex-end;
-  height: 168px;
-  border-bottom: 1px solid $color-tab-line;
+  @extend %post;
   &__avatar {
     @extend %avatar;
+    &:hover ~ div > div > .name {
+      text-decoration: underline;
+    }
   }
   &__content {
     width: 85%;
@@ -238,11 +237,7 @@ export default {
       }
     }
     &__body {
-      width: 95%;
-      height: 78px;
-      margin-top: 8px;
-      margin-bottom: 40px;
-      @extend %description-font;
+      @extend %body;
       cursor: pointer;
     }
     &__footer {

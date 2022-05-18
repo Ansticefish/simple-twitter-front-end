@@ -64,7 +64,7 @@ export default {
     async fecthUsers() {
       try {
         const { data } = await usersAPI.getUsersTop();
-        this.users = [...data.result];
+        this.users = [...data];
       } catch (err) {
         console.log(err);
         Toast.fire({

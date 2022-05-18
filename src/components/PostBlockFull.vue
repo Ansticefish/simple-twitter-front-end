@@ -4,12 +4,16 @@
       <div class="post__main pb-2">
         <div class="post__main__info">
           <img
+            @click="getIntoPersonalPage(post.TweetUser.id)"
             :src="post.TweetUser.avatar | emptyAvatar"
             alt=""
             class="post__main__info__avatar mr-2"
           />
           <div class="post__main__info__creater">
-            <p class="post__main__info__creater__name">
+            <p
+              @click="getIntoPersonalPage(post.TweetUser.id)"
+              class="post__main__info__creater__name"
+            >
               {{ post.TweetUser.name }}
             </p>
             <p class="post__main__info__creater__account">
@@ -51,11 +55,11 @@
 import moment from "moment";
 import postAPI from "../apis/posts";
 import { Toast, ToastIcon } from "../utils/helpers";
-import {accountShow, emptyAvatar} from '../utils/mixins'
+import { accountShow, emptyAvatar } from "../utils/mixins";
 
 export default {
   name: "PostBlockFull",
-  mixins:[accountShow, emptyAvatar],
+  mixins: [accountShow, emptyAvatar],
   props: {
     post: {
       type: Object,
@@ -64,15 +68,14 @@ export default {
   },
   methods: {
     reply() {
-      this.$emit('replyPost')
+      this.$emit("replyPost");
     },
     async like() {
       try {
         await postAPI.likePost(this.post.id);
-        this.$emit('likePost')
-
+        this.$emit("likePost");
       } catch (err) {
-        const errorMessage = err.response.data.message.split(':')
+        const errorMessage = err.response.data.message.split(":");
         Toast.fire({
           title: errorMessage[1],
           html: ToastIcon.redCrossHtml,
@@ -80,21 +83,29 @@ export default {
       }
     },
     async unlike() {
-     try {
+      try {
         await postAPI.unlikePost(this.post.id);
-        this.$emit('unlikePost')
+        this.$emit("unlikePost");
       } catch (err) {
-        const errorMessage = err.response.data.message.split(':')
-        Toast.fire({ 
+        const errorMessage = err.response.data.message.split(":");
+        Toast.fire({
           title: errorMessage[1],
           html: ToastIcon.redCrossHtml,
+        });
+      }
+    },
+    getIntoPersonalPage(userId) {
+      if (this.$route.params.id !== userId) {
+        this.$router.push({
+          name: "personal-page-root",
+          params: { id: userId },
         });
       }
     },
   },
   filters: {
     showDate(dateTime) {
-      moment.locale("zh-tw", {
+      moment.updateLocale("zh-tw", {
         monthsShort: "1月_2月_3月_4月_5月_6月_7月_8月_9月_10月_11月_12月".split(
           "_"
         ),
@@ -153,6 +164,9 @@ export default {
       align-items: center;
       &__avatar {
         @extend %avatar_;
+        &:hover + div .post__main__info__creater__name{
+          text-decoration: underline;
+        }
       }
       &__creater {
         &__name {

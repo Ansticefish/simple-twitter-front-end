@@ -24,7 +24,7 @@
           @click="toPersonalPage(reply.Tweet.account)"
           class="reply__creater mb-2"
         >
-          回覆 <span>{{ reply.Tweet.account | accountShow }}</span>
+          回覆 <span>{{ reply.TweetUser.account | accountShow }}</span>
         </p>
         <p class="reply__content">
           {{ reply.comment }}

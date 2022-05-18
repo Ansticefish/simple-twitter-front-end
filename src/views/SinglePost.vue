@@ -7,13 +7,12 @@
       <div class="main col-lg-7 col-xl-7">
         <SinglePostheader />
         <PostBlockFull
-          v-show="!isLoading"
           :post="post"
           @replyPost="openReplyModal"
           @likePost="likePost"
           @unlikePost="unlikePost"
         />
-        <ReplyBlock v-show="!isLoading" :replies="replies" />
+        <ReplyBlock :replies="replies" />
       </div>
       <div class="col-lg-3 col-xl-3">
         <PopularUsers />
@@ -72,7 +71,6 @@ export default {
       },
       replies: [],
       openReply: false,
-      isLoading: true,
     };
   },
   methods: {
@@ -108,16 +106,12 @@ export default {
         });
       }
     },
-    async fetchReplies(postId, createrAccount) {
+    async fetchReplies(postId) {
       try {
         const { data } = await postAPI.getPostReplies(postId);
-        this.replies = data.map((reply) => ({
-          ...reply,
-          Tweet: {
-            account: createrAccount,
-          },
-        }));
-        this.isLoading = false;
+        if (!data.message) {
+          this.replies = [...data];
+        }
       } catch (err) {
         console.log(err.message);
         Toast.fire({
@@ -141,30 +135,30 @@ export default {
       this.openReply = false;
     },
     addReply() {
-      this.post.reply++;
-      this.fetchReplies(this.post.id)
+      this.post.replyCount++;
+      this.fetchReplies(this.post.id);
     },
   },
   computed: {
     ...mapState(["currentUser"]),
   },
-  async created() {
+  created() {
     const { id } = this.$route.params;
-    const { account } = await this.fetchPost(id);
-    this.fetchReplies(id, account);
+    this.fetchPost(id);
+    this.fetchReplies(id);
   },
-  async beforeRouteUpdate(to, from, next) {
+  beforeRouteUpdate(to, from, next) {
     const { id } = to.params;
-    const { account } = await this.fetchPost(id);
-    this.fetchReplies(id, account);
+    this.fetchPost(id);
+    this.fetchReplies(id);
     next();
   },
 };
 </script>
 
 <style lang="scss" scoped>
-@import '../assets/scss/modal.scss';
-.modal-backdrop{
+@import "../assets/scss/modal.scss";
+.modal-backdrop {
   @extend %modal-backdrop;
 }
 .main {

@@ -4,7 +4,7 @@
       <div class="post__main pb-2">
         <div class="post__main__info">
           <img
-            :src="post.TweetUser.avatar"
+            :src="post.TweetUser.avatar | emptyAvatar"
             alt=""
             class="post__main__info__avatar mr-2"
           />
@@ -13,7 +13,7 @@
               {{ post.TweetUser.name }}
             </p>
             <p class="post__main__info__creater__account">
-              {{ post.TweetUser.account }}
+              {{ post.TweetUser.account | accountShow }}
             </p>
           </div>
         </div>
@@ -48,11 +48,14 @@
 </template>
 
 <script>
+import moment from "moment";
 import postAPI from "../apis/posts";
 import { Toast, ToastIcon } from "../utils/helpers";
-import moment from "moment";
+import {accountShow, emptyAvatar} from '../utils/mixins'
+
 export default {
   name: "PostBlockFull",
+  mixins:[accountShow, emptyAvatar],
   props: {
     post: {
       type: Object,

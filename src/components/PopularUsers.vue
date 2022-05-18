@@ -17,7 +17,7 @@
             />
             <div class="list__card__info">
               <p
-                @click="getIntoPersonalPage(user.account)"
+                @click="getIntoPersonalPage(user.id)"
                 class="list__card__info__name"
               >
                 {{ user.name }}
@@ -49,45 +49,9 @@
 
 <script>
 import { accountShow, emptyAvatar } from "../utils/mixins";
-const dummyData = {
-  users: [
-    {
-      id: 1,
-      account: "Young",
-      name: "Duane",
-      avatar: "",
-      isFollowed: true,
-    },
-    {
-      id: 2,
-      account: "Moore",
-      name: "Crystal",
-      avatar: "",
-      isFollowed: false,
-    },
-    {
-      id: 3,
-      account: "Uribe",
-      name: "Denise",
-      avatar: "",
-      isFollowed: false,
-    },
-    {
-      id: 4,
-      account: "McCleery",
-      name: "Felipe",
-      avatar: "",
-      isFollowed: false,
-    },
-    {
-      id: 5,
-      account: "Larry",
-      name: "Stanley",
-      avatar: "",
-      isFollowed: false,
-    },
-  ],
-};
+import usersAPI from "../apis/users";
+import { Toast, ToastIcon } from "../utils/helpers";
+
 export default {
   name: "PopularUsers",
   mixins: [accountShow, emptyAvatar],
@@ -97,44 +61,68 @@ export default {
     };
   },
   methods: {
-    fecthUsers() {
-      // api here
-      this.users = [...dummyData.users];
-    },
-    follow(userId) {
-      // api here
-      this.users = this.users.map((user) => {
-        if (user.id === userId) {
-          return {
-            ...user,
-            isFollowed: true,
-          };
-        } else {
-          return { ...user };
-        }
-      });
-    },
-    unfollow(userId) {
-      // api here
-      this.users = this.users.map((user) => {
-        if (user.id === userId) {
-          return {
-            ...user,
-            isFollowed: false,
-          };
-        } else {
-          return { ...user };
-        }
-      });
-    },
-    getIntoPersonalPage(userAccount) {
-      if (this.$route.params.userAccount !== userAccount) {
-        this.$router.push({
-          name: "personal-page-root",
-          params: { userAccount: userAccount },
+    async fecthUsers() {
+      try {
+        const { data } = await usersAPI.getUsersTop();
+        this.users = [...data.result];
+      } catch (err) {
+        console.log(err);
+        Toast.fire({
+          title: "無法成功取得Top Users",
+          html: ToastIcon.redCrossHtml,
         });
       }
-    }
+    },
+    async follow(userId) {
+      try {
+        await usersAPI.followUser(userId);
+        this.users = this.users.map((user) => {
+          if (user.id === userId) {
+            return {
+              ...user,
+              isFollowed: true,
+            };
+          } else {
+            return { ...user };
+          }
+        });
+      } catch (err) {
+        console.log(err);
+        Toast.fire({
+          title: "無法成功追蹤使用者",
+          html: ToastIcon.redCrossHtml,
+        });
+      }
+    },
+    async unfollow(userId) {
+      try {
+        await usersAPI.unfollowUser(userId);
+        this.users = this.users.map((user) => {
+          if (user.id === userId) {
+            return {
+              ...user,
+              isFollowed: false,
+            };
+          } else {
+            return { ...user };
+          }
+        });
+      } catch (err) {
+        console.log(err);
+        Toast.fire({
+          title: "無法取消追蹤使用者",
+          html: ToastIcon.redCrossHtml,
+        });
+      }
+    },
+    getIntoPersonalPage(userId) {
+      if (this.$route.params.id !== userId) {
+        this.$router.push({
+          name: "personal-page-root",
+          params: { id: userId },
+        });
+      }
+    },
   },
   created() {
     this.fecthUsers();
@@ -174,7 +162,7 @@ export default {
           }
           &__account {
             @extend %account_;
-            
+
             font-size: $font-size-secondary;
             color: $color-gray-6;
           }

@@ -143,6 +143,7 @@ export default {
 .home-style {
   width: 100%;
   height: 136px;
+  max-width: 100%;
 }
 
 .modal__content.home-style {

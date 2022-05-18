@@ -33,9 +33,6 @@ export default new Vuex.Store({
             state.isAuthenticated = false
             state.token = ''
             localStorage.removeItem('token')
-            sessionStorage.removeItem('currentUser')
-            sessionStorage.removeItem('token')
-            sessionStorage.removeItem('isAuthenticated')
         }
     },
     actions: {
@@ -43,7 +40,7 @@ export default new Vuex.Store({
             try {
                 const { data } = await authorizationAPI.getCurrentUser()
 
-                const { id, account, name, email, avatar, role } = data
+                const { id, account, name, email, avatar, role } = data.userData
 
                 this.commit('setCurrentUser', {
                     id,

@@ -93,7 +93,6 @@ export default {
 <style lang="scss" scoped>
 .follow {
   @extend %main-container_;
-  padding: 0;
   &__tab {
     @extend %tab-style;
     height: 52px;

@@ -23,11 +23,27 @@
   }
 }
 
+%post {
+  position: relative;
+  display: flex;
+  justify-content: flex-end;
+  height: 168px;
+  border-bottom: 1px solid $color-tab-line;
+}
+
 %avatar {
   position: absolute;
   top: 16px;
   left: 24px;
   @extend %avatar_;
+}
+
+%body {
+  width: 95%;
+  height: 78px;
+  margin-top: 8px;
+  margin-bottom: 40px;
+  @extend %description-font;
 }
 
 %description-font {

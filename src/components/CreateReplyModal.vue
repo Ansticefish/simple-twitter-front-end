@@ -197,7 +197,7 @@ export default {
     }
     &__body {
       margin-top: 8px;
-      height: 85px;
+      height: 75px;
       @extend %description-font;
     }
     &__footer {

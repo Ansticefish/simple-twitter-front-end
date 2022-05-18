@@ -134,6 +134,7 @@ router.beforeEach( async (to, from, next) => {
     //if token is different
     if (token && token !== userToken) {
         isAuthenticated = await store.dispatch('fetchCurrentUser')
+        role = store.state.currentUser.role
     }
 
     // isAuthenticated: false
@@ -151,7 +152,7 @@ router.beforeEach( async (to, from, next) => {
 
     // isAuthenticated: true => users can't see sign-in-related pages
     if (isAuthenticated &&
-        role == 'admin' &&
+        role === 'admin' &&
         pagesWithoutAuthentication.includes(to.name)) {
         from.name === 'admin-posts' ?
             router.push('') : router.push({
@@ -165,7 +166,7 @@ router.beforeEach( async (to, from, next) => {
                 name: 'home-page'
             })
     }
-
+    
 
     // separate signed-in users with roles
     if (isAuthenticated &&

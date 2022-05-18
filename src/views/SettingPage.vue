@@ -291,15 +291,8 @@ export default {
 @import '../assets/scss/signIn.scss';
 .setting {
   @extend %main-container_;
-  padding: 0;
   &__header {
-    width: 100%;
-    height: 74px;
-    border-bottom: 1px solid $color-tab-line;
-    h4 {
-      margin-left: 24px;
-      line-height: 74px;
-    }
+    @extend %header_;
   }
   &__body {
     @extend %signin;

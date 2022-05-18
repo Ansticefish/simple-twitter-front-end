@@ -1,5 +1,5 @@
 <template>
-<div>
+<div  v-if="!isLoading">
   <div 
     v-for="(follow, index) in followList"
     :key="index"
@@ -37,6 +37,15 @@
       </p>
     </div>
   </div>
+  <div 
+    v-if="!followList.length"
+    class="follow__empty"
+  >
+     <h5>
+       {{ this.$route.name === 'follow-page-followers'? 
+       '尚無追隨者': '尚無追蹤者' }}
+     </h5> 
+  </div>
 </div>  
 </template>
 
@@ -52,32 +61,44 @@ export default {
     user:{
       type: Object,
       required: true
-    },
+    }
   },
   mixins: [ emptyAvatar ],
   data () {
     return {
-      followList: []
+      followList: [],
+      isLoading: true,
     }
   },
   computed: {
     ...mapState(['currentUser'])
   },
   methods: {
+    fetchData ( id ) {
+      if (this.$route.name === 'follow-page-followers') {
+        this.fetchFollowers( id )
+        return
+      }  
+      this.fetchFollowings( id )
+    },
     async fetchFollowings ( id ) {
       try {
         const { data } = await usersAPI.userFollowings( id )
         this.followList = data 
+        this.isLoading = false
       } catch (error) {
         console.log(error)
+        this.isLoading = false
       }
     },
     async fetchFollowers ( id ) {
       try {
         const { data } = await usersAPI.userFollowers( id )
         this.followList = data
+        this.isLoading = false
       } catch (error) {
         console.log(error)
+        this.isLoading = false
       }
     },
     getUserId ( account ) {
@@ -174,21 +195,8 @@ export default {
   },
   created () {
     const { id } = this.$route.params
-    if(this.$route.name === 'follow-page-followers') {
-      this.fetchFollowers( id )
-      return
-    }  
-    this.fetchFollowings( id )
+    this.fetchData ( id )
   },
-  beforeRouteCreated (to, from, next) {
-    const { id } = this.$route.params
-    if(this.$route.name === 'follow-page-followers') {
-      this.fetchFollowers( id )
-      return
-    }  
-    this.fetchFollowings( id )
-    next()
-  }
 }
 </script>
 
@@ -243,6 +251,16 @@ export default {
       color: $color-black;
     }
   }
+}
 
+.follow__empty {
+  height: 50px;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  h5 {
+    color: $color-secondary;
+    font-weight: normal;
+  } 
 }
 </style>

@@ -1,5 +1,5 @@
 <template>
-  <div id="personal-header" class="py-3 px-4">
+  <div id="personal-header">
     <div @click.prevent.stop="backToPersonalPage" class="back-btn">
       <div class="back-btn__icon"></div>
       <div class="back-btn__descript">
@@ -39,6 +39,9 @@ export default {
 </script>
 
 <style lang="scss" scoped>
+#personal-header{
+  @extend %header_;
+}
 .back-btn {
   width: 100px;
   display: flex;

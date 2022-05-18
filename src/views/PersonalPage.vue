@@ -51,16 +51,16 @@ const dummyData = {
       createdAt: "2022-05-14T08:38:46.106Z",
       updatedAt: "2022-05-15T08:38:46.106Z",
       comment: "vel pharetra vel turpis nunc eget lorem dolor sed viverra",
-      post_user: {
+      ReplyUser: {
         id: -1,
         name: "root",
         account: "root",
-      },
-      reply_user: {
-        id: 2,
-        name: "Alan",
-        account: "Feiwang",
         avatar: "",
+      },
+      PostUser: {
+        id: 1,
+        name: "Hello",
+        account: "Word",
       },
     },
     {
@@ -69,16 +69,16 @@ const dummyData = {
       updatedAt: "2022-05-15T08:38:46.106Z",
       comment:
         "enim ut sem viverra aliquet eget sit amet tellus cras adipiscing enim eu turpis egestas pretium aenean pharetra magna ac",
-      post_user: {
+      ReplyUser: {
         id: -1,
         name: "root",
         account: "root",
-      },
-      reply_user: {
-        id: 5,
-        name: "Michael",
-        account: "Tucker",
         avatar: "",
+      },
+      PostUser: {
+        id: 1,
+        name: "Hello",
+        account: "Word",
       },
     },
     {
@@ -87,16 +87,16 @@ const dummyData = {
       updatedAt: "2022-05-14T08:38:46.106Z",
       comment:
         "risus nullam eget felis eget nunc lobortis mattis aliquam faucibus purus in massa tempor nec",
-      post_user: {
+      ReplyUser: {
         id: -1,
         name: "root",
         account: "root",
-      },
-      reply_user: {
-        id: 3,
-        name: "Clara",
-        account: "Howell",
         avatar: "",
+      },
+      PostUser: {
+        id: 1,
+        name: "Hello",
+        account: "Word",
       },
     },
     {
@@ -105,16 +105,16 @@ const dummyData = {
       updatedAt: "2022-05-12T08:38:46.106Z",
       comment:
         "quam vulputate dignissim suspendisse in est ante in nibh mauris cursus mattis molestie a iaculis",
-      post_user: {
+      ReplyUser: {
         id: -1,
         name: "root",
         account: "root",
-      },
-      reply_user: {
-        id: 4,
-        name: "Karen",
-        account: "Kurtz",
         avatar: "",
+      },
+      PostUser: {
+        id: 1,
+        name: "Hello",
+        account: "Word",
       },
     },
   ],
@@ -176,7 +176,7 @@ export default {
         cover,
         introduction,
       };
-      this.isEditing = false
+      this.isEditing = false;
     },
   },
   created() {
@@ -188,14 +188,6 @@ export default {
 
 <style lang="scss" scoped>
 .main {
-  height: 100vh;
-  border-left: 1px solid $color-tab-line;
-  border-right: 1px solid $color-tab-line;
-  overflow-y: scroll;
-}
-
-// test
-d-none {
-  display: none;
+  @extend %main-container_;
 }
 </style>

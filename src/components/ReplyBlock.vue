@@ -2,30 +2,37 @@
   <div id="reply-block">
     <div v-for="reply in replies" :key="reply.id" class="reply py-3 px-4">
       <img
-        :src="reply.reply_user.avatar | emptyAvatar"
+        @click="toPersonalPage(reply.ReplyUser.account)"
+        :src="reply.ReplyUser.avatar | emptyAvatar"
         alt=""
         class="reply__avatar mr-2"
       />
       <div class="text-wrapper">
         <div class="reply__replier mb-2">
-          <span class="reply__replier__name mr-2">{{
-            reply.reply_user.name
-          }}</span>
+          <span
+            @click="toPersonalPage(reply.ReplyUser.account)"
+            class="reply__replier__name mr-2"
+            >{{ reply.ReplyUser.name }}</span
+          >
           <span class="reply__replier__account-time"
-            >{{ reply.reply_user.account | accountShow }}・{{
+            >{{ reply.ReplyUser.account | accountShow }}・{{
               reply.createdAt | fromNow
             }}</span
           >
         </div>
-        <p class="reply__creater mb-2">
-          回覆 <span>{{ reply.post_user.account | accountShow }}</span>
+        <p
+          @click="toPersonalPage(reply.PostUser.account)"
+          class="reply__creater mb-2"
+        >
+          回覆 <span>{{ reply.PostUser.account | accountShow }}</span>
         </p>
         <p class="reply__content">
           {{ reply.comment }}
         </p>
-        <div 
-          v-if="reply.post_user.id !== currentUser.id"
-          class="reply__response mt-2">
+        <div
+          v-if="reply.ReplyUser.id !== currentUser.id"
+          class="reply__response mt-2"
+        >
           <div class="reply__response__reply mr-8">
             <div class="reply__response__reply__icon"></div>
             <span class="reply__response__reply__num">25</span>
@@ -42,7 +49,7 @@
 
 <script>
 import { accountShow, emptyAvatar, fromNow } from "../utils/mixins";
-import {mapState} from 'vuex'
+import { mapState } from "vuex";
 
 export default {
   name: "ReplyBlock",
@@ -53,20 +60,30 @@ export default {
       required: true,
     },
   },
-  computed:{
-    ...mapState(['currentUser'])
-  }
+  methods: {
+    toPersonalPage(userAccount) {
+      this.$router.push({
+        name: "personal-page-root",
+        params: { userAccount: userAccount },
+      });
+    },
+  },
+  computed: {
+    ...mapState(["currentUser"]),
+  },
 };
 </script>
 
 <style lang="scss" scoped>
 .reply {
+  width: 100%;
   display: flex;
   border-bottom: 1px solid $color-tab-line;
   &__avatar {
-    width: 50px;
-    height: 50px;
-    object-fit: cover;
+    @extend %avatar_;
+    &:hover + div .reply__replier__name {
+      text-decoration: underline;
+    }
   }
   &__replier {
     &__name,
@@ -74,22 +91,24 @@ export default {
       line-height: 26px;
     }
     &__name {
-      font-weight: bold;
+      @extend %name_;
     }
     &__account-time {
-      font-size: $font-size-secondary;
-      color: $color-secondary;
+      @extend %account_;
     }
   }
   &__creater {
-    font-size: $font-size-secondary;
-    color: $color-secondary;
+    @extend %account_;
     span {
       color: $color-brand;
+      &:hover {
+        cursor: pointer;
+        text-decoration: underline;
+      }
     }
   }
   &__content {
-    line-height: 26px;
+    @extend %content_;
   }
   &__response {
     display: flex;
@@ -99,26 +118,24 @@ export default {
       display: flex;
       align-items: center;
       &__icon {
-        @include setIcon(14px, 14px, $icon-reply, $icon-reply){
+        @include setIcon(14px, 14px, $icon-reply, $icon-reply) {
           margin-right: 8px;
         }
       }
       &__num {
-        font-size: $font-size-secondary;
-        color: $color-secondary;
+        @extend %num_;
       }
     }
     &__like {
       display: flex;
       align-items: center;
       &__icon {
-        @include setIcon(15px, 14px, $icon-heart, $icon-heart-liked){
+        @include setIcon(15px, 14px, $icon-heart, $icon-heart-liked) {
           margin-right: 8px;
         }
       }
       &__num {
-        font-size: $font-size-secondary;
-        color: $color-secondary;
+        @extend %num_;
       }
     }
   }

@@ -31,14 +31,25 @@
         </p>
       </div>
       <div class="post__response pt-3 my-1">
-        <div class="post__response__comment"></div>
-        <div class="post__response__like"></div>
+        <div @click.prevent.stop="reply" class="post__response__comment"></div>
+        <div
+          v-if="post.isLiked"
+          @click.prevent.stop="unlike"
+          class="post__response__like active"
+        ></div>
+        <div
+          v-else
+          @click.prevent.stop="like"
+          class="post__response__like"
+        ></div>
       </div>
     </div>
   </div>
 </template>
 
 <script>
+import postAPI from "../apis/posts";
+import { Toast, ToastIcon } from "../utils/helpers";
 import moment from "moment";
 export default {
   name: "PostBlockFull",
@@ -48,14 +59,82 @@ export default {
       required: true,
     },
   },
-  methods: {},
+  methods: {
+    reply() {
+      this.$emit('replyPost')
+    },
+    async like() {
+      try {
+        await postAPI.likePost(this.post.id);
+        this.$emit('likePost')
+
+      } catch (err) {
+        const errorMessage = err.response.data.message.split(':')
+        Toast.fire({
+          title: errorMessage[1],
+          html: ToastIcon.redCrossHtml,
+        });
+      }
+    },
+    async unlike() {
+     try {
+        await postAPI.unlikePost(this.post.id);
+        this.$emit('unlikePost')
+      } catch (err) {
+        const errorMessage = err.response.data.message.split(':')
+        Toast.fire({ 
+          title: errorMessage[1],
+          html: ToastIcon.redCrossHtml,
+        });
+      }
+    },
+  },
   filters: {
     showDate(dateTime) {
-      moment.locale("zh-tw");
-      const time = moment(dateTime).format("LT");
-      const date = moment(dateTime).format("LL");
-      const timeZone = moment(dateTime).hour > 12 ? '下午' : '上午'
-      return dateTime ? `${timeZone} ${time}・${date}` : "--";
+      moment.locale("zh-tw", {
+        monthsShort: "1月_2月_3月_4月_5月_6月_7月_8月_9月_10月_11月_12月".split(
+          "_"
+        ),
+        meridiemParse: /凌晨|早上|上午|中午|下午|晚上/,
+        longDateFormat: {
+          lll: "A h:mm・YYYY年MMMD日",
+        },
+        meridiemHour: function (h, meridiem) {
+          let hour = h;
+          if (hour === 12) {
+            hour = 0;
+          }
+          if (
+            meridiem === "凌晨" ||
+            meridiem === "早上" ||
+            meridiem === "上午"
+          ) {
+            return hour;
+          } else if (meridiem === "下午" || meridiem === "晚上") {
+            return hour + 12;
+          } else {
+            // '中午'
+            return hour >= 11 ? hour : hour + 12;
+          }
+        },
+        meridiem: function (hour, minute) {
+          const hm = hour * 100 + minute;
+          if (hm < 600) {
+            return "凌晨";
+          } else if (hm < 900) {
+            return "早上";
+          } else if (hm < 1130) {
+            return "上午";
+          } else if (hm < 1230) {
+            return "中午";
+          } else if (hm < 1800) {
+            return "下午";
+          } else {
+            return "晚上";
+          }
+        },
+      });
+      return dateTime ? moment(dateTime).format("lll") : "--";
     },
   },
 };
@@ -108,13 +187,17 @@ export default {
     }
   }
   &__response {
-    &__comment { 
-      @include setIcon(25px, 25px, $icon-reply, $icon-reply){
+    &__comment {
+      @include setIcon(25px, 25px, $icon-reply, $icon-reply) {
         margin-right: 130px;
+        &:hover {
+          cursor: pointer;
+        }
       }
     }
     &__like {
-      @include setIcon(25px, 25px, $icon-heart, $icon-heart-liked);
+      @include setIcon(23px, 26px, $icon-heart, $icon-heart-liked) {
+      }
     }
   }
 }

@@ -12,12 +12,6 @@
 
 export default {
   name: "PersonalPageHeader",
-  props: {
-    user: {
-      type: Object,
-      required: true,
-    },
-  },
   data() {
     return {
       tweetsAmount: 25,

@@ -1,5 +1,5 @@
 <template>
-  <div class="container">
+  <div v-if="!isLoading" class="container">
     <div class="row">
       <div class="col-lg-2 col-xl-2">
         <SideBar/>
@@ -70,7 +70,8 @@ export default {
   data () {
     return {
       openCreate: false, 
-      posts: []
+      posts: [],
+      isLoading: true,
     }
   },
   computed: {
@@ -81,6 +82,7 @@ export default {
       try {
          const { data } = await postsAPI.getPosts()
          this.posts = data
+         this.isLoading = false
       } catch (error) {
         const errorMsg = error.response.data.message
         if( errorMsg ) {
@@ -90,6 +92,8 @@ export default {
             html: ToastIcon.redCrossHtml
           })
         }
+
+        this.isLoading = false
       }
     },
     updateData () {

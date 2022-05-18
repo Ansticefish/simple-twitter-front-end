@@ -144,7 +144,10 @@ export default {
       } catch (error) {
         this.isProcessing = false
         const errorMsg = error.response.data.message
-        if( errorMsg ) {
+        if( errorMsg === 'Error:只有管理者帳號可以登入後台！') {
+          this.a.error = true
+          this.a.warning = '帳號不存在！'
+        } else if( errorMsg ) {
           const message = errorMsg.slice(6)
           Toast.fire({
             title: `${message}`,

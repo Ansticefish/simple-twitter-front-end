@@ -31,7 +31,10 @@
         </div>
         <p 
          class="adminPost__post__content__body">
-          {{ post.description | filterContent }}
+          {{ post.description | filterContent }} 
+          <span v-if="post.description.length >= 50">
+            ...
+          </span>
         </p>
       </div>
        <img
@@ -106,7 +109,7 @@ export default {
   },
   filters: {
     filterContent ( content ) {
-      return content.slice(0, 50)
+      return content.slice(0, 51) 
     }
   }
 }
@@ -145,6 +148,9 @@ export default {
       }
       &__body {
         @extend %body;
+        span {
+          @extend %description-font;
+        }
       }
     }
      &__btn--delete {

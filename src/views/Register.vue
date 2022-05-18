@@ -239,7 +239,7 @@ export default {
 
         // if successfully register
         Toast.fire({
-          title: '註冊成功，請至登入頁面登入',
+          title: '已成功註冊！',
           html: ToastIcon.greenCheckHtml
         })
         this.$router.push({ name: 'sign-in'})

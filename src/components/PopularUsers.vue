@@ -10,14 +10,14 @@
         >
           <div class="list__card">
             <img
-              @click="getIntoPersonalPage(user.account)"
+              @click="getIntoPersonalPage(user.id, user.name)"
               class="list__card__avatar"
               :src="user.avatar | emptyAvatar"
               alt=""
             />
             <div class="list__card__info">
               <p
-                @click="getIntoPersonalPage(user.id)"
+                @click="getIntoPersonalPage(user.id, user.name)"
                 class="list__card__info__name"
               >
                 {{ user.name }}
@@ -28,7 +28,13 @@
             </div>
           </div>
           <button
-            v-if="user.isFollowed"
+            v-if="currentUser.id === user.id"
+            class="list__card__me-btn"
+          >
+            我
+          </button>
+          <button
+            v-else-if="user.isFollowed"
             @click.prevent.stop="unfollow(user.id)"
             class="list__card__follow-btn active"
           >
@@ -48,13 +54,14 @@
 </template>
 
 <script>
-import { accountShow, emptyAvatar } from "../utils/mixins";
+import { mapState } from "vuex";
+import { accountShow, emptyAvatar, getIntoPersonalPage } from "../utils/mixins";
 import usersAPI from "../apis/users";
 import { Toast, ToastIcon } from "../utils/helpers";
 
 export default {
   name: "PopularUsers",
-  mixins: [accountShow, emptyAvatar],
+  mixins: [accountShow, emptyAvatar, getIntoPersonalPage],
   data() {
     return {
       users: [],
@@ -115,14 +122,9 @@ export default {
         });
       }
     },
-    getIntoPersonalPage(userId) {
-      if (this.$route.params.id !== userId) {
-        this.$router.push({
-          name: "personal-page-root",
-          params: { id: userId },
-        });
-      }
-    },
+  },
+  computed: {
+    ...mapState(['currentUser'])
   },
   created() {
     this.fecthUsers();
@@ -165,6 +167,11 @@ export default {
 
             font-size: $font-size-secondary;
             color: $color-gray-6;
+          }
+        }
+        &__me-btn{
+          @include setButton($color-secondary, transparent, 50px, 16px, 8px){
+            border-color: $color-secondary;
           }
         }
         &__follow-btn {

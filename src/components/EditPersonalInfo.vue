@@ -2,75 +2,85 @@
   <div id="edit-modal" class="modal">
     <div class="modal__mask">
       <div class="modal__container">
-        <div class="modal__container__header my-1 py-2 px-3">
-          <div @click.prevent.stop="cancelEdit" class="cancel-icon"></div>
-          <h5 class="modal__container__header__title">編輯個人資料</h5>
-          <button
-            @click.prevent.stop="saveEdit"
-            :disabled="
-              nameTextArea.warning !== '' || introTextArea.warning !== ''
-            "
-            class="modal__container__header__save"
-          >
-            儲存
-          </button>
-        </div>
-        <div class="modal__container__main">
-          <div class="modal__container__main__cover">
-            <img :src="user.cover | emptyCover" alt="" />
-            <div class="modal__container__main__cover__icons">
-              <label for="cover-upload"><div class="camera-icon"></div></label>
-              <button @click.prevent.stop="regretCoverChange">
-                <div class="cancel-icon"></div>
-              </button>
-              <form action="" ref="coverupload">
+        <form @submit.prevent.stop="saveEdit" action="" ref="coverupload">
+          <div class="modal__container__header my-1 py-2 px-3">
+            <div @click.prevent.stop="cancelEdit" class="cancel-icon"></div>
+            <h5 class="modal__container__header__title">編輯個人資料</h5>
+            <button
+              :disabled="
+                nameTextArea.warning !== '' ||
+                introTextArea.warning !== '' ||
+                isSaving
+              "
+              type="submit"
+              class="modal__container__header__save"
+            >
+              儲存
+            </button>
+          </div>
+          <div class="modal__container__main">
+            <div class="modal__container__main__cover">
+              <img :src="user.cover | emptyCover" alt="" />
+              <div class="modal__container__main__cover__icons">
+                <label for="cover-upload"
+                  ><div class="camera-icon"></div
+                ></label>
+                <button @click.prevent.stop="regretCoverChange">
+                  <div class="cancel-icon"></div>
+                </button>
                 <input
                   id="cover-upload"
                   @change="handleCoverChange"
                   type="file"
+                  name="cover"
                   accpet="image/*"
                 />
-              </form>
+              </div>
             </div>
-          </div>
-          <div class="modal__container__main__avatar">
-            <div class="avatar-mask"></div>
-            <img :src="user.avatar | emptyAvatar" alt="" />
-            <label for="avatar-upload"><div class="camera-icon"></div></label>
-            <input
-              id="avatar-upload"
-              @change="handleAvatarChange"
-              type="file"
-              accpet="image/*"
-            />
-          </div>
-          <div class="modal__container__main__info p-3">
-            <div class="modal__container__main__info__name">
-              <label for="">名稱</label>
+            <div class="modal__container__main__avatar">
+              <div class="avatar-mask"></div>
+              <img :src="user.avatar | emptyAvatar" alt="" />
+              <label for="avatar-upload"><div class="camera-icon"></div></label>
               <input
-                v-model="user.name"
-                type="text"
-                placeholder="Placeholder"
-                :class="{ error: nameTextArea.warning !== '' }"
+                id="avatar-upload"
+                @change="handleAvatarChange"
+                type="file"
+                name="avatar"
+                accpet="image/*"
               />
-              <label for="" class="error-message">{{
-                nameTextArea.warning
-              }}</label>
-              <label for="" class="text-count">{{ nameTextLength }}/50</label>
             </div>
-            <div class="modal__container__main__info__introduction">
-              <label for="">自我介紹</label>
-              <textarea
-                v-model="user.introduction"
-                :class="{ error: introTextArea.warning !== '' }"
-              />
-              <label for="" class="error-message">{{
-                introTextArea.warning
-              }}</label>
-              <label for="" class="text-count">{{ introTextLength }}/160</label>
+            <div class="modal__container__main__info p-3">
+              <div class="modal__container__main__info__name">
+                <label for="">名稱</label>
+                <input
+                  v-model="user.name"
+                  type="text"
+                  name="name"
+                  placeholder="Placeholder"
+                  :class="{ error: nameTextArea.warning !== '' }"
+                />
+                <label for="" class="error-message">{{
+                  nameTextArea.warning
+                }}</label>
+                <label for="" class="text-count">{{ nameTextLength }}/50</label>
+              </div>
+              <div class="modal__container__main__info__introduction">
+                <label for="">自我介紹</label>
+                <textarea
+                  v-model="user.introduction"
+                  name="introduction"
+                  :class="{ error: introTextArea.warning !== '' }"
+                />
+                <label for="" class="error-message">{{
+                  introTextArea.warning
+                }}</label>
+                <label for="" class="text-count"
+                  >{{ introTextLength }}/160</label
+                >
+              </div>
             </div>
           </div>
-        </div>
+        </form>
       </div>
     </div>
   </div>
@@ -78,6 +88,7 @@
 
 <script>
 import { accountShow, emptyAvatar, emptyCover } from "../utils/mixins";
+import usersAPI from "../apis/users";
 import { Toast, ToastIcon } from "../utils/helpers";
 export default {
   name: "EditPersonalInfo",
@@ -103,12 +114,14 @@ export default {
         warning: "",
       },
       tempCover: "",
+      isSaving: false,
     };
   },
   methods: {
     loadUserData() {
-      const { cover, avatar, name, introduction } = this.initialUser;
+      const { id, cover, avatar, name, introduction } = this.initialUser;
       this.user = {
+        id,
         cover,
         avatar,
         name,
@@ -118,28 +131,42 @@ export default {
     cancelEdit() {
       this.$emit("cancelEdit");
     },
-    saveEdit() {
-      // add api here
-      if (this.nameTextArea.warning !== "") {
-        Toast.fire({
-          title: `姓名${this.nameTextArea.warning}`,
-          html: ToastIcon.redCrossHtml,
+    async saveEdit(e) {
+      try {
+        this.isSaving = true;
+        if (this.nameTextArea.warning !== "") {
+          Toast.fire({
+            title: `姓名${this.nameTextArea.warning}`,
+            html: ToastIcon.redCrossHtml,
+          });
+          return;
+        }
+        if (this.introTextArea.warning !== "") {
+          Toast.fire({
+            title: `自我介紹${this.introTextArea.warning}`,
+            html: ToastIcon.redCrossHtml,
+          });
+          return;
+        }
+        const form = e.target;
+        const formData = new FormData(form);
+        await usersAPI.editUserProfile({
+          id: this.user.id,
+          formData,
         });
-        return;
-      } else if (this.introTextArea.warning !== "") {
-        Toast.fire({
-          title: `自我介紹${this.introTextArea.warning}`,
-          html: ToastIcon.redCrossHtml,
-        });
-        return;
-      }else{
         this.$emit("saveEdit", this.user);
         Toast.fire({
-          title: '成功儲存個人資料',
+          title: "成功儲存個人資料",
           html: ToastIcon.greenCheckHtml,
         });
+      } catch (err) {
+        console.log(err);
+        this.isSaving = false;
+        Toast.fire({
+          title: "無法儲存個人資料",
+          html: ToastIcon.redCrossHtml,
+        });
       }
-      
     },
     handleCoverChange(e) {
       const { files } = e.target;
@@ -162,7 +189,7 @@ export default {
     },
     regretCoverChange() {
       this.user.cover = this.tempCover;
-      this.$refs.coverupload.reset();
+      this.$refs.coverupload[2].value = "";
     },
     textLength(text) {
       return text.trim().length;

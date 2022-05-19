@@ -172,6 +172,9 @@ export default {
         &__me-btn{
           @include setButton($color-secondary, transparent, 50px, 16px, 8px){
             border-color: $color-secondary;
+            &:hover{
+              cursor: default;
+            }
           }
         }
         &__follow-btn {

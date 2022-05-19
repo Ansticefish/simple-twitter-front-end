@@ -296,9 +296,7 @@ export default {
   width: 88px;
   height: 46px;
   padding: 0;
-  &:disabled {
-    opacity: 0.6;
-  }
+  @extend %submitBtnDisable;
 }
 
 </style>

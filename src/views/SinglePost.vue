@@ -1,5 +1,6 @@
 <template>
   <div class="container">
+    <Spinner v-show="isLoading" />
     <div class="row">
       <div class="col-lg-2 col-xl-2">
         <SideBar />
@@ -37,6 +38,7 @@ import PostBlockFull from "../components/PostBlockFull.vue";
 import ReplyBlock from "../components/ReplyBlock.vue";
 import CreateReplyModal from "../components/CreateReplyModal.vue";
 
+import Spinner from '../components/Spinner.vue'
 import { mapState } from "vuex";
 import postAPI from "../apis/posts";
 import { Toast, ToastIcon } from "../utils/helpers";
@@ -44,6 +46,7 @@ import { Toast, ToastIcon } from "../utils/helpers";
 export default {
   name: "SinglePost",
   components: {
+    Spinner,
     SideBar,
     PopularUsers,
     SinglePostheader,
@@ -71,6 +74,7 @@ export default {
       },
       replies: [],
       openReply: false,
+      isLoading: false,
     };
   },
   methods: {
@@ -94,10 +98,9 @@ export default {
           replyCount,
           likeCount,
           createdAt,
-          TweetUser: { ...TweetUser },
+          TweetUser,
           isLiked,
         };
-        return TweetUser;
       } catch (err) {
         console.log(err.message);
         Toast.fire({
@@ -142,10 +145,12 @@ export default {
   computed: {
     ...mapState(["currentUser"]),
   },
-  created() {
+  async created() {
+    this.isLoading = true
     const { id } = this.$route.params;
-    this.fetchPost(id);
-    this.fetchReplies(id);
+    await this.fetchPost(id);
+    await this.fetchReplies(id);
+    this.isLoading = false
   },
   beforeRouteUpdate(to, from, next) {
     const { id } = to.params;

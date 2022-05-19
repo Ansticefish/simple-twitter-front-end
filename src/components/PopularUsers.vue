@@ -27,10 +27,7 @@
               </p>
             </div>
           </div>
-          <button
-            v-if="currentUser.id === user.id"
-            class="list__card__me-btn"
-          >
+          <button v-if="currentUser.id === user.id" class="list__card__me-btn">
             我
           </button>
           <button
@@ -65,7 +62,7 @@ export default {
     updateList: {
       type: Number,
       default: 0,
-    }
+    },
   },
   mixins: [accountShow, emptyAvatar, getIntoPersonalPage],
   data() {
@@ -78,7 +75,6 @@ export default {
       try {
         const { data } = await usersAPI.getUsersTop();
         this.users = [...data];
-        console.log(data)
       } catch (err) {
         console.log(err);
         Toast.fire({
@@ -100,7 +96,7 @@ export default {
             return { ...user };
           }
         });
-        this.$emit('rerender')
+        this.$emit("rerender");
       } catch (err) {
         console.log(err);
         Toast.fire({
@@ -122,7 +118,7 @@ export default {
             return { ...user };
           }
         });
-        this.$emit('rerender')
+        this.$emit("rerender");
       } catch (err) {
         console.log(err);
         Toast.fire({
@@ -133,16 +129,16 @@ export default {
     },
   },
   computed: {
-    ...mapState(['currentUser'])
+    ...mapState(["currentUser"]),
   },
   created() {
     this.fecthUsers();
   },
   watch: {
-    'updateList': {
-      handler: 'fecthUsers',
-    }
-  }
+    updateList: {
+      handler: "fecthUsers",
+    },
+  },
 };
 </script>
 
@@ -158,6 +154,8 @@ export default {
     border-bottom: 1px solid $color-tab-line;
   }
   &__list {
+    height: calc(100vh - 25px);
+    overflow: auto;
     &__card {
       display: flex;
       justify-content: space-between;
@@ -175,18 +173,22 @@ export default {
         &__info {
           &__name {
             @extend %name_;
+            width: 80px;
+            overflow: hidden;
+            text-overflow: ellipsis;
           }
           &__account {
             @extend %account_;
-
-            font-size: $font-size-secondary;
+            width: 80px;
+            overflow: hidden;
+            text-overflow: ellipsis;
             color: $color-gray-6;
           }
         }
-        &__me-btn{
-          @include setButton($color-secondary, transparent, 50px, 16px, 8px){
+        &__me-btn {
+          @include setButton($color-secondary, transparent, 50px, 16px, 8px) {
             border-color: $color-secondary;
-            &:hover{
+            &:hover {
               cursor: default;
             }
           }

@@ -1,5 +1,5 @@
 <template>
-  <div class="replies">
+  <div v-show="!isLoading" class="replies">
     <ReplyBlock :replies="replies" />
   </div>
 </template>
@@ -8,6 +8,7 @@
 import ReplyBlock from "../components/ReplyBlock.vue";
 import userAPI from "../apis/users";
 import { Toast, ToastIcon } from "../utils/helpers";
+
 export default {
   name: "PersonalReplies",
   components: {

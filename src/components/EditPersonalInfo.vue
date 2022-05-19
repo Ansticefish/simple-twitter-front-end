@@ -104,8 +104,8 @@ export default {
       user: {
         cover: "",
         avatar: "",
-        name: "",
-        introduction: "",
+        name: " ",
+        introduction: " ",
       },
       nameTextArea: {
         warning: "",
@@ -179,7 +179,6 @@ export default {
     },
     handleAvatarChange(e) {
       const { files } = e.target;
-      console.log(e.target.parentElement);
       if (files.length === 0) {
         this.user.avatar = "";
       } else {
@@ -192,7 +191,7 @@ export default {
       this.$refs.coverupload[2].value = "";
     },
     textLength(text) {
-      return text.trim().length;
+      return text? text.trim().length : 0;
     },
   },
   computed: {
@@ -214,7 +213,9 @@ export default {
       }
     },
     "user.introduction"(text) {
-      if (this.textLength(text) > 160) {
+      if (this.textLength(text) === 0) {
+        this.introTextArea.warning = "自我介紹不可空白";
+      } else if (this.textLength(text) > 160) {
         this.introTextArea.warning = "字數超出上限";
       } else {
         this.introTextArea.warning = "";
@@ -262,13 +263,8 @@ export default {
         margin-left: 55px;
       }
       &__save {
-        @include setButton($color-white, $color-brand, 50px, 16px, 8px) {
-          &:disabled {
-            color: $color-white;
-            background: $color-gray-4;
-            border-color: $color-gray-3;
-          }
-        }
+        @include setButton($color-white, $color-brand, 50px, 16px, 8px) ;
+        @extend %submitBtnDisable ;
       }
     }
     &__main {
@@ -368,6 +364,7 @@ export default {
           @extend %input-style;
           width: 100%;
           textarea {
+            resize: none;
             height: 145px;
           }
           .error-message {

@@ -221,6 +221,15 @@ $py) {
   @content;
 }
 
+%submitBtnDisable {
+  &:disabled {
+    cursor: default;
+    color: $color-white;
+    background: $color-aid-orange;
+    border-color: $color-aid-orange;
+  }
+}
+
 
 /* - logo & icon - */
 

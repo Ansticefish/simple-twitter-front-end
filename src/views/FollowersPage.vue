@@ -15,41 +15,13 @@
         col-lg-7 col-xl-7"
       >
         <PersonalPageHeader 
-         v-show="!isLoading"
          :user="user"/>
-        <ul 
-         v-show="!isLoading"
-         class="follow__tab">
-          <li 
-          :class="{ 'active': this.$route.name === 'follow-page-followers'}">
-            <router-link 
-              :to="{ 
-              name: 'follow-page-followers',
-              params: { id: user.id },
-              }"
-            >
-              追隨者
-            </router-link>
-          </li>
-          <li
-            :class="{ 'active': this.$route.name === 'follow-page-following'}"
-          >
-            <router-link
-              :to="{ 
-              name: 'follow-page-following',
-              params: { id: user.id },
-              }"
-            >
-              正在追蹤
-            </router-link>
-          </li>
-        </ul>
-        <router-view 
-         :key="$route.fullPath"
-         :user="user"
-         @loading="changeIsLoading"
+        <FollowTab 
         />
-        <!-- Two sub-pages -->
+        <FollowUsers
+         :user="user"
+         :initial-list="followList"
+        />
       </div>
       <div 
        class="col-lg-3 
@@ -66,6 +38,8 @@
 import SideBar from '../components/SideBar.vue'
 import PopularUsers from '../components/PopularUsers.vue'
 import PersonalPageHeader from '../components/PersonalPageHeader.vue'
+import FollowTab from '../components/FollowTab.vue'
+import FollowUsers from '../components/FollowUsers.vue'
 import usersAPI from '../apis/users'
 import { Toast, ToastIcon } from '../utils/helpers'
 import Spinner from '../components/Spinner.vue'
@@ -76,11 +50,14 @@ export default {
     SideBar,
     PopularUsers,
     PersonalPageHeader,
+    FollowTab,
+    FollowUsers,
     Spinner,
   },
   data () {
     return {
       user: {},
+      followList: [],
       isLoading: true
     }
   },
@@ -100,13 +77,37 @@ export default {
         }
       }
     },
-    changeIsLoading () {
-      this.isLoading = false
-    }
+    async fetchFollowers ( id ) {
+      try {
+        const { data } = await usersAPI.userFollowers( id )
+        this.followList = data
+
+        if (data.message === '沒有粉絲名單'){
+          this.followList = []
+        } else {
+          this.followList = data 
+        }
+
+        this.isLoading = false
+     
+      } catch (error) {
+        const errorMsg = error.response.data.message
+        if( errorMsg ) {
+          const message = errorMsg.slice(6)
+          Toast.fire({
+            title: `${message}`,
+            html: ToastIcon.redCrossHtml
+          })
+        }
+        this.isLoading = false
+   
+      }
+    },
   },
   created () {
     const { id } = this.$route.params
     this.fetchUser ( id )
+    this.fetchFollowers ( id )
   }
 }
 </script>

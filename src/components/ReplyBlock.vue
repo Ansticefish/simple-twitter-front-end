@@ -10,7 +10,7 @@
       <div class="text-wrapper">
         <div class="reply__replier mb-2">
           <span
-            @click="toPersonalPage(reply.ReplyUser.account)"
+            @click="getIntoPersonalPage(reply.ReplyUser.id, reply.ReplyUser.name)"
             class="reply__replier__name mr-2"
             >{{ reply.ReplyUser.name }}</span
           >
@@ -21,7 +21,7 @@
           >
         </div>
         <p
-          @click="toPersonalPage(reply.Tweet.account)"
+          @click="getIntoPersonalPage(reply.ReplyUser.id, reply.ReplyUser.name)"
           class="reply__creater mb-2"
         >
           回覆 <span>{{ reply.TweetUser.account | accountShow }}</span>
@@ -48,24 +48,21 @@
 </template>
 
 <script>
-import { accountShow, emptyAvatar, fromNow } from "../utils/mixins";
+import {
+  accountShow,
+  emptyAvatar,
+  fromNow,
+  getIntoPersonalPage,
+} from "../utils/mixins";
 import { mapState } from "vuex";
 
 export default {
   name: "ReplyBlock",
-  mixins: [accountShow, emptyAvatar, fromNow],
+  mixins: [accountShow, emptyAvatar, fromNow, getIntoPersonalPage],
   props: {
     replies: {
       type: Array,
       required: true,
-    },
-  },
-  methods: {
-    toPersonalPage(userAccount) {
-      this.$router.push({
-        name: "personal-page-root",
-        params: { userAccount: userAccount },
-      });
     },
   },
   computed: {

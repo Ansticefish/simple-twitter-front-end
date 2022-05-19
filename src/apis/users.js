@@ -7,6 +7,11 @@ export default {
   getUser({ id }) {
     return apiHelper.get(`/users/${id}`)
   },
+  editUserProfile({ id, formData }) {
+    return apiHelper.put(`/users/${id}`, formData, {
+      headers: { "Content-Type": "multipart/form-data" }
+    })
+  },
   editUserSetting({ id, account, name, email, password, checkPassword }) {
     return apiHelper.put(`/users/${id}/setting`, {
       account,

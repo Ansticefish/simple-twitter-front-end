@@ -102,9 +102,10 @@ export default {
       } catch (error) {
         this.isProcessing = false
         const errorMsg = error.response.data.message
-        if (errorMsg === 'Error:推文內容不可空白！') {
+        if( errorMsg ) {
+          const message = errorMsg.slice(6)
           Toast.fire({
-            title: '內容不可空白',
+            title: `${message}`,
             html: ToastIcon.redCrossHtml
           })
         }

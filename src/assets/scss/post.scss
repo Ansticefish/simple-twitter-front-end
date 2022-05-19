@@ -27,7 +27,6 @@
   position: relative;
   display: flex;
   justify-content: flex-end;
-  height: 168px;
   border-bottom: 1px solid $color-tab-line;
 }
 
@@ -40,9 +39,7 @@
 
 %body {
   width: 95%;
-  height: 78px;
-  margin-top: 8px;
-  margin-bottom: 40px;
+  margin: 8px 0;
   @extend %description-font;
 }
 

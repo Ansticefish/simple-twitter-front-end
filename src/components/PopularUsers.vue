@@ -61,6 +61,12 @@ import { Toast, ToastIcon } from "../utils/helpers";
 
 export default {
   name: "PopularUsers",
+  props: {
+    updateList: {
+      type: Number,
+      default: 0,
+    }
+  },
   mixins: [accountShow, emptyAvatar, getIntoPersonalPage],
   data() {
     return {
@@ -72,6 +78,7 @@ export default {
       try {
         const { data } = await usersAPI.getUsersTop();
         this.users = [...data];
+        console.log(data)
       } catch (err) {
         console.log(err);
         Toast.fire({
@@ -93,6 +100,7 @@ export default {
             return { ...user };
           }
         });
+        this.$emit('rerender')
       } catch (err) {
         console.log(err);
         Toast.fire({
@@ -114,6 +122,7 @@ export default {
             return { ...user };
           }
         });
+        this.$emit('rerender')
       } catch (err) {
         console.log(err);
         Toast.fire({
@@ -129,6 +138,11 @@ export default {
   created() {
     this.fecthUsers();
   },
+  watch: {
+    'updateList': {
+      handler: 'fecthUsers',
+    }
+  }
 };
 </script>
 

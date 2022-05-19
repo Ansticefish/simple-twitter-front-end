@@ -92,6 +92,7 @@ export default {
     },
     updateData () {
       this.$router.push('/home')
+      this.$emit('update')
     },
     openCreateModal () {
       this.openCreate = true

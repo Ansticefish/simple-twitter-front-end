@@ -1,5 +1,7 @@
 <template>
-  <div class="container">
+<div>
+  <Spinner v-if="isLoading"/>
+  <div class="container" v-show="!isLoading">
     <div class="row">
       <div 
         class="col-lg-2 
@@ -13,8 +15,11 @@
         col-lg-7 col-xl-7"
       >
         <PersonalPageHeader 
+         v-show="!isLoading"
          :user="user"/>
-        <ul class="follow__tab">
+        <ul 
+         v-show="!isLoading"
+         class="follow__tab">
           <li 
           :class="{ 'active': this.$route.name === 'follow-page-followers'}">
             <router-link 
@@ -42,6 +47,7 @@
         <router-view 
          :key="$route.fullPath"
          :user="user"
+         @loading="changeIsLoading"
         />
         <!-- Two sub-pages -->
       </div>
@@ -53,6 +59,7 @@
       </div>
     </div>
   </div>
+</div>
 </template>
 
 <script>
@@ -61,6 +68,7 @@ import PopularUsers from '../components/PopularUsers.vue'
 import PersonalPageHeader from '../components/PersonalPageHeader.vue'
 import usersAPI from '../apis/users'
 import { Toast, ToastIcon } from '../utils/helpers'
+import Spinner from '../components/Spinner.vue'
 
 export default {
   name: 'FollowPage',
@@ -68,10 +76,12 @@ export default {
     SideBar,
     PopularUsers,
     PersonalPageHeader,
+    Spinner,
   },
   data () {
     return {
       user: {},
+      isLoading: true
     }
   },
   methods: {
@@ -90,6 +100,9 @@ export default {
         }
       }
     },
+    changeIsLoading () {
+      this.isLoading = false
+    }
   },
   created () {
     const { id } = this.$route.params

@@ -70,41 +70,38 @@ const routes = [{
                 path: 'posts',
                 name: 'personal-page-posts',
                 component: () =>
-                    import ('../components/PostBlockShort')
+                    import ('../views/PersonalPosts')
             },
             {
                 path: 'replies',
                 name: 'personal-page-replies',
                 component: () =>
-                    import ('../components/ReplyBlock')
+                    import('../views/PersonalReplies')
             },
             {
                 path: 'liked',
                 name: 'personal-page-liked',
                 component: () =>
-                    import ('../components/PostBlockShort')
+                    import('../views/PersonalLiked')
             },
         ]
     },
     {
         path: '/users/:id/follow',
         name: 'follow-page-root',
-        component: () =>
-            import ('../views/FollowPage'),
         redirect: '/users/:id/follow/followers',
-        children: [{
-                path: 'followers',
-                name: 'follow-page-followers',
-                component: () =>
-                    import ('../components/FollowUsers')
-            },
-            {
-                path: 'followings',
-                name: 'follow-page-following',
-                component: () =>
-                    import ('../components/FollowUsers')
-            },
-        ]
+    },
+    {
+        path: '/users/:id/follow/followers',
+        name: 'follow-page-followers',
+        component: () =>
+            import('../views/FollowersPage')
+    },
+    {
+        path: '/users/:id/follow/followings',
+        name: 'follow-page-following',
+        component: () =>
+            import('../views/FollowingsPage')
     },
     {
         path: '/setting/:id',

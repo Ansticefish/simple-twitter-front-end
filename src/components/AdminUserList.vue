@@ -3,11 +3,11 @@
     <div class="admin-users__header">
       <h4>使用者列表</h4>
     </div>
-    <div class="admin-users__main row">
+    <div class="admin-users__main row m-0">
       <div 
         v-for="user in users"
         :key="user.id"
-        class="admin-users__card m-3 col-3 p-0">
+        class="admin-users__card col-3 mt-3 ml-3 p-0">
         <img
           :src="user.cover |emptyCover"
           alt=""
@@ -43,68 +43,8 @@
 
 <script>
 import {accountShow, emptyAvatar, emptyCover} from '../utils/mixins'
-const dummyData = [
-    {
-        "id": 21,
-        "account": "user1",
-        "name": "user1",
-        "avatar": "https://i.imgur.com/q6bwDGO.png",
-        "cover": "https://source.unsplash.com/1000x200/?nature",
-        "role": "",
-        "tweetCount": 11,
-        "likeCount": 20,
-        "followerCount": 4,
-        "followingCount": 3
-    },
-    {
-        "id": 22,
-        "account": "user2",
-        "name": "user2",
-        "avatar": "https://i.imgur.com/q6bwDGO.png",
-        "cover": "https://source.unsplash.com/1000x200/?nature",
-        "role": "",
-        "tweetCount": 10,
-        "likeCount": 19,
-        "followerCount": 6,
-        "followingCount": 0
-    },
-    {
-        "id": 23,
-        "account": "user2",
-        "name": "user2",
-        "avatar": "https://i.imgur.com/q6bwDGO.png",
-        "cover": "https://source.unsplash.com/1000x200/?nature",
-        "role": "",
-        "tweetCount": 10,
-        "likeCount": 19,
-        "followerCount": 6,
-        "followingCount": 0
-    },
-    {
-        "id": 24,
-        "account": "user2",
-        "name": "user2",
-        "avatar": "https://i.imgur.com/q6bwDGO.png",
-        "cover": "https://source.unsplash.com/1000x200/?nature",
-        "role": "",
-        "tweetCount": 10,
-        "likeCount": 19,
-        "followerCount": 6,
-        "followingCount": 0
-    },
-    {
-        "id": 25,
-        "account": "user2",
-        "name": "user2",
-        "avatar": "https://i.imgur.com/q6bwDGO.png",
-        "cover": "https://source.unsplash.com/1000x200/?nature",
-        "role": "",
-        "tweetCount": 10,
-        "likeCount": 19,
-        "followerCount": 6,
-        "followingCount": 0
-    },
-]
+import { Toast, ToastIcon } from "../utils/helpers";
+import adminAPI from '../apis/admin'
 
 export default {
   name: "AdminUserList",
@@ -115,9 +55,17 @@ export default {
     }
   },
   methods:{
-    fetchUsers(){
-      //api here
-      this.users = [...dummyData]
+    async fetchUsers(){
+      try{
+        const {data} = await adminAPI.getUsers()
+        this.users = [...data]
+      }catch(err){
+        console.log(err)
+        Toast.fire({
+          title:'無法取得使用者資料',
+          html: ToastIcon.redCrossHtml
+        })
+      }
     }
   },
   filters:{
@@ -172,6 +120,10 @@ export default {
       @extend %card-center;
       &__name {
         @extend %name_;
+        &:hover{
+          cursor: default;
+          text-decoration: none;
+        }
       }
       &__account {
         @extend %account_;
@@ -182,11 +134,17 @@ export default {
       .tweet-icon {
         @include setIcon(24px, 22px, $icon-tweet, $icon-tweet){
           margin-right: 8px;
+          &:hover{
+            cursor: default;
+          }
         }
       }
       .like-icon {
         @include setIcon(20px, 19px, $icon-heart, $icon-heart){
           margin-right: 8px;
+          &:hover{
+            cursor: default;
+          }
         }
       }
     }

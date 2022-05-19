@@ -21,13 +21,17 @@
         <FollowUsers 
          :user="user"
          :initial-list="followList"
+         @update="updateTop"
         />
       </div>
       <div 
        class="col-lg-3 
        col-xl-3"
       >
-        <PopularUsers />
+        <PopularUsers 
+        :updateList="updateList"
+         @rerender="rerender"
+        />
       </div>
     </div>
   </div>
@@ -58,6 +62,7 @@ export default {
     return {
       user: {},
       followList: [],
+      updateList: 0,
       isLoading: true
     }
   },
@@ -102,6 +107,12 @@ export default {
         this.isLoading = false
       }
     },
+     updateTop () {
+      this.updateList += 1
+    },
+    rerender ( ){
+      this.fetchFollowings(this.user.id)
+    }
   },
   created () {
     const { id } = this.$route.params

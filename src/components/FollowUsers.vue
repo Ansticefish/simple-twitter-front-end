@@ -109,6 +109,8 @@ export default {
           }
         })
 
+        this.$emit('update')
+
       } catch (error) {
        const errorMsg = error.response.data.message
         if( errorMsg ) {
@@ -141,6 +143,8 @@ export default {
             return follow
           }
         })
+
+        this.$emit('update')
 
       } catch (error) {
         const errorMsg = error.response.data.message

@@ -71,7 +71,7 @@ import { Toast, ToastIcon } from '../utils/helpers'
 import Spinner from '../components/Spinner.vue'
 
 export default {
-  name: 'FollowPage',
+  name: 'FollowersPage',
   components: {
     SideBar,
     PopularUsers,

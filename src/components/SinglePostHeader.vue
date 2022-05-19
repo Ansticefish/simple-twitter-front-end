@@ -30,7 +30,6 @@ export default {
   @extend %header_
 }
 .back-btn {
-  width: 100px;
   display: flex;
   align-items: center;
   &:hover {

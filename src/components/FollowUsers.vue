@@ -1,7 +1,5 @@
 <template>
-<div>
-  <Spinner v-if="isLoading"/>
-  <div  v-if="!isLoading">
+  <div>
     <div 
       v-show="followList.length > 0"
       v-for="(follow, index) in followList"
@@ -50,7 +48,6 @@
       </h5> 
     </div>
   </div> 
-</div> 
 </template>
 
 <script>
@@ -58,16 +55,16 @@ import usersAPI from '../apis/users'
 import { Toast, ToastIcon } from '../utils/helpers'
 import { mapState } from 'vuex'
 import { emptyAvatar } from '../utils/mixins'
-import Spinner from '../components/Spinner.vue'
 
 export default {
   name: 'FollowUsers',
-  components: {
-    Spinner,
-  },
   props: {
     user:{
       type: Object,
+      required: true
+    },
+    initialList: {
+      type: Array,
       required: true
     }
   },
@@ -75,71 +72,14 @@ export default {
   data () {
     return {
       followList: [],
-      isLoading: true,
     }
   },
   computed: {
     ...mapState(['currentUser'])
   },
-  methods: {
-    fetchData ( id ) {
-      if (this.$route.name === 'follow-page-followers') {
-        this.fetchFollowers( id )
-        return
-      }  
-      this.fetchFollowings( id )
-    },
-    async fetchFollowings ( id ) {
-      try {
-        const { data } = await usersAPI.userFollowings( id )
-
-        if (data.message === '沒有追隨者名單'){
-          this.followList = []
-        } else {
-          this.followList = data 
-        }
-        
-        this.isLoading = false
-        this.$emit('loading')
-
-      } catch (error) {
-        const errorMsg = error.response.data.message
-        if( errorMsg ) {
-          const message = errorMsg.slice(6)
-          Toast.fire({
-            title: `${message}`,
-            html: ToastIcon.redCrossHtml
-          })
-        }
-        this.isLoading = false
-        this.$emit('loading')
-      }
-    },
-    async fetchFollowers ( id ) {
-      try {
-        const { data } = await usersAPI.userFollowers( id )
-        this.followList = data
-
-        if (data.message === '沒有粉絲名單'){
-          this.followList = []
-        } else {
-          this.followList = data 
-        }
-
-        this.isLoading = false
-        this.$emit('loading')
-      } catch (error) {
-        const errorMsg = error.response.data.message
-        if( errorMsg ) {
-          const message = errorMsg.slice(6)
-          Toast.fire({
-            title: `${message}`,
-            html: ToastIcon.redCrossHtml
-          })
-        }
-        this.isLoading = false
-        this.$emit('loading')
-      }
+  methods: { 
+    fetchData () {
+      this.followList = this.initialList
     },
     getUserId ( account ) {
        const user =  this.followList.filter( follow => 
@@ -224,9 +164,13 @@ export default {
     }
   },
   created () {
-    const { id } = this.$route.params
-    this.fetchData ( id )
+    this.fetchData ( )
   },
+  watch: {
+    'initialList': {
+      handler: 'fetchData'
+    }
+  }
 }
 </script>
 

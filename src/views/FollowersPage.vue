@@ -92,7 +92,12 @@ export default {
      
       } catch (error) {
         const errorMsg = error.response.data.message
-        if( errorMsg ) {
+        if (errorMsg === "Error:該名使用者沒有被任何人追蹤！"){
+          Toast.fire({
+            title: '尚無追隨者',
+            html: ToastIcon.yellowWarningHtml
+          })
+        } else if( errorMsg ) {
           const message = errorMsg.slice(6)
           Toast.fire({
             title: `${message}`,
@@ -108,7 +113,7 @@ export default {
     const { id } = this.$route.params
     this.fetchUser ( id )
     this.fetchFollowers ( id )
-  }
+  },
 }
 </script>
 

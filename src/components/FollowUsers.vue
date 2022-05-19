@@ -59,10 +59,6 @@ import { emptyAvatar } from '../utils/mixins'
 export default {
   name: 'FollowUsers',
   props: {
-    user:{
-      type: Object,
-      required: true
-    },
     initialList: {
       type: Array,
       required: true

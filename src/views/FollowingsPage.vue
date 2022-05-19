@@ -81,17 +81,18 @@ export default {
       try {
         const { data } = await usersAPI.userFollowings( id )
 
-        if (data.message === '沒有追隨者名單'){
-          this.followList = []
-        } else {
-          this.followList = data 
-        }
+        this.followList = data 
         
         this.isLoading = false
 
       } catch (error) {
         const errorMsg = error.response.data.message
-        if( errorMsg ) {
+        if (errorMsg === "Error:該名使用者沒有追蹤任何人！"){
+          Toast.fire({
+            title: '尚無追蹤者',
+            html: ToastIcon.yellowWarningHtml
+          })
+        } else if( errorMsg ) {
           const message = errorMsg.slice(6)
           Toast.fire({
             title: `${message}`,

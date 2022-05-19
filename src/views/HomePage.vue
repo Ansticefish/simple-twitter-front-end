@@ -4,7 +4,9 @@
   <div v-if="!isLoading" class="container">
     <div class="row">
       <div class="col-lg-2 col-xl-2">
-        <SideBar/>
+        <SideBar
+        @update="fetchPosts"
+        />
       </div>
       <div 
         class="

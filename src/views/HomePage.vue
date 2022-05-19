@@ -1,4 +1,6 @@
 <template>
+<div>
+  <Spinner v-if="isLoading" />
   <div v-if="!isLoading" class="container">
     <div class="row">
       <div class="col-lg-2 col-xl-2">
@@ -48,6 +50,7 @@
       </div>
     </div> 
   </div>
+</div>
 </template>
 
 <script>
@@ -58,6 +61,7 @@ import PostBlockShort from '../components/PostBlockShort.vue'
 import { mapState } from 'vuex'
 import postsAPI from '../apis/posts'
 import { Toast, ToastIcon } from '../utils/helpers'
+import Spinner from '../components/Spinner.vue'
 
 export default {
   name: 'HomePage',
@@ -66,6 +70,7 @@ export default {
     PopularUsers,
     CreatePostModal,
     PostBlockShort,
+    Spinner
   },
   data () {
     return {

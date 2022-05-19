@@ -1,52 +1,56 @@
 <template>
-<div  v-if="!isLoading">
-  <div 
-    v-for="(follow, index) in followList"
-    :key="index"
-    class="followBlock">
-    <img 
-       @click.stop.prevent="toPersonalPage(follow.account)"
-      class="followBlock__avatar"
-      :src="follow.avatar | emptyAvatar " alt="">
-    <div class="followBlock__wrapper">
-      <div class="followBlock__wrapper__header">
-        <p 
-         @click.stop.prevent="toPersonalPage(follow.account)"
-         class="followBlock__wrapper__header__name"> 
-          {{ follow.name }}
-        </p>
-        <template v-if="follow.account !== currentUser.account">
+<div>
+  <Spinner v-if="isLoading"/>
+  <div  v-if="!isLoading">
+    <div 
+      v-show="followList.length > 0"
+      v-for="(follow, index) in followList"
+      :key="index"
+      class="followBlock">
+      <img 
+        @click.stop.prevent="toPersonalPage(follow.account)"
+        class="followBlock__avatar"
+        :src="follow.avatar | emptyAvatar " alt="">
+      <div class="followBlock__wrapper">
+        <div class="followBlock__wrapper__header">
+          <p 
+          @click.stop.prevent="toPersonalPage(follow.account)"
+          class="followBlock__wrapper__header__name"> 
+            {{ follow.name }}
+          </p>
+          <template v-if="follow.account !== currentUser.account">
+            <button
+          v-if="follow.isFollowed"
+          @click.stop.prevent="removeFollow(follow.account)"
+          class="followBlock__wrapper__header__btn--following"
+          >
+            正在跟隨
+          </button>
           <button
-         v-if="follow.isFollowed"
-         @click.stop.prevent="removeFollow(follow.account)"
-         class="followBlock__wrapper__header__btn--following"
-        >
-          正在跟隨
-        </button>
-        <button
-        v-else
-        @click.stop.prevent="addFollow(follow.account)"
-        class="followBlock__wrapper__header__btn--follow"
-        >
-          跟隨
-        </button>
-        </template>
+          v-else
+          @click.stop.prevent="addFollow(follow.account)"
+          class="followBlock__wrapper__header__btn--follow"
+          >
+            跟隨
+          </button>
+          </template>
+        </div>
+        <p class="followBlock__wrapper__content">
+        {{ follow.introduction}}
+        </p>
       </div>
-      <p class="followBlock__wrapper__content">
-      {{ follow.introduction}}
-      </p>
     </div>
-  </div>
-  <div 
-    v-if="!followList.length"
-    class="follow__empty"
-  >
-     <h5>
-       {{ this.$route.name === 'follow-page-followers'? 
-       '尚無追隨者': '尚無追蹤者' }}
-     </h5> 
-  </div>
-</div>  
+    <div 
+      v-show="!followList.length"
+      class="follow__empty"
+    >
+      <h5>
+        {{ this.$route.name === 'follow-page-followers'? 
+        '尚無追隨者': '尚無追蹤者' }}
+      </h5> 
+    </div>
+  </div> 
+</div> 
 </template>
 
 <script>
@@ -54,9 +58,13 @@ import usersAPI from '../apis/users'
 import { Toast, ToastIcon } from '../utils/helpers'
 import { mapState } from 'vuex'
 import { emptyAvatar } from '../utils/mixins'
+import Spinner from '../components/Spinner.vue'
 
 export default {
   name: 'FollowUsers',
+  components: {
+    Spinner,
+  },
   props: {
     user:{
       type: Object,
@@ -84,8 +92,16 @@ export default {
     async fetchFollowings ( id ) {
       try {
         const { data } = await usersAPI.userFollowings( id )
-        this.followList = data 
+
+        if (data.message === '沒有追隨者名單'){
+          this.followList = []
+        } else {
+          this.followList = data 
+        }
+        
         this.isLoading = false
+        this.$emit('loading')
+
       } catch (error) {
         const errorMsg = error.response.data.message
         if( errorMsg ) {
@@ -96,13 +112,22 @@ export default {
           })
         }
         this.isLoading = false
+        this.$emit('loading')
       }
     },
     async fetchFollowers ( id ) {
       try {
         const { data } = await usersAPI.userFollowers( id )
         this.followList = data
+
+        if (data.message === '沒有粉絲名單'){
+          this.followList = []
+        } else {
+          this.followList = data 
+        }
+
         this.isLoading = false
+        this.$emit('loading')
       } catch (error) {
         const errorMsg = error.response.data.message
         if( errorMsg ) {
@@ -113,6 +138,7 @@ export default {
           })
         }
         this.isLoading = false
+        this.$emit('loading')
       }
     },
     getUserId ( account ) {

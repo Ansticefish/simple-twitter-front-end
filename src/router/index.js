@@ -143,9 +143,11 @@ router.beforeEach( async (to, from, next) => {
 
     if (!isAuthenticated &&
         !pagesWithoutAuthentication.includes(to.name)) {
-        if (from.name === 'sign-in') {
+        if (from.name === 'sign-in' || from.name === 'admin-sign-in') {
             return
-        } else {
+        } else if ( to.name.includes('admin')){
+            router.push({ name: 'admin-sign-in' })
+        } else{
             router.push({ name: 'sign-in' })
         }
     }

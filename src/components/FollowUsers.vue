@@ -1,5 +1,5 @@
 <template>
-<div>
+<div  v-if="!isLoading">
   <div 
     v-for="(follow, index) in followList"
     :key="index"
@@ -37,6 +37,15 @@
       </p>
     </div>
   </div>
+  <div 
+    v-if="!followList.length"
+    class="follow__empty"
+  >
+     <h5>
+       {{ this.$route.name === 'follow-page-followers'? 
+       '尚無追隨者': '尚無追蹤者' }}
+     </h5> 
+  </div>
 </div>  
 </template>
 
@@ -52,32 +61,58 @@ export default {
     user:{
       type: Object,
       required: true
-    },
+    }
   },
   mixins: [ emptyAvatar ],
   data () {
     return {
-      followList: []
+      followList: [],
+      isLoading: true,
     }
   },
   computed: {
     ...mapState(['currentUser'])
   },
   methods: {
+    fetchData ( id ) {
+      if (this.$route.name === 'follow-page-followers') {
+        this.fetchFollowers( id )
+        return
+      }  
+      this.fetchFollowings( id )
+    },
     async fetchFollowings ( id ) {
       try {
         const { data } = await usersAPI.userFollowings( id )
         this.followList = data 
+        this.isLoading = false
       } catch (error) {
-        console.log(error)
+        const errorMsg = error.response.data.message
+        if( errorMsg ) {
+          const message = errorMsg.slice(6)
+          Toast.fire({
+            title: `${message}`,
+            html: ToastIcon.redCrossHtml
+          })
+        }
+        this.isLoading = false
       }
     },
     async fetchFollowers ( id ) {
       try {
         const { data } = await usersAPI.userFollowers( id )
         this.followList = data
+        this.isLoading = false
       } catch (error) {
-        console.log(error)
+        const errorMsg = error.response.data.message
+        if( errorMsg ) {
+          const message = errorMsg.slice(6)
+          Toast.fire({
+            title: `${message}`,
+            html: ToastIcon.redCrossHtml
+          })
+        }
+        this.isLoading = false
       }
     },
     getUserId ( account ) {
@@ -99,9 +134,8 @@ export default {
       try {
         const id = this.getUserId(account)
 
-        const response = await usersAPI.followUser(id)
-        
-        console.log(response)
+         await usersAPI.followUser(id)
+      
         this.followList = this.followList.map( follow => {
           if( follow.account === account) {
             return {
@@ -114,17 +148,13 @@ export default {
         })
 
       } catch (error) {
-        const errorMsg = error.response.data.message
-        if (errorMsg === 'Error:不能追蹤自己!') {
+       const errorMsg = error.response.data.message
+        if( errorMsg ) {
+          const message = errorMsg.slice(6)
           Toast.fire({
-            title: '不能追蹤自己！',
+            title: `${message}`,
             html: ToastIcon.redCrossHtml
-          }) 
-          } else if (errorMsg === 'Error:你已經追蹤該使用者！') {
-            Toast.fire({
-              title: '已追蹤該使用者',
-              html: ToastIcon.redCrossHtml
-            }) 
+          })
         } else { 
           Toast.fire({
             title: '追蹤失敗',
@@ -151,21 +181,16 @@ export default {
         })
 
       } catch (error) {
-        // need to be tested 
         const errorMsg = error.response.data.message
-        if (errorMsg === 'Error:不能追蹤自己!') {
+        if( errorMsg ) {
+          const message = errorMsg.slice(6)
           Toast.fire({
-            title: '不能追蹤自己！',
+            title: `${message}`,
             html: ToastIcon.redCrossHtml
-          }) 
-          } else if (errorMsg === 'Error:你已經追蹤該使用者！') {
-            Toast.fire({
-              title: '已追蹤該使用者',
-              html: ToastIcon.redCrossHtml
-            }) 
+          })
         } else { 
           Toast.fire({
-            title: '追蹤失敗',
+            title: '取消追蹤失敗',
             html: ToastIcon.redCrossHtml
           }) 
         } 
@@ -174,11 +199,7 @@ export default {
   },
   created () {
     const { id } = this.$route.params
-    if(this.$route.name === 'follow-page-followers') {
-      this.fetchFollowers( id )
-      return
-    }  
-    this.fetchFollowings( id )
+    this.fetchData ( id )
   },
 }
 </script>
@@ -234,6 +255,16 @@ export default {
       color: $color-black;
     }
   }
+}
 
+.follow__empty {
+  height: 50px;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  h5 {
+    color: $color-secondary;
+    font-weight: normal;
+  } 
 }
 </style>

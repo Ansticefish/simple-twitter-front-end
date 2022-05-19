@@ -255,21 +255,11 @@ export default {
 
       } catch(error) {
         this.isProcessing = false
-        const message = error.response.data.message
-        if ( message === 'Error:密碼與確認密碼不符！') {
+        const errorMsg = error.response.data.message
+        if( errorMsg ) {
+          const message = errorMsg.slice(6)
           Toast.fire({
-            title: '兩次密碼不同，請重新輸入',
-            html: ToastIcon.redCrossHtml
-          })
-          this.checkPassword = ''
-        } else if (message === 'Error:此帳號已被註冊！') {
-          Toast.fire({
-            title: 'Account已重複註冊',
-            html: ToastIcon.redCrossHtml
-          })
-        } else if ( message === 'Error:此 Email 已被註冊！') {
-          Toast.fire({
-            title: 'Email已重複註冊',
+            title: `${message}`,
             html: ToastIcon.redCrossHtml
           })
         } else {

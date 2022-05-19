@@ -6,9 +6,17 @@
       </div>
       <div class="main col-lg-7 col-xl-7 p-0">
         <PersonalPageHeader :user="user" />
-        <PersonalInfo :initial-user="user" @edit="handleEdit" />
+        <PersonalInfo
+          v-show="!isLoadingInfo"
+          :initial-user="user"
+          @edit="handleEdit"
+        />
         <PersonalPageTabs :user-account="user.account" />
-        <router-view :replies="replies" />
+        <router-view
+          v-show="!isLoadingRouter"
+          :initialPosts="posts"
+          :replies="replies"
+        />
         <!--Three sub-pages -->
       </div>
       <div class="col-lg-3 col-xl-3">
@@ -32,93 +40,8 @@ import PersonalInfo from "../components/PersonalInfo.vue";
 import EditPersonalInfo from "../components/EditPersonalInfo.vue";
 import PersonalPageTabs from "../components/PersonalPageTabs.vue";
 
-const dummyData = {
-  user: {
-    id: -1,
-    account: "root",
-    name: "root",
-    avatar: "",
-    introduction:
-      "enim facilisis gravida neque convallis a cras semper auctor neque vitae tempus quam pellentesque nec nam aliquam sem et tortor consequat id porta ",
-    following_count: 30,
-    follower_count: 20,
-    cover: "",
-    isFollowed: false,
-  },
-  replies: [
-    {
-      id: 1,
-      createdAt: "2022-05-14T08:38:46.106Z",
-      updatedAt: "2022-05-15T08:38:46.106Z",
-      comment: "vel pharetra vel turpis nunc eget lorem dolor sed viverra",
-      ReplyUser: {
-        id: -1,
-        name: "root",
-        account: "root",
-        avatar: "",
-      },
-      PostUser: {
-        id: 1,
-        name: "Hello",
-        account: "Word",
-      },
-    },
-    {
-      id: 2,
-      createdAt: "2022-05-14T08:38:46.106Z",
-      updatedAt: "2022-05-15T08:38:46.106Z",
-      comment:
-        "enim ut sem viverra aliquet eget sit amet tellus cras adipiscing enim eu turpis egestas pretium aenean pharetra magna ac",
-      ReplyUser: {
-        id: -1,
-        name: "root",
-        account: "root",
-        avatar: "",
-      },
-      PostUser: {
-        id: 1,
-        name: "Hello",
-        account: "Word",
-      },
-    },
-    {
-      id: 3,
-      createdAt: "2022-05-13T08:38:46.106Z",
-      updatedAt: "2022-05-14T08:38:46.106Z",
-      comment:
-        "risus nullam eget felis eget nunc lobortis mattis aliquam faucibus purus in massa tempor nec",
-      ReplyUser: {
-        id: -1,
-        name: "root",
-        account: "root",
-        avatar: "",
-      },
-      PostUser: {
-        id: 1,
-        name: "Hello",
-        account: "Word",
-      },
-    },
-    {
-      id: 4,
-      createdAt: "2022-05-12T08:38:46.106Z",
-      updatedAt: "2022-05-12T08:38:46.106Z",
-      comment:
-        "quam vulputate dignissim suspendisse in est ante in nibh mauris cursus mattis molestie a iaculis",
-      ReplyUser: {
-        id: -1,
-        name: "root",
-        account: "root",
-        avatar: "",
-      },
-      PostUser: {
-        id: 1,
-        name: "Hello",
-        account: "Word",
-      },
-    },
-  ],
-};
+import userAPI from "../apis/users";
+import { Toast, ToastIcon } from "../utils/helpers";
 
 export default {
   name: "PersonalPage",
@@ -138,13 +61,17 @@ export default {
         name: "",
         avatar: "",
         introduction: "",
-        following_count: 0,
-        follower_count: 0,
+        followingCount: 0,
+        followerCount: 0,
         cover: "",
         isFollowed: false,
+        tweetCount: 0,
       },
       replies: [],
+      posts: [],
       isEditing: false,
+      isLoadingInfo: true,
+      isLoadingRouter: true,
 
       // undevelop function
       Undevelop: {
@@ -153,13 +80,82 @@ export default {
     };
   },
   methods: {
-    fetchUser() {
-      // get user api here
-      this.user = { ...dummyData.user };
+    async fetchUser(userId) {
+      try {
+        this.isLoadingInfo = true;
+        const { data } = await userAPI.getUser({ id: userId });
+        this.user = { ...data };
+        this.isLoadingInfo = false;
+      } catch (err) {
+        console.log(err);
+        Toast.fire({
+          title: "無法取得使用者資料",
+          html: ToastIcon.redCrossHtml,
+        });
+      }
     },
-    fectchReplies() {
-      // api here
-      this.replies = [...dummyData.replies];
+    async fectchReplies(userId) {
+      try {
+        this.isLoadingRouter = true;
+        const { data } = await userAPI.getUserReplies(userId);
+        if (!data.message) {
+          this.replies = [...data];
+        } else {
+          this.replies = [];
+          Toast.fire({
+            title: "使用者無回覆紀錄",
+            html: ToastIcon.blueInformHtml,
+          });
+        }
+        this.isLoadingRouter = false;
+      } catch (err) {
+        console.log(err);
+        Toast.fire({
+          title: "無法取得使用者回覆",
+          html: ToastIcon.redCrossHtml,
+        });
+      }
+    },
+    async fectchPosts(userId) {
+      try {
+        this.isLoadingRouter = true;
+        if (this.$route.name === "personal-page-liked") {
+          const { data } = await userAPI.getUserLikes(userId);
+          if (!data.message) {
+            this.posts = data.map((post) => ({
+              ...post.Tweet,
+              TweetUser: post.TweetUser,
+              isLiked: post.isLiked,
+            }));
+          } else {
+            this.posts = [];
+            Toast.fire({
+              title: "使用者尚無喜歡的推文",
+              html: ToastIcon.blueInformHtml,
+            });
+          }
+          this.isLoadingRouter = false;
+        } else {
+          const { data } = await userAPI.getUserPosts(userId);
+          if (!data.message) {
+            this.posts = [...data];
+            this.user.postCount = data.length
+          } else {
+            this.posts = [];
+            Toast.fire({
+              title: "使用者尚無推文",
+              html: ToastIcon.blueInformHtml,
+            });
+          }
+          this.isLoadingRouter = false;
+        }
+      } catch (err) {
+        console.log(err);
+        Toast.fire({
+          title: "無法取得使用者推文",
+          html: ToastIcon.redCrossHtml,
+        });
+      }
     },
     handleEdit() {
       this.isEditing = true;
@@ -180,8 +176,19 @@ export default {
     },
   },
   created() {
-    this.fetchUser();
-    this.fectchReplies();
+    const { id } = this.$route.params;
+    this.fetchUser(id);
+    this.fectchReplies(id);
+    this.fectchPosts(id);
+  },
+  beforeRouteUpdate(to, from, next) {
+    const { id } = to.params;
+    if (id !== from.params.id) {
+      this.fetchUser(id);
+    }
+    this.fectchReplies(id);
+    this.fectchPosts(id);
+    next();
   },
 };
 </script>

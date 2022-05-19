@@ -4,7 +4,7 @@
       <div class="back-btn__icon"></div>
       <div class="back-btn__descript">
         <h5 class="back-btn__descript__name">{{this.user.name}}</h5>
-        <p class="back-btn__descript__num-tweets">{{tweetsAmount}} 推文</p>
+        <p class="back-btn__descript__num-tweets">{{user.tweetCount}} 推文</p>
       </div>
     </div>
   </div>
@@ -20,11 +20,6 @@ export default {
     user:{
       type: Object,
       required: true
-    }
-  },
-  data(){
-    return{
-      tweetsAmount: 25
     }
   },
   methods: {
@@ -43,7 +38,7 @@ export default {
   @extend %header_;
 }
 .back-btn {
-  width: 100px;
+  width: auto;
   display: flex;
   align-items: center;
   &:hover {

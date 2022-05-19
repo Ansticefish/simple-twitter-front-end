@@ -50,7 +50,7 @@
             parmas: user.account,
           }"
           class="personal__info__following mr-4"
-          ><strong>{{ user.following_count }} 個</strong>跟隨中</router-link
+          ><strong>{{ user.followingCount }} 個</strong>跟隨中</router-link
         >
         <router-link
           :to="{
@@ -58,7 +58,7 @@
             parmas: user.account,
           }"
           class="personal__info__follower"
-          ><strong>{{ user.follower_count }} 位</strong>跟隨者</router-link
+          ><strong>{{ user.followerCount }} 位</strong>跟隨者</router-link
         >
       </div>
     </div>
@@ -86,8 +86,8 @@ export default {
         name: "",
         avatar: "",
         introduction: "",
-        following_count: 0,
-        follower_count: 0,
+        followingCount: 0,
+        followerCount: 0,
         cover: "",
         isFollowed: false,
       },

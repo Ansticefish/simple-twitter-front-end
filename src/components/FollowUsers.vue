@@ -1,6 +1,7 @@
 <template>
 <div  v-if="!isLoading">
   <div 
+    v-show="followList.length > 0"
     v-for="(follow, index) in followList"
     :key="index"
     class="followBlock">
@@ -38,7 +39,7 @@
     </div>
   </div>
   <div 
-    v-if="!followList.length"
+    v-show="!followList.length"
     class="follow__empty"
   >
      <h5>
@@ -84,7 +85,13 @@ export default {
     async fetchFollowings ( id ) {
       try {
         const { data } = await usersAPI.userFollowings( id )
-        this.followList = data 
+
+        if (data.message === '沒有追隨者名單'){
+          this.followList = []
+        } else {
+          this.followList = data 
+        }
+        
         this.isLoading = false
       } catch (error) {
         const errorMsg = error.response.data.message
@@ -102,6 +109,13 @@ export default {
       try {
         const { data } = await usersAPI.userFollowers( id )
         this.followList = data
+
+        if (data.message === '沒有粉絲名單'){
+          this.followList = []
+        } else {
+          this.followList = data 
+        }
+
         this.isLoading = false
       } catch (error) {
         const errorMsg = error.response.data.message

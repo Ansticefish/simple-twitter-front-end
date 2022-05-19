@@ -17,6 +17,7 @@ export default {
 <style lang="scss" scoped>
 .spinner {
   position: fixed;
+  z-index: 10;
   top:0;
   bottom: 0;
   left: 0;
@@ -24,6 +25,7 @@ export default {
   display: flex;
   align-items: center;
   justify-content: center;
+  background: $color-white;
   img {
     width: 50px;
     height: 50px;

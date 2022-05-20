@@ -8,8 +8,6 @@
 </template>
 
 <script>
-// check post numbers
-
 export default {
   name: "PersonalPageHeader",
   data() {

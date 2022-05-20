@@ -2,7 +2,7 @@
   <div id="reply-block">
     <div v-for="reply in replies" :key="reply.id" class="reply py-3 px-4">
       <img
-        @click="toPersonalPage(reply.ReplyUser.account)"
+        @click="getIntoPersonalPage(reply.ReplyUser.id, reply.ReplyUser.namet)"
         :src="reply.ReplyUser.avatar | emptyAvatar"
         alt=""
         class="reply__avatar mr-2"
@@ -21,7 +21,7 @@
           >
         </div>
         <p
-          @click="getIntoPersonalPage(reply.ReplyUser.id, reply.ReplyUser.name)"
+          @click="getIntoPersonalPage(reply.TweetUser.id, reply.TweetUser.name)"
           class="reply__creater mb-2"
         >
           回覆 <span>{{ reply.TweetUser.account | accountShow }}</span>

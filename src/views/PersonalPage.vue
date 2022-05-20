@@ -8,7 +8,7 @@
       <div class="main col-lg-7 col-xl-7 p-0">
         <PersonalPageHeader :user="user" />
         <PersonalInfo
-          v-show="!isLoadingInfo"
+          v-show="!isLoading"
           :initial-user="user"
           @edit="handleEdit"
         />

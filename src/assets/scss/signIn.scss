@@ -1,29 +1,27 @@
 %signin {
-    margin: 0 auto;
-    text-align: center;
-    img {
-        width: 40px;
-        height: 40px;
+  margin: 0 auto;
+  text-align: center;
+  img {
+    width: 40px;
+    height: 40px;
+  }
+  ul {
+    display: flex;
+    justify-content: flex-end;
+    li a {
+      color: $color-primary;
+      text-decoration: underline;
     }
-    ul {
-        display: flex;
-        justify-content: flex-end;
-        li a {
-            color: $color-primary;
-            text-decoration: underline;
-        }
+  }
+  form {
+    div {
+      @extend %input-style;
+      width: inherit;
     }
-    form {
-        div {
-            @extend %input-style;
-            width: inherit;
-        }
-        button {
-            width: 100%;
-            @include setButton ( $color-white, $color-brand, 50px, 0px, 8px, );
-            &:disabled {
-                opacity: 0.6;
-            }
-        }
+    button {
+      width: 100%;
+      @include setButton ( $color-white, $color-brand, 50px, 0px, 8px, );
+      @extend %submitBtnDisable;
     }
+  }
 }

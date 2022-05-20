@@ -47,9 +47,9 @@
           >
         </li>
       </ul>
-      <button 
-        @click="openCreateModal"
-        class="sidebar__upper__tweet mt-2">推文</button>
+      <button @click="openCreateModal" class="sidebar__upper__tweet mt-2">
+        推文
+      </button>
     </div>
     <button @click="logout" class="sidebar__log-out">
       <div class="sidebar__log-out__icon"></div>
@@ -67,38 +67,41 @@
 </template>
 
 <script>
-import CreatePostModal from '../components/CreatePostModal.vue'
+import CreatePostModal from "../components/CreatePostModal.vue";
 import { mapState } from "vuex";
 import { Toast, ToastIcon } from "../utils/helpers";
 
 export default {
   name: "SideBar",
-  components:{
-    CreatePostModal
+  components: {
+    CreatePostModal,
   },
-  data(){
-    return{
+  data() {
+    return {
       openCreate: false,
-    }
+    };
   },
   methods: {
     logout() {
       this.$store.commit("revokeAuthentication");
       Toast.fire({
-        title: '已登出',
-        html: ToastIcon.blueInformHtml
-      })
+        title: "已登出",
+        html: ToastIcon.blueInformHtml,
+      });
       this.$router.push("/signIn");
     },
-    updateData () {
-      this.$router.push('/home')
-      this.$emit('update')
+    updateData() {
+      if (this.$route.name === "home-page") {
+        this.$emit("update");
+      } else {
+        this.$router.push("/home");
+      }
     },
-    openCreateModal () {
-      this.openCreate = true
+    openCreateModal() {
+      this.openCreate = true;
     },
-    closeCreateModal () {
-      this.openCreate = false
+    closeCreateModal() {
+      this.openCreate = false;
     },
   },
   computed: {
@@ -126,7 +129,7 @@ export default {
 
 <style lang="scss" scoped>
 @import "../assets/scss/sidebar.scss";
-@import '../assets/scss/modal.scss';
+@import "../assets/scss/modal.scss";
 
 #sidebar {
   @extend %sidebar-container;
@@ -161,7 +164,7 @@ export default {
 .sidebar__log-out {
   @extend %sidebar-logout;
 }
-.modal-backdrop{
-   @extend %modal-backdrop;
+.modal-backdrop {
+  @extend %modal-backdrop;
 }
 </style>

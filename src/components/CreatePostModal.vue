@@ -102,10 +102,13 @@ export default {
       } catch (error) {
         this.isProcessing = false
         const errorMsg = error.response.data.message
-        if( errorMsg ) {
-          const message = errorMsg.slice(6)
+        if ( errorMsg === 'Error:推文內容不可空白！') {
+          this.warning = '內容不可空白'
+        } else if ( errorMsg === 'Error:推文不可超過140字！') {
+          this.warning = '字數不可超過140字'
+        } else {
           Toast.fire({
-            title: `${message}`,
+            title: '推文發送失敗',
             html: ToastIcon.redCrossHtml
           })
         }

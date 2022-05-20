@@ -131,7 +131,11 @@ export default {
       } catch (error) {
         this.isProcessing = false
         const errorMsg = error.response.data.message
-        if( errorMsg ) {
+        if ( errorMsg === 'Error:回覆不可超過140字！'){
+          this.warning = '字數不可超過140字'
+        } else if ( errorMsg === 'Error:回覆內容不可空白！') {
+          this.warning = '內容不可空白'
+        } else {
           const message = errorMsg.slice(6)
           Toast.fire({
             title: `${message}`,

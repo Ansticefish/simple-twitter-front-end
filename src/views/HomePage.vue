@@ -91,17 +91,13 @@ export default {
          this.posts = data
          this.isLoading = false
       } catch (error) {
-        const errorMsg = error.response.data.message
-        if( errorMsg ) {
-          const message = errorMsg.slice(6)
           Toast.fire({
-            title: `${message}`,
+            title: '無法取得推文資料',
             html: ToastIcon.redCrossHtml
           })
         }
 
         this.isLoading = false
-      }
     },
     updateData () {
       this.fetchPosts()

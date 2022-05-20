@@ -69,7 +69,7 @@
            mt-8"
            :disabled="isProcessing"
           >
-            {{ isProcessing? '處理中': '登入'}}
+            登入
           </button>
         </form>
         <ul 
@@ -144,10 +144,13 @@ export default {
       } catch (error) {
         this.isProcessing = false
         const errorMsg = error.response.data.message
-        if( errorMsg === 'Error:只有管理者帳號可以登入後台！') {
+        if( errorMsg === 'Error:只有管理者帳號可以登入後台！' || 
+          errorMsg === 'Error:帳號不存在！'
+        ) {
           this.a.error = true
           this.a.warning = '帳號不存在！'
-        } else if( errorMsg ) {
+          return
+        } else if (errorMsg) {
           const message = errorMsg.slice(6)
           Toast.fire({
             title: `${message}`,
@@ -155,12 +158,12 @@ export default {
           })
         } else {
           Toast.fire({
-            title: '登入失敗，請重新確認',
-            html: ToastIcon.redCrossHtml 
+            title: '登入失敗',
+            html: ToastIcon.redCrossHtml
           })
-          this.password = ''
         }
-      }
+          this.password = ''
+      }   
     }
   }
 }

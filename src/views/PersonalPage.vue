@@ -1,6 +1,6 @@
 <template>
   <div class="container">
-     <Spinner v-if='isLoading' />
+     <Spinner v-if='isLoading && !isRendering' />
     <div class="row">
       <div class="col-lg-2 col-xl-2">
         <SideBar />
@@ -8,16 +8,19 @@
       <div class="main col-lg-7 col-xl-7 p-0">
         <PersonalPageHeader :user="user" />
         <PersonalInfo
-          v-show="!isLoading"
+          v-show="!isLoading || isRendering"
           :initial-user="user"
           @edit="handleEdit"
+          @updateFollowStatus="updateTop"
         />
         <PersonalPageTabs :user-account="user.account" />
         <!--Three sub-pages -->
         <router-view />
       </div>
       <div class="col-lg-3 col-xl-3">
-        <PopularUsers />
+        <PopularUsers 
+          :updateList="updateList"
+          @rerender="rerender"/>
       </div>
     </div>
     <EditPersonalInfo
@@ -68,6 +71,8 @@ export default {
       },
       isLoading: true,
       isEditing: false,
+      isRendering: false,
+      updateList: 0,
 
       // undevelop function
       Undevelop: {
@@ -107,6 +112,15 @@ export default {
       };
       this.isEditing = false;
     },
+    updateTop () {
+      this.updateList -= 1
+    },
+    async rerender(){
+      this.isRendering = true
+      const { id } = this.$route.params;
+      await this.fetchUser(id)
+      this.isRendering = false
+    }
   },
   created() {
     const { id } = this.$route.params;

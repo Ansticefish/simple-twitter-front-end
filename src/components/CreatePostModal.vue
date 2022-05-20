@@ -68,7 +68,7 @@ export default {
     return {
       postContent: '',
       warning: '',
-      isProcessing: false
+      isProcessing: true
     }
   },
   mixins: [ emptyAvatar ],
@@ -125,6 +125,9 @@ export default {
           this.isProcessing = false
         } else if (this.postContent.length > 140) {
           this.warning = '字數不可超過140字'
+          this.isProcessing = true
+        } else {
+          this.warning = '內容不可空白'
           this.isProcessing = true
         }
       }

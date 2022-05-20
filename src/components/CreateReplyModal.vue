@@ -93,7 +93,7 @@ export default {
     return {
       replyContent: '',
       warning: '',
-      isProcessing: false
+      isProcessing: true
     }
   },
   methods: {
@@ -155,6 +155,9 @@ export default {
           this.isProcessing = false
         } else if (this.replyContent.length > 140) {
           this.warning = '字數不可超過140字'
+          this.isProcessing = true
+        } else {
+          this.warning = '內容不可空白'
           this.isProcessing = true
         }
       }

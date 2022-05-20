@@ -11,13 +11,16 @@
           v-show="!isLoading"
           :initial-user="user"
           @edit="handleEdit"
+          @updateFollowStatus="updateTop"
         />
         <PersonalPageTabs :user-account="user.account" />
         <!--Three sub-pages -->
         <router-view />
       </div>
       <div class="col-lg-3 col-xl-3">
-        <PopularUsers />
+        <PopularUsers 
+          :updateList="updateList"
+          @rerender="rerender"/>
       </div>
     </div>
     <EditPersonalInfo
@@ -68,6 +71,7 @@ export default {
       },
       isLoading: true,
       isEditing: false,
+      updateList: 0,
 
       // undevelop function
       Undevelop: {
@@ -107,6 +111,13 @@ export default {
       };
       this.isEditing = false;
     },
+    updateTop () {
+      this.updateList -= 1
+    },
+    rerender(){
+      const { id } = this.$route.params;
+      this.fetchUser(id)
+    }
   },
   created() {
     const { id } = this.$route.params;

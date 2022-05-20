@@ -2,8 +2,8 @@
   <div>
     <div 
       v-show="followList.length > 0"
-      v-for="follow in followList"
-      :key="follow.id"
+      v-for="(follow, index) in followList"
+      :key="index"
       class="followBlock">
       <img 
         @click.stop.prevent="toPersonalPage(follow.account)"

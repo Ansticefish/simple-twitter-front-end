@@ -86,13 +86,6 @@ export default {
       try {
         const { data } = await usersAPI.userFollowers( id )
         this.followList = data
-
-        if (data.message === '沒有粉絲名單'){
-          this.followList = []
-        } else {
-          this.followList = data 
-        }
-
         this.isLoading = false
      
       } catch (error) {
@@ -102,10 +95,9 @@ export default {
             title: '尚無追隨者',
             html: ToastIcon.yellowWarningHtml
           })
-        } else if( errorMsg ) {
-          const message = errorMsg.slice(6)
+        } else  {
           Toast.fire({
-            title: `${message}`,
+            title: '資料取得失敗',
             html: ToastIcon.redCrossHtml
           })
         }

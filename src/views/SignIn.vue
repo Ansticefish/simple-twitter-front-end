@@ -69,7 +69,7 @@
            mt-8"
            :disabled="isProcessing"
           >
-            {{ isProcessing? '處理中': '登入'}}
+            登入
           </button>
         </form>
         <ul 
@@ -166,8 +166,9 @@ export default {
           this.a.error = true
           this.a.warning = '帳號不存在！'
         } else {
+          const message = errorMsg.slice(6)
           Toast.fire({
-            title: '帳號或密碼錯誤！',
+            title: `${message}`,
             html: ToastIcon.redCrossHtml
           })
           this.password = ''

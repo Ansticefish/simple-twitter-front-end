@@ -33,7 +33,6 @@
             name="account"
             id="register__form__wrapper__account" 
             placeholder="請輸入帳號"
-            maxlength="50" 
             required
             autofocus
             >
@@ -62,7 +61,6 @@
             name="name"
             id="register__form__wrapper__name" 
             placeholder="請輸入名稱"
-            maxlength="50"
             required
             >
             <label
@@ -247,15 +245,31 @@ export default {
       } catch (error) {
         this.isProcessing = false
         const errorMsg = error.response.data.message
-        if( errorMsg ) {
+         if( errorMsg === 'Error:此欄位不可空白！') {
+           Toast.fire({
+              title: '欄位不可空白',
+              html: ToastIcon.redCrossHtml
+            })
+         } else if ( errorMsg === 'Error:密碼與確認密碼不符！') {
+            this.p.error = true
+            this.p.warning = '兩次密碼輸入不同'
+            this.cp.error = true
+            this.cp.warning = '兩次密碼輸入不同'
+            return
+         } else if ( errorMsg === 'Error:此 Email 已被註冊！') {
+            Toast.fire({
+              title: 'Email 已重複註冊！',
+              html: ToastIcon.redCrossHtml
+            })
+         } else if ( errorMsg === 'Error:此帳號已被註冊！') {
+            Toast.fire({
+              title: 'Account 已重複註冊！',
+              html: ToastIcon.redCrossHtml
+            })
+         } else if (errorMsg) {
           const message = errorMsg.slice(6)
           Toast.fire({
             title: `${message}`,
-            html: ToastIcon.redCrossHtml
-          })
-        } else {
-          Toast.fire({
-            title: '註冊失敗，請確認資料',
             html: ToastIcon.redCrossHtml
           })
         }

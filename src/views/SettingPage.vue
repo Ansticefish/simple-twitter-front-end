@@ -26,7 +26,6 @@
               :class="{'error': a.error}"
               name="account"
               id="setting__body__form__wrapper__account" 
-              maxlength="50"
               placeholder="請輸入帳號" 
               required
               autofocus
@@ -56,7 +55,6 @@
               name="name"
               id="setting__body__form__wrapper__name" 
               placeholder="請輸入名稱"
-              maxlength="50"
               required
               >
               <label
@@ -256,7 +254,17 @@ export default {
       } catch(error) {
         this.isProcessing = false
         const errorMsg = error.response.data.message
-        if( errorMsg ) {
+        if ( errorMsg === 'Error:此 Email 已被註冊！') {
+          Toast.fire({
+            title: 'Email 已重複註冊！',
+            html: ToastIcon.redCrossHtml
+          })
+        } else if ( errorMsg === 'Error:此帳號已被註冊！') {
+          Toast.fire({
+            title: 'Account 已重複註冊！',
+            html: ToastIcon.redCrossHtml
+          })
+        } else if( errorMsg ) {
           const message = errorMsg.slice(6)
           Toast.fire({
             title: `${message}`,

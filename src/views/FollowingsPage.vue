@@ -97,10 +97,9 @@ export default {
             title: '尚無追蹤者',
             html: ToastIcon.yellowWarningHtml
           })
-        } else if( errorMsg ) {
-          const message = errorMsg.slice(6)
-          Toast.fire({
-            title: `${message}`,
+        } else  {
+           Toast.fire({
+            title: '資料取得失敗',
             html: ToastIcon.redCrossHtml
           })
         }

@@ -6,27 +6,27 @@
       :key="follow.id"
       class="followBlock">
       <img 
-        @click.stop.prevent="toPersonalPage(follow.id)"
+        @click.stop.prevent="toPersonalPage(follow.account)"
         class="followBlock__avatar"
         :src="follow.avatar | emptyAvatar " alt="">
       <div class="followBlock__wrapper">
         <div class="followBlock__wrapper__header">
           <p 
-          @click.stop.prevent="toPersonalPage(follow.id)"
+          @click.stop.prevent="toPersonalPage(follow.account)"
           class="followBlock__wrapper__header__name"> 
             {{ follow.name }}
           </p>
           <template v-if="follow.account !== currentUser.account">
             <button
           v-if="follow.isFollowed"
-          @click.stop.prevent="removeFollow(follow.id)"
+          @click.stop.prevent="removeFollow(follow.account)"
           class="followBlock__wrapper__header__btn--following"
           >
             正在跟隨
           </button>
           <button
           v-else
-          @click.stop.prevent="addFollow(follow.id)"
+          @click.stop.prevent="addFollow(follow.account)"
           class="followBlock__wrapper__header__btn--follow"
           >
             跟隨
@@ -77,18 +77,27 @@ export default {
     fetchData () {
       this.followList = this.initialList
     },
-    toPersonalPage (id) {  
+    getUserId ( account ) {
+      const user =  this.followList.filter( follow => 
+        follow.account === account
+      )
+      const id = user[0].followingId || user[0].followerId
+      return id
+    },
+    toPersonalPage (account) {
+      const id = this.getUserId(account)  
        this.$router.push({
           name: "personal-page-root",
           params: { id,},
        });
     },
-    async addFollow (id) {
+    async addFollow (account) {
       try {
-         await usersAPI.followUser(id)
+        const id = this.getUserId(account) 
+        await usersAPI.followUser(id)
       
         this.followList = this.followList.map( follow => {
-          if( follow.id === id) {
+          if( follow.account === account) {
             return {
               ...follow,
               isFollowed: true
@@ -116,12 +125,13 @@ export default {
         } 
       }
     },
-    async removeFollow (id) {
+    async removeFollow (account) {
       try {
+        const id = this.getUserId(account) 
         await usersAPI.unfollowUser(id)
 
         this.followList = this.followList.map( follow => {
-          if( follow.id === id) {
+          if( follow.account === account) {
             return {
               ...follow,
               isFollowed: false

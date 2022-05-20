@@ -6,10 +6,11 @@
     <div class="personal__avatar">
       <img :src="user.avatar | emptyAvatar" alt="" />
     </div>
-    <button 
-      v-if="user.id === currentUser.id" 
+    <button
+      v-if="user.id === currentUser.id"
       @click.prevent.stop="edit"
-      class="personal__edit-btn">
+      class="personal__edit-btn"
+    >
       編輯個人資料
     </button>
     <div v-else class="personal__buttons">
@@ -24,14 +25,14 @@
       </button>
       <button
         v-if="user.isFollowed"
-        @click.prevent.stop="unfollow()"
+        @click.prevent.stop="unfollow(user.id)"
         class="personal__buttons__follow active"
       >
         正在跟隨
       </button>
       <button
         v-else
-        @click.prevent.stop="follow()"
+        @click.prevent.stop="follow(user.id)"
         class="personal__buttons__follow"
       >
         跟隨
@@ -68,6 +69,8 @@
 <script>
 import { accountShow, emptyAvatar, emptyCover } from "../utils/mixins";
 import { mapState } from "vuex";
+import { Toast, ToastIcon } from "../utils/helpers";
+import usersAPI from "../apis/users";
 
 export default {
   mixins: [accountShow, emptyAvatar, emptyCover],
@@ -75,7 +78,7 @@ export default {
   props: {
     initialUser: {
       type: Object,
-      required: true
+      required: true,
     },
   },
   data() {
@@ -98,20 +101,37 @@ export default {
     };
   },
   methods: {
-    fetchUser() {
-      // get user api here
+    async fetchUser() {
       this.user = { ...this.initialUser };
     },
-    follow() {
-      // api here
-      this.user.isFollowed = true;
+    async follow(userId) {
+      try {
+        await usersAPI.followUser(userId);
+        this.user.isFollowed = true;
+        this.$emit("updateFollowStatus");
+      } catch (err) {
+        console.log(err);
+        Toast.fire({
+          title: "無法成功追蹤使用者",
+          html: ToastIcon.redCrossHtml,
+        });
+      }
     },
-    unfollow() {
-      // api here
-      this.user.isFollowed = false;
+    async unfollow(userId) {
+      try {
+        await usersAPI.unfollowUser(userId);
+        this.user.isFollowed = false;
+        this.$emit("updateFollowStatus");
+      } catch (err) {
+        console.log(err);
+        Toast.fire({
+          title: "無法取消追蹤使用者",
+          html: ToastIcon.redCrossHtml,
+        });
+      }
     },
-    edit(){
-      this.$emit('edit')
+    edit() {
+      this.$emit("edit");
     },
 
     // function undeveloped
@@ -122,9 +142,9 @@ export default {
   computed: {
     ...mapState(["currentUser"]),
   },
-  watch:{
+  watch: {
     initialUser(){
-      this.fetchUser()
+      this.fetchUser();
     }
   },
   created() {

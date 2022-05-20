@@ -1,112 +1,63 @@
 <template>
-<div>
-  <Spinner v-if="isLoading"/>
-  <div class="container" v-show="!isLoading">
-    <div class="row">
-      <div 
-        class="col-lg-2 
-        col-xl-2"
-      >
-        <SideBar />
-      </div>
-      <div 
-        class="
-        follow
-        col-lg-7 col-xl-7"
-      >
-        <PersonalPageHeader 
-         :user="user"/>
-        <FollowTab 
-        />
-        <FollowUsers
-         :user="user"
-         :initial-list="followList"
-         @update="updateTop"
-        />
-      </div>
-      <div 
-       class="col-lg-3 
-       col-xl-3"
-      >
-        <PopularUsers 
-        :updateList="updateList"
-        @rerender="rerender"
-        />
-      </div>
-    </div>
-  </div>
+<div v-show="!isLoading">
+  <FollowUsers
+    :user="user"
+    :initial-list="followList"
+    @update="updateTop"
+  />    
 </div>
 </template>
 
 <script>
-import SideBar from '../components/SideBar.vue'
-import PopularUsers from '../components/PopularUsers.vue'
-import PersonalPageHeader from '../components/PersonalPageHeader.vue'
-import FollowTab from '../components/FollowTab.vue'
 import FollowUsers from '../components/FollowUsers.vue'
 import usersAPI from '../apis/users'
 import { Toast, ToastIcon } from '../utils/helpers'
-import Spinner from '../components/Spinner.vue'
 
 export default {
   name: 'FollowersPage',
+  props: {
+    user: {
+      type: Object,
+      required: true
+    },
+    rerenderList: {
+      type: Number,
+      default: 0
+    }
+  },
   components: {
-    SideBar,
-    PopularUsers,
-    PersonalPageHeader,
-    FollowTab,
     FollowUsers,
-    Spinner,
   },
   data () {
     return {
-      user: {},
       followList: [],
-      updateList: 0,
       isLoading: true
     }
   },
   methods: {
-    async fetchUser ( id ) {
-      try {
-        const { data } = await usersAPI.getUser( { id })
-        this.user = data
-      } catch (error) {
-        const errorMsg = error.response.data.message
-        if( errorMsg ) {
-          const message = errorMsg.slice(6)
-          Toast.fire({
-            title: `${message}`,
-            html: ToastIcon.redCrossHtml
-          })
-        }
-      }
-    },
     async fetchFollowers ( id ) {
       try {
         const { data } = await usersAPI.userFollowers( id )
         this.followList = data
-        this.isLoading = false
-     
-      } catch (error) {
-        const errorMsg = error.response.data.message
-        if (errorMsg === "Error:該名使用者沒有被任何人追蹤！"){
+
+        if ( !data.length ) {
           Toast.fire({
             title: '尚無追隨者',
             html: ToastIcon.yellowWarningHtml
           })
-        } else  {
-          Toast.fire({
-            title: '資料取得失敗',
-            html: ToastIcon.redCrossHtml
-          })
         }
         this.isLoading = false
-   
+     
+      } catch (error) {
+          Toast.fire({
+            title: '無法取得資料',
+            html: ToastIcon.redCrossHtml
+          })
+        this.isLoading = false
       }
     },
     updateTop () {
-      this.updateList += 1
+      this.$emit('update')
     },
     rerender ( ){
       this.fetchFollowers(this.user.id)
@@ -114,19 +65,13 @@ export default {
   },
   created () {
     const { id } = this.$route.params
-    this.fetchUser ( id )
     this.fetchFollowers ( id )
   },
+  watch: {
+    'rerenderList': {
+      handler: 'rerender'
+    }
+  }
 }
 </script>
 
-<style lang="scss" scoped>
-.follow {
-  @extend %main-container_;
-  &__tab {
-    @extend %tab-style;
-    height: 52px;
-    border-bottom: 1px solid $color-tab-line;
-  }
-}
-</style>

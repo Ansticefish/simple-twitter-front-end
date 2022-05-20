@@ -89,19 +89,21 @@ const routes = [{
     {
         path: '/users/:id/follow',
         name: 'follow-page-root',
+        component: () => import ('../views/FollowPage'),
         redirect: '/users/:id/follow/followers',
-    },
-    {
-        path: '/users/:id/follow/followers',
-        name: 'follow-page-followers',
-        component: () =>
-            import('../views/FollowersPage')
-    },
-    {
-        path: '/users/:id/follow/followings',
-        name: 'follow-page-following',
-        component: () =>
-            import('../views/FollowingsPage')
+        children: [{
+            path: 'followers',
+            name: 'follow-page-followers',
+            component: () =>
+                import('../views/FollowersPage')
+        },
+        {
+            path: 'followings',
+            name: 'follow-page-following',
+            component: () =>
+                import('../views/FollowingsPage')
+        },
+        ]
     },
     {
         path: '/setting/:id',

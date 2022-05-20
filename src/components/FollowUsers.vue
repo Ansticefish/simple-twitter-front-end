@@ -18,7 +18,7 @@
           </p>
           <template v-if="follow.account !== currentUser.account">
             <button
-          v-if="follow.isFollowed"
+          v-if="follow.isfollowed"
           @click.stop.prevent="removeFollow(follow.account)"
           class="followBlock__wrapper__header__btn--following"
           >
@@ -100,7 +100,7 @@ export default {
           if( follow.account === account) {
             return {
               ...follow,
-              isFollowed: true
+              isfollowed: true
             }
           } else {
             return follow
@@ -134,7 +134,7 @@ export default {
           if( follow.account === account) {
             return {
               ...follow,
-              isFollowed: false
+              isfollowed: false
             }
           } else {
             return follow

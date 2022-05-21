@@ -213,6 +213,16 @@ export default {
     align-self: flex-start;
     margin-top: 10px;
     margin-left: 85px; 
+    &::before {
+    // create line
+    content: '';
+    width: 2px;
+    height: 50px;
+    background: $color-gray-5;
+    position: absolute;
+    left: 48px;
+    bottom: -10px;
+  }
   }
 }
 

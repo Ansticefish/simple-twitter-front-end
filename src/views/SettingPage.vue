@@ -139,7 +139,7 @@
             class="setting__body__form__btn--submit
             mt-8 
             mb-6"
-            :disabled="isProcessing"
+            :disabled="isProcessing || a.warning.length > 0 || n.warning.length > 0"
             >
               儲存
             </button>

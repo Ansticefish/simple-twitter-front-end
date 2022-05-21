@@ -66,7 +66,7 @@
 
   * 安裝Homebrew：輸入下方指令並按Enter
 <br>
-<br>
+
 ```
 /bin/bash -c "$(curl -fsSL https://raw.githubusercontent.com/Homebrew/install/HEAD/install.sh)"
 ```
@@ -77,7 +77,6 @@
 
   * 當terminal出現以下訊息，按Enter鍵
 <br>
-<br>
 
 ```
 Press RETURN to continue or any other key to abort
@@ -85,7 +84,6 @@ Press RETURN to continue or any other key to abort
 <br>
 
   * 出現"installation successful!"表示安裝成功，也可輸入以下指令，若出現版本號(如：Homebrew 2.5.8)，就表示成功！
-<br>
 <br>
 
 ```
@@ -95,7 +93,6 @@ brew --version
 
   * 輸入以下指令，安裝Git
 <br>
-<br>
 
 ```
 brew install git
@@ -104,7 +101,7 @@ brew install git
 
   * 接著輸入下列指令，若有出現版本號(如：git version 2.24.3)就表示安裝成功！
 <br>
-<br>
+
 ```
 git --version
 ```
@@ -120,7 +117,6 @@ git --version
 
 Note: 有回傳檔案路徑如:/Applications/Xcode.app/Contents/Developer就代表有！若沒有，可輸入以下指令安裝
 <br>
-<br>
 
 ```
 xcode-select --install
@@ -129,7 +125,6 @@ xcode-select --install
 
   * 輸入指令安裝 nvm 
 <br>
-<br>
 
 ```
 curl -o- https://raw.githubusercontent.com/creationix/nvm/v0.34.0/install.sh | bash
@@ -137,7 +132,6 @@ curl -o- https://raw.githubusercontent.com/creationix/nvm/v0.34.0/install.sh | b
 <br>
 
   * 安裝後，務必重新啟動terminal，並輸入以下指令
-<br>
 <br>
 
 ```
@@ -150,7 +144,6 @@ Note: 若下一行出現了："nvm" 就表示成功了！
 <br>
 
   * 接連輸入下方指令，安裝與套用Node.js
-<br>
 <br>
 
 ```
@@ -180,7 +173,6 @@ nvm use 14.16.0
 
   * 先關閉再重新開啟Git Bash，輸入以下指令，若有出現版本號(如：1.1.7)，即表示安裝成功！
 <br>
-<br>
 
 ```
 nvm version
@@ -188,7 +180,6 @@ nvm version
 <br>
 
   * 接連輸入以下指令，安裝與套用Node.js
-<br>
 <br>
 
 ```

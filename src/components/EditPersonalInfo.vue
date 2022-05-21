@@ -159,6 +159,7 @@ export default {
           title: "成功儲存個人資料",
           html: ToastIcon.greenCheckHtml,
         });
+        window.location.reload()
       } catch (err) {
         console.log(err);
         this.isSaving = false;

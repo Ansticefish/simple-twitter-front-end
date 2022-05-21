@@ -30,14 +30,14 @@
         <p class="modal__post__content__body">
           {{ post.description }}
         </p>
-        <div class="modal__post__content__footer">
-          <p>
-            回覆給
-          </p>
-          <p class="ml-1">
-            {{ post.TweetUser.account | accountShow }}
-          </p>
-        </div>
+      </div>
+      <div class="modal__post__footer">
+        <p>
+          回覆給
+        </p>
+        <p class="ml-1">
+          {{ post.TweetUser.account | accountShow }}
+        </p>
       </div>
     </div>
     <form 
@@ -172,19 +172,20 @@ export default {
 @import '../assets/scss/post.scss';
 .modal {
   @extend %modal;
-  height: 450px;
+  height: fit-content;
 }
 
 .modal__post {
   position: relative;
   display: flex;
-  justify-content: flex-end;
-  height: 33%;
+  flex-direction: column;
+  align-items: flex-end;
+  height: fit-content;
   &::before {
     // create line
     content: '';
     width: 2px;
-    height: 86px;
+    height: 50%;
     background: $color-gray-5;
     position: absolute;
     left: 48px;
@@ -196,19 +197,22 @@ export default {
   &__content {
     width: 85%;
     padding: 28px 5px;
+    height: fit-content;
     &__header {
       display: flex;
       align-items: center;
     }
     &__body {
       margin-top: 8px;
-      height: 75px;
+      height: fit-content;
       @extend %description-font;
     }
-    &__footer {
-      display: flex;
-      margin-top: 11px;
-    }
+  }
+  &__footer {
+    display: flex;
+    align-self: flex-start;
+    margin-top: 10px;
+    margin-left: 85px; 
   }
 }
 
@@ -218,7 +222,7 @@ export default {
   @extend %post-header-font;
 }
 
-.modal__post__content__footer {
+.modal__post__footer {
   & > p {
       color: $color-secondary;
       font-size: 14px;
@@ -231,7 +235,7 @@ export default {
 
 .modal__reply {
   @extend %modal-form;
-  margin-top: 16px;
+  margin-top: 10px;
 }
 
 </style>

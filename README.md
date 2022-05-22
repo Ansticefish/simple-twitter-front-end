@@ -1,36 +1,36 @@
-# Alphitter  -- 和朋友交流的社交平台
-<br>
-
-### <a href="https://ansticefish.github.io/simple-twitter-front-end/#/signIn"> 點我到網站，直接玩看看！ </a>
+# Alphitter
+<h3>一個和朋友交流的社交平台</h3>
+<h4> 👉🏻 <a href="https://ansticefish.github.io/simple-twitter-front-end/#/signIn"> 點我到網站，直接玩看看！ </a> </h4>
 <br>
 
 > # 功能介紹
 <br>
 
-<img src="./src/assets/icons/front.PNG">
-<br>
-<br>
-
 ## <strong> 前台 <strong>
 <br>
-
-* 前台擁有和 Twitter 相似的社交功能，在這裡你能：
-  * 註冊個人帳號
+<img src="./src/assets/icons/front.PNG">
+<br>
+<br> 
+ <h4> 擁有和 Twitter 相似的社交功能: </h4>
+ 
+  * 註冊、登入個人帳號
+  * 瀏覽所有貼文
+  * 推文、回覆和對推文按讚
   * 打造個人profile
-  * 用按讚、追蹤、推文、回覆推文的方式與其他使用者互動
+  * 瀏覽、追蹤其他使用者
 
 <br>
 
 ## <strong> 後台管理 <strong>
 <br>
-
 <img src="./src/assets/icons/back.PNG">
 <br>
 <br>
-
-* 透過管理員帳號(帳號：root；密碼：12345678)你能快速掌握前台資訊，進行：
-  * 推文管理：刪除使用者推文
-  * 掌握使用者資訊：可以看見網站上的所有使用者與活躍程度
+ <h4> 透過管理員帳號(帳號：root；密碼：12345678)你能快速掌握前台資訊: </h4>
+ 
+  * 一覽所有推文、刪除使用者推文
+  * 掌握所有使用者資訊與活躍程度
+ 
 <br>
 <br>
 

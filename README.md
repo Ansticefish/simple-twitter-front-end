@@ -64,6 +64,14 @@
   * 打開應用程式庫裡的「terminal」軟體
 <br>
 
+  * 查看 terminal 的視窗上方邊框，是否有出現bash，若有，請進入「安裝Homebrew」的步驟，若沒有，請輸入下方指令轉換：
+<br>
+
+```
+chsh -s /bin/bash
+```
+<br>
+
   * 安裝Homebrew：輸入下方指令並按Enter
 <br>
 
@@ -72,7 +80,13 @@
 ```
 <br>
 
-  * 看到最後一行出現"Password"時，請輸入電腦開機時的密碼！
+  * 看到最後一行出現"Password"時，請輸入開機時的密碼，並按Enter送出
+<br>
+
+<img src="./src/assets/icons/password.PNG"> 
+<br>
+
+<small> (圖片取自Alpha Camp) </small>
 <br>
 
   * 當terminal出現以下訊息，按Enter鍵
@@ -83,7 +97,13 @@ Press RETURN to continue or any other key to abort
 ```
 <br>
 
-  * 出現"installation successful!"表示安裝成功，也可輸入以下指令，若出現版本號(如：Homebrew 2.5.8)，就表示成功！
+  * 當程式執行結束，若在程式碼中上方看見"installation successful!"表示安裝成功(如下圖)。若沒有看見，也可以輸入下方指令，如有出現版本號(如：Homebrew 2.5.8)，就表示成功！
+<br>
+
+<img src="./src/assets/icons/successful.PNG"> 
+<br>
+
+<small> (圖片取自Alpha Camp) </small>
 <br>
 
 ```
@@ -91,7 +111,7 @@ brew --version
 ```
 <br>
 
-  * 輸入以下指令，安裝Git
+  * 接著輸入以下指令，安裝Git
 <br>
 
 ```
@@ -99,7 +119,7 @@ brew install git
 ```
 <br>
 
-  * 接著輸入下列指令，若有出現版本號(如：git version 2.24.3)就表示安裝成功！
+  * 輸入下列指令後，若有出現版本號(如：git version 2.24.3)就表示Git安裝成功！
 <br>
 
 ```
@@ -107,7 +127,7 @@ git --version
 ```
 <br>
 
-  * 輸入指令，確認是否安裝 Xcode Cli 
+  * 接下來輸入指令，確認是否安裝 Xcode Cli 
 <br>
 
 ```
@@ -115,7 +135,7 @@ git --version
  ```
 <br>
 
-Note: 有回傳檔案路徑如:/Applications/Xcode.app/Contents/Developer就代表有！若沒有，可輸入以下指令安裝
+Note: 有回傳檔案路徑如:/Applications/Xcode.app/Contents/Developer就代表有，可以繼續進行下一個步驟！若沒有，請先輸入以下指令安裝：
 <br>
 
 ```
@@ -156,13 +176,21 @@ nvm use 14.16.0
 ```
 <br>
 
+恭喜你完成了環境設定！接下來請直接跳至「下載專案」部分，將專案下載下來！
+
 ------------------------------------------------------------------------------------------------------------------------
 <br>
 
  ##  Windows使用者：
 <br> 
     
-  * 到<a href="https://git-scm.com/">此網站</a>，點擊"Download for Windows"下載與安裝，安裝過程只要依序按Next鍵，不需做額外設定。安裝完成後打開名為 "Git Bash" 的檔案。(接下來會需要在Git Bash中輸入許多指令，若想直接將指令貼入介面中，請使用shift + insert鍵！)
+  * 到<a href="https://git-scm.com/">此網站</a>，點擊"Download for Windows"下載與安裝，安裝過程只要依序按Next鍵，不需做額外設定。
+  <br>
+  
+  * 安裝完成後打開名為 "Git Bash" 的檔案。
+  <br>
+  
+    Note：接下來會需要在Git Bash中輸入許多指令，若想直接將指令貼入介面中，請使用shift + insert鍵，或可以直接在Git Bash中按右鍵，選擇 "paste" 貼上指令！
 <br>
 
   * 到<a href="https://github.com/coreybutler/nvm-windows/releases"> nvm-windows</a> ，往下滑到 Assets列表，找到「nvm-setup.exe」，將它下載並執行。

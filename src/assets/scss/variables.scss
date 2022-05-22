@@ -163,6 +163,9 @@ padding: p) {
     &:disabled {
       border-color: $color-gray-4;
     }
+    &::placeholder {
+      color: $color-gray-5;
+    }
   }
   .error-message {
     display: none;

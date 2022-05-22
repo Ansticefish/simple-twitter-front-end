@@ -78,15 +78,14 @@ export default {
       this.followList = this.initialList
     },
     getUserId ( account ) {
-       const user =  this.followList.filter( follow => 
-          follow.account === account
-       )
-       const id = user[0].followingId || user[0].followerId
-       return id
+      const user =  this.followList.filter( follow => 
+        follow.account === account
+      )
+      const id = user[0].followingId || user[0].followerId
+      return id
     },
-    toPersonalPage (account) {  
-       const id = this.getUserId(account)
-
+    toPersonalPage (account) {
+      const id = this.getUserId(account)  
        this.$router.push({
           name: "personal-page-root",
           params: { id,},
@@ -94,9 +93,8 @@ export default {
     },
     async addFollow (account) {
       try {
-        const id = this.getUserId(account)
-
-         await usersAPI.followUser(id)
+        const id = this.getUserId(account) 
+        await usersAPI.followUser(id)
       
         this.followList = this.followList.map( follow => {
           if( follow.account === account) {
@@ -129,8 +127,7 @@ export default {
     },
     async removeFollow (account) {
       try {
-        const id = this.getUserId(account)
-
+        const id = this.getUserId(account) 
         await usersAPI.unfollowUser(id)
 
         this.followList = this.followList.map( follow => {

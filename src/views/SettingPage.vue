@@ -103,7 +103,7 @@
               :class="{'error': p.error}"
               name="password"
               id="setting__body__form__wrapper__password" 
-              placeholder="請輸入密碼" 
+              placeholder="請設定密碼" 
               required
               >
               <label
@@ -118,7 +118,7 @@
               mt-6"
             >
               <label for="setting__body__form__wrapper__checkPassword">
-              密碼確認
+              密碼再確認
               </label>
               <input type="password" 
               v-model="checkPassword"
@@ -139,7 +139,7 @@
             class="setting__body__form__btn--submit
             mt-8 
             mb-6"
-            :disabled="isProcessing"
+            :disabled="isProcessing || a.warning.length > 0 || n.warning.length > 0"
             >
               儲存
             </button>

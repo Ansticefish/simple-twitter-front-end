@@ -27,6 +27,7 @@ export default {
         if (!data.message) {
           this.posts = data.map((post) => ({
             ...post.Tweet,
+            createdAt: post.createdAt,
             TweetUser: post.TweetUser,
             isLiked: post.isLiked,
           }));

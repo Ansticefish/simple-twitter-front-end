@@ -106,6 +106,7 @@ export default {
   }
   &__content {
     @extend %content_;
+    word-break: break-all;
   }
   &__response {
     display: flex;

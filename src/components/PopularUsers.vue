@@ -156,6 +156,7 @@ export default {
   &__list {
     height: calc(100vh - 25px);
     overflow: auto;
+    overflow-wrap: normal;
     &__card {
       display: flex;
       justify-content: space-between;

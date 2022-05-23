@@ -82,6 +82,9 @@ export default {
       text-decoration: underline;
     }
   }
+  .text-wrapper{
+    width: 90%;
+  }
   &__replier {
     &__name,
     &__account-time {
@@ -106,7 +109,6 @@ export default {
   }
   &__content {
     @extend %content_;
-    word-break: break-all;
   }
   &__response {
     display: flex;

@@ -59,6 +59,7 @@ export default {
       width: 120px;
       line-height: 26px;
       overflow: hidden;
+      overflow-wrap: normal;
       text-overflow: ellipsis;
     }
     &__num-tweets {
